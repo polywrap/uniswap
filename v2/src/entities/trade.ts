@@ -21,7 +21,7 @@ import { currencyEquals, tokenAmountEquals, tokenEquals } from "./token";
 import { PriorityQueue, TradeOptions, ETHER } from "../utils";
 import { copyTokenAmount, wrapIfEther } from "../utils/utils";
 
-import { BigInt, BigNumber, Option } from "@polywrap/wasm-as";
+import { BigInt, BigNumber, Box } from "@polywrap/wasm-as";
 
 export function createTrade(args: Args_createTrade): Trade {
   const amounts: TokenAmount[] = new Array(args.route.path.length);
@@ -274,8 +274,8 @@ function _bestTradeExactIn(
         amountOut,
         currencyOut,
         new TradeOptions({
-          maxNumResults: new Option(options.maxNumResults, false),
-          maxHops: new Option(options.maxHops - 1, false),
+          maxNumResults: Box.from(options.maxNumResults),
+          maxHops: Box.from(options.maxHops - 1),
         }),
         currentPairs.concat([pair]),
         originalAmountIn,
@@ -358,8 +358,8 @@ function _bestTradeExactOut(
         currencyIn,
         amountIn,
         new TradeOptions({
-          maxNumResults: new Option(options.maxNumResults, false),
-          maxHops: new Option(options.maxHops - 1, false),
+          maxNumResults: Box.from(options.maxNumResults),
+          maxHops: Box.from(options.maxHops - 1),
         }),
         [pair].concat(currentPairs),
         originalAmountOut,

@@ -1,5 +1,7 @@
 import { BestTradeOptions } from "../wrap";
 
+import { Box } from "@polywrap/wasm-as";
+
 export class TradeOptions {
   maxNumResults: u32;
   maxHops: u32;
@@ -9,10 +11,10 @@ export class TradeOptions {
       this.maxNumResults = 3;
       this.maxHops = 3;
     } else {
-      this.maxNumResults = options.maxNumResults.isNone
+      this.maxNumResults = options.maxNumResults === null
         ? 3
-        : options.maxNumResults.unwrap();
-      this.maxHops = options.maxHops.isNone ? 3 : options.maxHops.unwrap();
+        : (options.maxNumResults as Box<u32>).unwrap();
+      this.maxHops = options.maxHops === null ? 3 : (options.maxHops as Box<u32>).unwrap();
     }
   }
 }

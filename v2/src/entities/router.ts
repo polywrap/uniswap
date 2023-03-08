@@ -14,7 +14,7 @@ import {
 import { currencyEquals } from "./token";
 import { UNISWAP_ROUTER_CONTRACT, getSwapMethodAbi, ETHER } from "../utils";
 
-import { BigInt, Option } from "@polywrap/wasm-as";
+import { BigInt, Box } from "@polywrap/wasm-as";
 
 const ZERO_HEX = "0x0";
 
@@ -38,7 +38,7 @@ export function swapCallParameters(
     throw new Error("Ether can't be trade input and output");
   }
 
-  if (args.tradeOptions.ttl.isNone && args.tradeOptions.deadline.isNone) {
+  if (args.tradeOptions.ttl === null && args.tradeOptions.deadline === null) {
     throw new Error("Either ttl or deadline have to be defined for trade");
   }
 
@@ -58,12 +58,12 @@ export function swapCallParameters(
 
   const pathArray = args.trade.route.path.map<string>((token) => token.address);
   const path = '["' + pathArray.join('","') + '"]';
-  const deadline = !args.tradeOptions.ttl.isNone
+  const deadline = args.tradeOptions.ttl
     ? "0x" +
       (
-        args.tradeOptions.unixTimestamp + args.tradeOptions.ttl.unwrap()
+        args.tradeOptions.unixTimestamp + (args.tradeOptions.ttl as Box<u32>).unwrap()
       ).toString(16)
-    : "0x" + (args.tradeOptions.deadline.unwrap() as u32).toString(16);
+    : "0x" + (args.tradeOptions.deadline as Box<u32>).unwrap().toString(16);
   const useFeeOnTransfer = args.tradeOptions.feeOnTransfer;
 
   let methodName: string;
@@ -74,7 +74,7 @@ export function swapCallParameters(
     case TradeType.EXACT_INPUT:
       if (etherIn) {
         methodName =
-          !useFeeOnTransfer.isNone && useFeeOnTransfer.unwrap()
+          useFeeOnTransfer && useFeeOnTransfer.unwrap()
             ? "swapExactETHForTokensSupportingFeeOnTransferTokens"
             : "swapExactETHForTokens";
         // (uint amountOutMin, address[] calldata path, address to, uint deadline)
@@ -82,7 +82,7 @@ export function swapCallParameters(
         value = amountIn;
       } else if (etherOut) {
         methodName =
-          !useFeeOnTransfer.isNone && useFeeOnTransfer.unwrap()
+          useFeeOnTransfer && useFeeOnTransfer.unwrap()
             ? "swapExactTokensForETHSupportingFeeOnTransferTokens"
             : "swapExactTokensForETH";
         // (uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline)
@@ -90,7 +90,7 @@ export function swapCallParameters(
         value = ZERO_HEX;
       } else {
         methodName =
-          !useFeeOnTransfer.isNone && useFeeOnTransfer.unwrap()
+          useFeeOnTransfer && useFeeOnTransfer.unwrap()
             ? "swapExactTokensForTokensSupportingFeeOnTransferTokens"
             : "swapExactTokensForTokens";
         // (uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline)
@@ -99,7 +99,7 @@ export function swapCallParameters(
       }
       break;
     case TradeType.EXACT_OUTPUT:
-      if (!useFeeOnTransfer.isNone && useFeeOnTransfer.unwrap()) {
+      if (useFeeOnTransfer && useFeeOnTransfer.unwrap()) {
         throw new Error("Cannot use fee on transfer with exact out trade");
       }
 
@@ -133,21 +133,24 @@ export function swapCallParameters(
 
 export function estimateGas(args: Args_estimateGas): BigInt {
   const swapParameters: SwapParameters = args.parameters;
-  const chainId: Option<ChainId> = args.chainId;
+  const chainId = args.chainId;
   return Ethereum_Module.estimateContractCallGas({
     address: UNISWAP_ROUTER_CONTRACT,
     method: getSwapMethodAbi(swapParameters.methodName),
     args: swapParameters.args,
-    connection: chainId.isNone
+    connection: chainId === null
       ? null
       : {
           node: null,
           networkNameOrChainId: getChainIdKey(chainId.unwrap()),
         },
-    txOverrides: {
+    options: {
       value: BigInt.fromString(swapParameters.value.substring(2), 16),
-      gasPrice: null,
       gasLimit: null,
+      gasPrice: null,
+      maxFeePerGas: null,
+      maxPriorityFeePerGas: null,
+      nonce: null
     },
   }).unwrap();
 }
@@ -170,10 +173,13 @@ export function execCallStatic(
       node: null,
       networkNameOrChainId: getChainIdKey(chainId),
     },
-    txOverrides: {
+    options: {
       value: BigInt.fromString(swapParameters.value.substring(2), 16),
       gasPrice: txOverrides.gasPrice,
       gasLimit: txOverrides.gasLimit,
+      maxFeePerGas: null,
+      maxPriorityFeePerGas: null,
+      nonce: null
     },
   }).unwrap();
 }

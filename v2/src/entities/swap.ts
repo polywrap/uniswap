@@ -53,10 +53,13 @@ export function execCall(args: Args_execCall): Ethereum_TxResponse {
       node: null,
       networkNameOrChainId: getChainIdKey(chainId),
     },
-    txOverrides: {
+    options: {
       value: BigInt.fromString(swapParameters.value.substring(2), 16),
       gasPrice: txOverrides.gasPrice,
       gasLimit: txOverrides.gasLimit,
+      maxFeePerGas: null,
+      maxPriorityFeePerGas: null,
+      nonce: null
     },
   }).unwrap();
 }
@@ -104,10 +107,13 @@ export function approve(args: Args_approve): Ethereum_TxResponse {
       node: null,
       networkNameOrChainId: getChainIdKey(args.token.chainId),
     },
-    txOverrides: {
+    options: {
       value: null,
       gasPrice: txOverrides.gasPrice,
       gasLimit: txOverrides.gasLimit,
+      maxFeePerGas: null,
+      maxPriorityFeePerGas: null,
+      nonce: null
     },
   }).unwrap();
 }

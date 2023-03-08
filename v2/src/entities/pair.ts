@@ -27,7 +27,7 @@ import {
   ProcessedPair,
 } from "../utils";
 
-import { BigInt } from "@polywrap/wasm-as";
+import { BigInt, Box } from "@polywrap/wasm-as";
 
 // returns address of pair liquidity token contract
 // see https://uniswap.org/docs/v2/javascript-SDK/getting-pair-addresses/
@@ -201,7 +201,7 @@ export function pairLiquidityValue(
   const pair: Pair = args.pair;
   const totalSupply: TokenAmount = args.totalSupply;
   const liquidity: TokenAmount = args.liquidity;
-  const feeOn: bool = args.feeOn.isSome && args.feeOn.unwrap();
+  const feeOn: bool = args.feeOn !== null && (args.feeOn as Box<boolean>).unwrap();
   const kLast: BigInt = args.kLast === null ? BigInt.ZERO : args.kLast!;
   const amount0 = pair.tokenAmount0.amount;
   const amount1 = pair.tokenAmount1.amount;

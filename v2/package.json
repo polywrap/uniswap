@@ -1,8 +1,8 @@
 {
-  "name": "@polywrap/uniswap-v2-api",
-  "description": "Uniswap V2 Polywrap",
+  "name": "@polywrap/uniswap-v2-wrapper",
+  "description": "Uniswap V2 Wrapper",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.10.0",
   "scripts": {
     "reset": "yarn clean && yarn && yarn build",
     "clean": "npx rimraf ./node_modules ./build ./coverage ./.wrap ./**/wrap",
@@ -15,14 +15,14 @@
     "test:ci": "yarn test"
   },
   "dependencies": {
-    "@polywrap/wasm-as": "0.3.x"
+    "@polywrap/wasm-as": "~0.10.0-pre"
   },
   "devDependencies": {
     "@as-pect/cli": "6.2.4",
     "@ethersproject/providers": "5.6.4",
-    "@polywrap/client-js": "0.3.x",
-    "@polywrap/ethereum-plugin-js": "0.3.x",
-    "@polywrap/test-env-js": "0.3.x",
+    "@polywrap/client-js": "~0.10.0-pre",
+    "@polywrap/ethereum-provider-js": "~0.2.4",
+    "@polywrap/test-env-js": "~0.10.0-pre",
     "@types/jest": "26.0.8",
     "@types/node": "12.6.9",
     "@types/node-fetch": "2.5.10",
@@ -46,6 +46,6 @@
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-prettier": "3.3.0",
     "prettier": "2.2.1",
-    "polywrap": "0.3.x"
+    "polywrap": "~0.10.0-pre"
   }
 }
