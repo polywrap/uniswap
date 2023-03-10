@@ -10,7 +10,6 @@ import {
   MethodParameters,
 } from "../wrap";
 import { MAX_UINT_256, ROUTER_ADDRESS } from "../utils";
-import { toHex } from "../router";
 
 import { BigInt } from "@polywrap/wasm-as";
 
@@ -31,6 +30,9 @@ export function execCall(args: Args_execCall): Ethereum_TxResponse {
       value: BigInt.fromString(methodParameters.value, 16),
       chainId: null,
       _type: null,
+      maxFeePerGas: null,
+      maxPriorityFeePerGas: null,
+      accessList: null,
     },
     connection: {
       node: null,
@@ -48,15 +50,18 @@ export function approve(args: Args_approve): Ethereum_TxResponse {
     address: args.token.address,
     method:
       "function approve(address spender, uint value) external returns (bool)",
-    args: [ROUTER_ADDRESS, toHex({ value: amount })],
+    args: [ROUTER_ADDRESS, amount.toString()],
     connection: {
       node: null,
       networkNameOrChainId: getChainIdKey(args.token.chainId),
     },
-    txOverrides: {
+    options: {
       value: null,
       gasLimit: gasOptions === null ? null : gasOptions.gasLimit,
       gasPrice: gasOptions === null ? null : gasOptions.gasPrice,
+      maxFeePerGas: null,
+      maxPriorityFeePerGas: null,
+      nonce: null,
     },
   }).unwrap();
 }

@@ -71,7 +71,7 @@ export function addDelta(args: Args_addDelta): BigInt {
  */
 export function getAmount0Delta(args: Args_getAmount0Delta): BigInt {
   const liquidity: BigInt = args.liquidity;
-  const roundUp: boolean = args.roundUp;
+  const roundUp: bool = args.roundUp;
 
   let sqrtRatioAX96: BigInt;
   let sqrtRatioBX96: BigInt;
@@ -106,7 +106,7 @@ export function getAmount0Delta(args: Args_getAmount0Delta): BigInt {
  */
 export function getAmount1Delta(args: Args_getAmount1Delta): BigInt {
   const liquidity: BigInt = args.liquidity;
-  const roundUp: boolean = args.roundUp;
+  const roundUp: bool = args.roundUp;
 
   let sqrtRatioAX96: BigInt;
   let sqrtRatioBX96: BigInt;
@@ -136,7 +136,7 @@ export function getNextSqrtPriceFromInput(
   const sqrtPX96: BigInt = args.sqrtPX96;
   const liquidity: BigInt = args.liquidity;
   const amountIn: BigInt = args.amountIn;
-  const zeroForOne: boolean = args.zeroForOne;
+  const zeroForOne: bool = args.zeroForOne;
 
   if (sqrtPX96 <= BigInt.ZERO) {
     throw new Error("sqrtPX96 <= 0");
@@ -164,7 +164,7 @@ export function getNextSqrtPriceFromOutput(
   const sqrtPX96: BigInt = args.sqrtPX96;
   const liquidity: BigInt = args.liquidity;
   const amountOut: BigInt = args.amountOut;
-  const zeroForOne: boolean = args.zeroForOne;
+  const zeroForOne: bool = args.zeroForOne;
 
   if (sqrtPX96 <= BigInt.ZERO) {
     throw new Error("sqrtPX96 <= 0");

@@ -6,7 +6,7 @@
   "scripts": {
     "reset": "yarn clean && yarn && yarn build",
     "clean": "rimraf ./node_modules ./build ./coverage ./.polywrap ./**/wrap",
-    "build": "npx polywrap build -c ./config.ts -s image",
+    "build": "npx polywrap build",
     "deploy": "npx polywrap deploy",
     "codegen": "npx polywrap codegen",
     "test:e2e:replication": "jest --passWithNoTests --runInBand --verbose src/__tests__/e2e/sdk-test-replications",
@@ -19,7 +19,7 @@
     "lint:fix": "yarn eslint src --fix"
   },
   "dependencies": {
-    "@polywrap/wasm-as": "0.9.4"
+    "@polywrap/wasm-as": "~0.10.0-pre"
   },
   "devDependencies": {
     "@as-pect/cli": "6.2.4",
@@ -30,9 +30,9 @@
     "@uniswap/v3-core": "1.0.0",
     "@uniswap/v3-periphery": "1.3.0",
     "@uniswap/v3-sdk": "3.6.2",
-    "polywrap": "0.9.4",
-    "@polywrap/client-js": "0.9.4",
-    "@polywrap/test-env-js": "0.9.4",
+    "polywrap": "~0.10.0-pre",
+    "@polywrap/client-js": "~0.10.0-pre",
+    "@polywrap/test-env-js": "~0.10.0-pre",
     "assemblyscript": "0.19.23",
     "eslint": "7.16.0",
     "eslint-config-prettier": "7.1.0",

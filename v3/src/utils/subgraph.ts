@@ -29,8 +29,7 @@ export function getSubgraphEndpoint(chainId: ChainId): SubgraphEndpoint {
 
 export function subgraphQuery(args: QueryArgs): JSON.Obj {
   const response = Subgraph_Module.querySubgraph({
-    subgraphAuthor: args.subgraphAuthor,
-    subgraphName: args.subgraphName,
+    url: `https://api.thegraph.com/subgraphs/name/${args.subgraphAuthor}/${args.subgraphName}`,
     query: args.query,
   }).unwrap();
 

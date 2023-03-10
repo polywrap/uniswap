@@ -55,7 +55,7 @@ class SimulatedSwapState {
 class StepComputations {
   sqrtPriceStartX96: BigInt;
   tickNext: i32;
-  initialized: boolean;
+  initialized: bool;
   sqrtPriceNextX96: BigInt;
   amountIn: BigInt;
   amountOut: BigInt;

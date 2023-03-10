@@ -115,7 +115,7 @@ export function createPositionFromAmounts(
   const tickUpper: i32 = args.tickUpper;
   const amount0: BigInt = args.amount0;
   const amount1: BigInt = args.amount1;
-  const useFullPrecision: boolean = args.useFullPrecision;
+  const useFullPrecision: bool = args.useFullPrecision;
 
   const sqrtRatioAX96: BigInt = getSqrtRatioAtTick({ tick: tickLower });
   const sqrtRatioBX96: BigInt = getSqrtRatioAtTick({ tick: tickUpper });
@@ -149,7 +149,7 @@ export function createPositionFromAmount0(
   const tickLower: i32 = args.tickLower;
   const tickUpper: i32 = args.tickUpper;
   const amount0: BigInt = args.amount0;
-  const useFullPrecision: boolean = args.useFullPrecision;
+  const useFullPrecision: bool = args.useFullPrecision;
   return createPositionFromAmounts({
     pool,
     tickLower,

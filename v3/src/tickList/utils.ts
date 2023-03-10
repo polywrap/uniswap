@@ -108,7 +108,7 @@ export function findTick(ticks: Tick[], index: u32): Tick {
 export function nextInitializedTick(args: Args_nextInitializedTick): Tick {
   const ticks: Tick[] = args.ticks;
   const tick: i32 = args.tick;
-  const lte: boolean = args.lte;
+  const lte: bool = args.lte;
 
   if (lte) {
     if (tickIsBelowSmallest({ ticks: ticks, tick: tick })) {

@@ -90,7 +90,7 @@ export function maxLiquidityForAmounts(
   let sqrtRatioBX96: BigInt = args.sqrtRatioBX96;
   const amount0: BigInt = args.amount0;
   const amount1: BigInt = args.amount1;
-  const useFullPrecision: boolean = args.useFullPrecision;
+  const useFullPrecision: bool = args.useFullPrecision;
 
   if (sqrtRatioAX96 > sqrtRatioBX96) {
     const temp = sqrtRatioAX96;
