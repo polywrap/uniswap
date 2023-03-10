@@ -1,4 +1,4 @@
-import { Option, BigInt } from "@polywrap/wasm-as";
+import { Box, BigInt } from "@polywrap/wasm-as";
 import {
   createRoute,
   bestTradeExactIn,
@@ -179,8 +179,8 @@ describe("Trade", () => {
           },
           tokenOut: token2,
           options: {
-            maxHops: new Option<u32>(0, false),
-            maxNumResults: Option.None<u32>(),
+            maxHops: Box.from<u32>(0),
+            maxNumResults: null,
           },
         })
       }).toThrow();
@@ -236,8 +236,8 @@ describe("Trade", () => {
         },
         tokenOut: token2,
         options: {
-          maxHops: new Option<u32>(1, false),
-          maxNumResults: Option.None<u32>(),
+          maxHops: Box.from<u32>(1),
+          maxNumResults: null,
         }
       });
 
@@ -255,8 +255,8 @@ describe("Trade", () => {
         },
         tokenOut: token2,
         options: {
-          maxHops: new Option<u32>(1, false),
-          maxNumResults: Option.None<u32>(),
+          maxHops: Box.from<u32>(1),
+          maxNumResults: null,
         }
       });
 
@@ -279,8 +279,8 @@ describe("Trade", () => {
         },
         tokenOut: token2,
         options: {
-          maxHops: Option.None<u32>(),
-          maxNumResults: new Option<u32>(1, false),
+          maxHops: null,
+          maxNumResults: Box.from<u32>(1),
         }
       });
 
@@ -400,8 +400,8 @@ describe("Trade", () => {
           },
           tokenIn: token0,
           options: {
-            maxHops: new Option<u32>(0, false),
-            maxNumResults: Option.None<u32>(),
+            maxHops: Box.from<u32>(0),
+            maxNumResults: null,
           },
         })
       }).toThrow();
@@ -465,8 +465,8 @@ describe("Trade", () => {
         },
         tokenIn: token0,
         options: {
-          maxHops: new Option<u32>(1, false),
-          maxNumResults: Option.None<u32>(),
+          maxHops: Box.from<u32>(1),
+          maxNumResults: null,
         }
       });
 
@@ -512,8 +512,8 @@ describe("Trade", () => {
         },
         tokenIn: token0,
         options: {
-          maxHops: Option.None<u32>(),
-          maxNumResults: new Option<u32>(1, false),
+          maxHops: null,
+          maxNumResults: Box.from<u32>(1),
         }
       });
 
