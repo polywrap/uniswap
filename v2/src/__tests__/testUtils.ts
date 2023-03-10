@@ -116,6 +116,9 @@ export async function approveToken(
     method: "approve",
     args: {
       token,
+      txOverrides: {
+        gasPrice: "100",
+      }
     },
   });
   if (!result.ok) throw result.error;
@@ -134,6 +137,9 @@ export async function execTrade(
     args: {
       trade,
       tradeOptions,
+      txOverrides: {
+        gasPrice: "100",
+      }
     },
   });
   if (!result.ok) throw result.error;
@@ -157,7 +163,10 @@ export async function execSwap(
       tokenOut: tokenOut,
       amount: amount,
       tradeType: tradeType,
-      tradeOptions: tradeOptions
+      tradeOptions: tradeOptions,
+      txOverrides: {
+        gasPrice: "100",
+      }
     },
   });
   if (!result.ok) throw result.error;
