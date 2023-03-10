@@ -1,7 +1,7 @@
-import { CoreClientConfig, PolywrapClient } from "@polywrap/client-js";
+import { PolywrapClient } from "@polywrap/client-js";
 import path from "path";
 import { getTokenList } from "../testUtils";
-import { getPlugins, initInfra, stopInfra } from "../infraUtils";
+import { getBuilder, initInfra, stopInfra } from "../infraUtils";
 import * as uni from "@uniswap/sdk";
 import * as ethers from "ethers";
 import { BaseProvider, getDefaultProvider} from "@ethersproject/providers"
@@ -21,8 +21,7 @@ describe("Fetch", () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const config: Partial<CoreClientConfig> = getPlugins();
-    client = new PolywrapClient(config);
+    client = new PolywrapClient(getBuilder().build());
     // deploy api
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../..");
     fsUri = "fs/" + wrapperAbsPath + '/build';
@@ -58,7 +57,7 @@ describe("Fetch", () => {
   it("Fetches token data", async () => {
     for (let i = 0; i < 10; i++) {
       // actual token
-      const tokenData = await client.invoke<App.Token>({
+      const result = await client.invoke<App.Token>({
         uri: fsUri,
         method: "fetchTokenData",
         args: {
@@ -67,12 +66,11 @@ describe("Fetch", () => {
         },
       });
       // compare results
-      expect(tokenData.error).toBeFalsy();
-      expect(tokenData.data).toBeTruthy();
-      expect(tokenData.data?.currency.symbol).toStrictEqual(tokens[i].currency.symbol);
-      expect(tokenData.data?.currency.decimals).toStrictEqual(tokens[i].currency.decimals);
+      if (result.ok === false) throw result.error;
+      expect(result.value.currency.symbol).toStrictEqual(tokens[i].currency.symbol);
+      expect(result.value.currency.decimals).toStrictEqual(tokens[i].currency.decimals);
       // fetched name can vary from token list, e.g. "Aave" vs "Aave Token", so not testing (can verify it works with console.log)
-      // expect(tokenData.data?.fetchTokenData.currency.name).toStrictEqual(tokens[i].currency.name);
+      // expect(tokenData.value.fetchTokenData.currency.name).toStrictEqual(tokens[i].currency.name);
     }
   });
 
@@ -83,7 +81,7 @@ describe("Fetch", () => {
       const uniTokenI: uni.Token = uniTokens.filter(token => token.address === pairs[i][0].address)[0];
       const uniTokenJ: uni.Token = uniTokens.filter(token => token.address === pairs[i][1].address)[0];
       // actual pair data
-      const pairData = await client.invoke<App.Pair>({
+      const result = await client.invoke<App.Pair>({
         uri: fsUri,
         method: "fetchPairData",
         args: {
@@ -94,10 +92,9 @@ describe("Fetch", () => {
       // expected pair data
       const uniPair: uni.Pair = await uni.Fetcher.fetchPairData(uniTokenI, uniTokenJ, ethersProvider);
       // compare results
-      expect(pairData.error).toBeFalsy();
-      expect(pairData.data).toBeTruthy();
-      expect(pairData.data?.tokenAmount0.amount).toStrictEqual(uniPair.reserve0.numerator.toString());
-      expect(pairData.data?.tokenAmount1.amount).toStrictEqual(uniPair.reserve1.numerator.toString());
+      if (result.ok === false) throw result.error;
+      expect(result.value.tokenAmount0.amount).toStrictEqual(uniPair.reserve0.numerator.toString());
+      expect(result.value.tokenAmount1.amount).toStrictEqual(uniPair.reserve1.numerator.toString());
     }
   });
 
@@ -107,7 +104,7 @@ describe("Fetch", () => {
       const abi = ["function totalSupply() external view returns (uint)"];
       const contract = new ethers.Contract(tokens[i].address, abi, ethersProvider);
       // actual totalSupply
-      const totalSupply = await client.invoke<App.TokenAmount>({
+      const result = await client.invoke<App.TokenAmount>({
         uri: fsUri,
         method: "fetchTotalSupply",
         args: {
@@ -117,9 +114,8 @@ describe("Fetch", () => {
       // expected totalSupply
       const expectedTotalSupply: string = (await contract.totalSupply()).toString();
       // compare results
-      expect(totalSupply.error).toBeFalsy();
-      expect(totalSupply.data).toBeTruthy();
-      expect(totalSupply.data?.amount).toStrictEqual(expectedTotalSupply);
+      if (result.ok === false) throw result.error;
+      expect(result.value.amount).toStrictEqual(expectedTotalSupply);
     }
   });
 
@@ -141,7 +137,8 @@ describe("Fetch", () => {
           token1: pairs[i][1]
         },
       });
-      const actualPairAddress: string = pairAddress.data ?? "";
+      if (pairAddress.ok === false) throw pairAddress.error;
+      const actualPairAddress: string = pairAddress.value;
       // create pair token using pair address
       const pairToken: App.Token = {
         chainId: App.ChainIdEnum.MAINNET,
@@ -153,7 +150,7 @@ describe("Fetch", () => {
         },
       };
       // get actual kLast
-      const kLast = await client.invoke<string>({
+      const result = await client.invoke<string>({
         uri: fsUri,
         method: "fetchKLast",
         args: {
@@ -163,10 +160,9 @@ describe("Fetch", () => {
       // expected kLast
       const expectedKLast: string = (await contract.kLast()).toString();
       // compare results
-      expect(kLast.error).toBeFalsy();
-      expect(kLast.data).toBeTruthy();
+      if (result.ok === false) throw result.error;
       expect(actualPairAddress).toStrictEqual(uniPairAddress);
-      expect(kLast.data).toStrictEqual(expectedKLast);
+      expect(result.value).toStrictEqual(expectedKLast);
     }
   });
 

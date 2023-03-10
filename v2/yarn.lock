@@ -1816,7 +1816,7 @@
   resolved "https://registry.yarnpkg.com/@polywrap/asyncify-js/-/asyncify-js-0.10.0-pre.11.tgz#5bc5c6812bc66b0894153742f7e1ba2d77f164c6"
   integrity sha512-/6YFW/glUjqS9Sa9KpOAD/0kruhN2dPu1AZpVYIwydXBhpklpWTwRL2umIL/6XABjGJtCrjvVbZG+JyY3UGP3w==
 
-"@polywrap/client-config-builder-js@0.10.0-pre.11":
+"@polywrap/client-config-builder-js@0.10.0-pre.11", "@polywrap/client-config-builder-js@~0.10.0-pre":
   version "0.10.0-pre.11"
   resolved "https://registry.yarnpkg.com/@polywrap/client-config-builder-js/-/client-config-builder-js-0.10.0-pre.11.tgz#29786284cb6e07284f7f11bd9b52b40c19d005a9"
   integrity sha512-rDRcvg1J3AckpISBnMCQWP5+MixVNR6LjWDzfbqvWkVBQmGQEjAgAkczU6z78aBLkNiKu/4iTHwOOwStd0V4xQ==

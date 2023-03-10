@@ -9,9 +9,9 @@
     "build": "npx polywrap build",
     "deploy": "npx polywrap deploy",
     "codegen:test": "npx polywrap codegen -m src/__tests__/e2e/types/polywrap.app.yaml -g src/__tests__/e2e/types/wrap",
-    "test:e2e": "yarn codegen:test && jest --passWithNoTests --runInBand --verbose",
+    "test:e2e": "jest --passWithNoTests --runInBand --verbose",
     "test:unit": "asp --verbose",
-    "test": "yarn test:unit && yarn test:e2e",
+    "test": "yarn test:unit && yarn codegen:test && yarn test:e2e",
     "test:ci": "yarn test"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "@polywrap/client-js": "~0.10.0-pre",
     "@polywrap/ethereum-provider-js": "~0.2.4",
     "@polywrap/test-env-js": "~0.10.0-pre",
+    "@polywrap/client-config-builder-js": "~0.10.0-pre",
     "@types/jest": "26.0.8",
     "@types/node": "12.6.9",
     "@types/node-fetch": "2.5.10",

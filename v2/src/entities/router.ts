@@ -137,7 +137,7 @@ export function estimateGas(args: Args_estimateGas): BigInt {
   return Ethereum_Module.estimateContractCallGas({
     address: UNISWAP_ROUTER_CONTRACT,
     method: getSwapMethodAbi(swapParameters.methodName),
-    args: swapParameters.args,
+    args: sanitizeSwapArgs(swapParameters.methodName, swapParameters.args),
     connection: chainId === null
       ? null
       : {
@@ -168,7 +168,7 @@ export function execCallStatic(
   return Ethereum_Module.callContractStatic({
     address: UNISWAP_ROUTER_CONTRACT,
     method: getSwapMethodAbi(swapParameters.methodName),
-    args: swapParameters.args,
+    args: sanitizeSwapArgs(swapParameters.methodName, swapParameters.args),
     connection: {
       node: null,
       networkNameOrChainId: getChainIdKey(chainId),
@@ -182,4 +182,31 @@ export function execCallStatic(
       nonce: null
     },
   }).unwrap();
+}
+
+export function sanitizeSwapArgs(method: string, args: string[]): string[] {
+  // get indexes of values to unhex
+  let toUnHex: i32[] = [];
+  if (method == "swapExactTokensForTokens") toUnHex = [0, 1, 4];
+  else if (method == "swapTokensForExactTokens") toUnHex = [0, 1, 4];
+  else if (method == "swapExactETHForTokens") toUnHex = [0, 3];
+  else if (method == "swapTokensForExactETH") toUnHex = [0, 1, 4];
+  else if (method == "swapExactTokensForETH") toUnHex = [0, 1, 4];
+  else if (method == "swapETHForExactTokens") toUnHex = [0, 3];
+  else if (method == "swapExactTokensForTokensSupportingFeeOnTransferTokens") toUnHex = [0, 1, 4];
+  else if (method == "swapExactETHForTokensSupportingFeeOnTransferTokens") toUnHex = [0, 3];
+  else if (method == "swapExactTokensForETHSupportingFeeOnTransferTokens") toUnHex = [0, 1, 4];
+  else return args;
+
+  // unhex values and remove quotes
+  let result: string[] = [];
+  for (let i = 0; i < args.length; i++) {
+    let arg = args[i].replaceAll('"', "").replaceAll("\\", "");
+    if (toUnHex.includes(i) && arg.startsWith("0x")) {
+      result.push(BigInt.fromString(arg.substring(2), 16).toString());
+    } else {
+      result.push(arg);
+    }
+  }
+  return result;
 }

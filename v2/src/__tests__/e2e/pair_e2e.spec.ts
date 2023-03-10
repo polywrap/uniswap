@@ -1,7 +1,7 @@
-import { ClientConfig, PolywrapClient } from "@polywrap/client-js";
+import { PolywrapClient } from "@polywrap/client-js";
 import * as path from "path";
 import { getPairData, getTokenList, getUniPairs } from "../testUtils";
-import { getPlugins, initInfra, stopInfra } from "../infraUtils";
+import { getBuilder, initInfra, stopInfra } from "../infraUtils";
 import * as uni from "@uniswap/sdk";
 import * as App from "./types/wrap";
 
@@ -17,8 +17,7 @@ describe('Pair', () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const config: Partial<ClientConfig> = getPlugins();
-    client = new PolywrapClient(config);
+    client = new PolywrapClient(getBuilder().build());
     // deploy api
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../..");
     fsUri = "fs/" + wrapperAbsPath + '/build';
@@ -57,7 +56,7 @@ describe('Pair', () => {
   it("off-chain pairAddress", async () => {
     for (let i = 0; i < pairs.length; i++) {
       const pair = pairs[i];
-      const actualOutput = await client.invoke<string>({
+      const result = await client.invoke<string>({
         uri: fsUri,
         method: "pairAddress",
         args: {
@@ -65,9 +64,10 @@ describe('Pair', () => {
           token1: pair.tokenAmount1.token
         },
       });
+      if (result.ok === false) throw result.error;
 
       const expectedOutput: string = uni.Pair.getAddress(uniPairs[i].token0, uniPairs[i].token1);
-      expect(actualOutput.data).toStrictEqual(expectedOutput);
+      expect(result.value).toStrictEqual(expectedOutput);
     }
   });
 
@@ -78,7 +78,7 @@ describe('Pair', () => {
         token: pair.tokenAmount0.token,
         amount: "1000000000000000000"
       }
-      const actualOutput = await client.invoke<App.TokenAmount>({
+      const result = await client.invoke<App.TokenAmount>({
         uri: fsUri,
         method: "pairOutputAmount",
         args: {
@@ -86,10 +86,11 @@ describe('Pair', () => {
           inputAmount
         },
       });
+      if (result.ok === false) throw result.error;
       const expectedOutput = uniPairs[i].getOutputAmount(new uni.TokenAmount(uniPairs[i].token0, inputAmount.amount));
       const expectedAmount = expectedOutput[0].numerator.toString();
-      expect(actualOutput.data?.token).toStrictEqual(pair.tokenAmount1.token);
-      expect(actualOutput.data?.amount).toStrictEqual(expectedAmount);
+      expect(result.value.token).toStrictEqual(pair.tokenAmount1.token);
+      expect(result.value.amount).toStrictEqual(expectedAmount);
     }
   });
 
@@ -100,7 +101,7 @@ describe('Pair', () => {
         token: pair.tokenAmount0.token,
         amount: "1000000000000000000"
       }
-      const actualNextPair = await client.invoke<App.Pair>({
+      const result = await client.invoke<App.Pair>({
         uri: fsUri,
         method: "pairOutputNextPair",
         args: {
@@ -108,11 +109,12 @@ describe('Pair', () => {
           inputAmount
         },
       });
+      if (result.ok === false) throw result.error;
       const expectedOutput = uniPairs[i].getOutputAmount(new uni.TokenAmount(uniPairs[i].token0, inputAmount.amount));
       const expectedNextReserve0 = expectedOutput[1].reserve0.numerator.toString();
       const expectedNextReserve1 = expectedOutput[1].reserve1.numerator.toString();
-      expect(actualNextPair.data?.tokenAmount0.amount).toStrictEqual(expectedNextReserve0);
-      expect(actualNextPair.data?.tokenAmount1.amount).toStrictEqual(expectedNextReserve1);
+      expect(result.value.tokenAmount0.amount).toStrictEqual(expectedNextReserve0);
+      expect(result.value.tokenAmount1.amount).toStrictEqual(expectedNextReserve1);
     }
   });
 
@@ -123,7 +125,7 @@ describe('Pair', () => {
         token: pair.tokenAmount0.token,
         amount: "100"
       }
-      const actualInput = await client.invoke<App.TokenAmount>({
+      const result = await client.invoke<App.TokenAmount>({
         uri: fsUri,
         method: "pairInputAmount",
         args: {
@@ -131,10 +133,11 @@ describe('Pair', () => {
           outputAmount
         },
       });
+      if (result.ok === false) throw result.error;
       const expectedInput = uniPairs[i].getInputAmount(new uni.TokenAmount(uniPairs[i].token0, outputAmount.amount));
       const expectedAmount = expectedInput[0].numerator.toString();
-      expect(actualInput.data?.token).toStrictEqual(pair.tokenAmount1.token);
-      expect(actualInput.data?.amount).toStrictEqual(expectedAmount);
+      expect(result.value.token).toStrictEqual(pair.tokenAmount1.token);
+      expect(result.value.amount).toStrictEqual(expectedAmount);
     }
   });
 
@@ -145,7 +148,7 @@ describe('Pair', () => {
         token: pair.tokenAmount0.token,
         amount: "100"
       }
-      const actualNextPair = await client.invoke<App.Pair>({
+      const result = await client.invoke<App.Pair>({
         uri: fsUri,
         method: "pairInputNextPair",
         args: {
@@ -153,11 +156,12 @@ describe('Pair', () => {
           outputAmount
         },
       });
+      if (result.ok === false) throw result.error;
       const expectedInput = uniPairs[i].getInputAmount(new uni.TokenAmount(uniPairs[i].token0, outputAmount.amount));
       const expectedNextReserve0 = expectedInput[1].reserve0.numerator.toString();
       const expectedNextReserve1 = expectedInput[1].reserve1.numerator.toString();
-      expect(actualNextPair.data?.tokenAmount0.amount).toStrictEqual(expectedNextReserve0);
-      expect(actualNextPair.data?.tokenAmount1.amount).toStrictEqual(expectedNextReserve1);
+      expect(result.value.tokenAmount0.amount).toStrictEqual(expectedNextReserve0);
+      expect(result.value.tokenAmount1.amount).toStrictEqual(expectedNextReserve1);
     }
   });
 

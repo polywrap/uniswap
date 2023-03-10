@@ -82,7 +82,8 @@ export function fetchPairData(args: Args_fetchPairData): Pair {
       networkNameOrChainId: getChainIdKey(token0.chainId),
     },
   }).unwrap();
-  const resArray: string[] = res.split(",");
+
+  const resArray: string[] = res.substring(1, res.length - 1).replaceAll("\"", "").split(",");
   const amountA = resArray[0];
   const amountB = resArray[1];
 

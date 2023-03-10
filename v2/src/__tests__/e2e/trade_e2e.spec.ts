@@ -1,7 +1,7 @@
-import { ClientConfig, PolywrapClient } from "@polywrap/client-js";
+import { PolywrapClient } from "@polywrap/client-js";
 import * as path from "path";
 import { getPairData, getTokenList, getUniPairs } from "../testUtils";
-import { getPlugins, initInfra, stopInfra } from "../infraUtils";
+import { getBuilder, initInfra, stopInfra } from "../infraUtils";
 import * as uni from "@uniswap/sdk";
 import * as App from "./types/wrap";
 
@@ -19,8 +19,7 @@ describe('trade e2e', () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const config: Partial<ClientConfig> = getPlugins();
-    client = new PolywrapClient(config);
+    client = new PolywrapClient(getBuilder().build());
     // deploy api
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../..");
     fsUri = "fs/" + wrapperAbsPath + '/build';
@@ -80,15 +79,17 @@ describe('trade e2e', () => {
         output: tokenOut,
       }
     });
+    if (route.ok === false) throw route.error
     const actualTrade = await client.invoke<App.Trade>({
       uri: fsUri,
       method: "createTrade",
       args: {
-        route: route.data,
+        route: route.value,
         amount: amountIn,
         tradeType: "EXACT_INPUT",
       }
     });
+    if (actualTrade.ok === false) throw actualTrade.error
     // expected trade
     const uniAmountIn: uni.TokenAmount = new uni.TokenAmount(new uni.Token(
       1,
@@ -107,11 +108,11 @@ describe('trade e2e', () => {
     const expectedRoute: uni.Route = new uni.Route(uniRoutePairs, uniAmountIn.currency, uniTokenOut)
     const expectedTrade: uni.Trade = new uni.Trade(expectedRoute, uniAmountIn, 0);
     // compare paths
-    const actualPath: string[] = actualTrade.data?.route.path.map(token => token.currency.symbol || "")!;
+    const actualPath: string[] = actualTrade.value.route.path.map(token => token.currency.symbol || "")!;
     const expectedPath: string[] = expectedTrade.route.path.map(token => token.symbol ?? "");
     expect(actualPath).toStrictEqual(expectedPath);
     // compare output amounts
-    expect(actualTrade.data?.outputAmount.amount).toStrictEqual(expectedTrade.outputAmount.numerator.toString());
+    expect(actualTrade.value.outputAmount.amount).toStrictEqual(expectedTrade.outputAmount.numerator.toString());
   });
 
   it('finds the best trade for exact input (default options)', async () => {
@@ -136,7 +137,8 @@ describe('trade e2e', () => {
             options: null
           }
         });
-        const actualTrades: App.Trade[] = invocation.data ?? [];
+        if (invocation.ok == false) throw invocation.error;
+        const actualTrades: App.Trade[] = invocation.value;
         // expected best trades
         const uniAmountIn: uni.TokenAmount = new uni.TokenAmount(new uni.Token(
           1,
@@ -157,7 +159,6 @@ describe('trade e2e', () => {
         if (actualTrades.length !== expectedTrades.length) {
           console.log("actual path: " + actualTrades[0]?.route.path.map(token => token.currency.symbol).toString())
           console.log("expected path: " + expectedTrades[0]?.route.path.map(token => token.symbol).toString())
-          console.log(invocation.error);
         }
         expect(actualTrades.length).toStrictEqual(expectedTrades.length);
         if (actualTrades.length === 0 && expectedTrades.length === 0) {
@@ -202,7 +203,8 @@ describe('trade e2e', () => {
             options: null
           }
         });
-        const actualTrades: App.Trade[] = invocation.data ?? [];
+        if (invocation.ok === false) throw invocation.error;
+        const actualTrades: App.Trade[] = invocation.value;
         // expected best trades
         const uniTokenIn: uni.Token = new uni.Token(
           1,
@@ -223,7 +225,6 @@ describe('trade e2e', () => {
         if (actualTrades.length !== expectedTrades.length) {
           console.log("actual path: " + actualTrades[0]?.route.path.map(token => token.currency.symbol).toString())
           console.log("expected path: " + expectedTrades[0]?.route.path.map(token => token.symbol).toString())
-          console.log(invocation.error);
         }
         expect(actualTrades.length).toStrictEqual(expectedTrades.length);
         if (actualTrades.length === 0 && expectedTrades.length === 0) {
@@ -264,7 +265,8 @@ describe('trade e2e', () => {
         options: null
       }
     });
-    const actualTrades: App.Trade[] = invocation.data ?? [];
+    if (invocation.ok === false) throw invocation.error;
+    const actualTrades: App.Trade[] = invocation.value;
     // expected best trades
     const uniAmountIn: uni.CurrencyAmount = uni.CurrencyAmount.ether(amountIn.amount);
     const uniTokenOut: uni.Token = new uni.Token(
@@ -279,7 +281,6 @@ describe('trade e2e', () => {
     if (actualTrades.length !== expectedTrades.length) {
       console.log("actual path: " + actualTrades[0]?.route.path.map(token => token.currency.symbol).toString())
       console.log("expected path: " + expectedTrades[0]?.route.path.map(token => token.symbol).toString())
-      console.log(invocation.error);
     }
     expect(actualTrades.length).toStrictEqual(expectedTrades.length);
     expect(actualTrades[0].tradeType).toStrictEqual(expectedTrades[0].tradeType);
@@ -321,7 +322,8 @@ describe('trade e2e', () => {
         options: null
       }
     });
-    const actualTrades: App.Trade[] = invocation.data ?? [];
+    if (invocation.ok === false) throw invocation.error;
+    const actualTrades: App.Trade[] = invocation.value;
     // expected best trades
     const uniAmountIn: uni.TokenAmount = new uni.TokenAmount(new uni.Token(
       1,
@@ -336,7 +338,6 @@ describe('trade e2e', () => {
     if (actualTrades.length !== expectedTrades.length) {
       console.log("actual path: " + actualTrades[0]?.route.path.map(token => token.currency.symbol).toString())
       console.log("expected path: " + expectedTrades[0]?.route.path.map(token => token.symbol).toString())
-      console.log(invocation.error);
     }
     expect(actualTrades.length).toStrictEqual(expectedTrades.length);
     expect(actualTrades[0].tradeType).toStrictEqual(expectedTrades[0].tradeType);
@@ -378,7 +379,8 @@ describe('trade e2e', () => {
         options: null
       }
     });
-    const actualTrades: App.Trade[] = invocation.data ?? [];
+    if (invocation.ok === false) throw invocation.error;
+    const actualTrades: App.Trade[] = invocation.value;
     // expected best trades
     const uniTokenIn: uni.Currency = uni.ETHER;
     const uniAmountOut: uni.TokenAmount = new uni.TokenAmount(new uni.Token(
@@ -393,7 +395,6 @@ describe('trade e2e', () => {
     if (actualTrades.length !== expectedTrades.length) {
       console.log("actual path: " + actualTrades[0]?.route.path.map(token => token.currency.symbol).toString())
       console.log("expected path: " + expectedTrades[0]?.route.path.map(token => token.symbol).toString())
-      console.log(invocation.error);
     }
     expect(actualTrades.length).toStrictEqual(expectedTrades.length);
     expect(actualTrades[0].tradeType).toStrictEqual(expectedTrades[0].tradeType);
@@ -435,7 +436,8 @@ describe('trade e2e', () => {
         options: null
       }
     });
-    const actualTrades: App.Trade[] = invocation.data ?? [];
+    if (invocation.ok === false) throw invocation.error;
+    const actualTrades: App.Trade[] = invocation.value;
     // expected best trades
     const uniTokenIn: uni.Currency = new uni.Token(
       1,
@@ -450,7 +452,6 @@ describe('trade e2e', () => {
     if (actualTrades.length !== expectedTrades.length) {
       console.log("actual path: " + actualTrades[0]?.route.path.map(token => token.currency.symbol).toString())
       console.log("expected path: " + expectedTrades[0]?.route.path.map(token => token.symbol).toString())
-      console.log(invocation.error)
     }
     expect(actualTrades.length).toStrictEqual(expectedTrades.length);
     expect(actualTrades[0].tradeType).toStrictEqual(expectedTrades[0].tradeType);

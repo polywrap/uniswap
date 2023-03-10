@@ -15,7 +15,7 @@ import {
   TxOverrides,
 } from "../wrap";
 import { getSwapMethodAbi, UNISWAP_ROUTER_CONTRACT } from "../utils";
-import { swapCallParameters, toHex } from "./router";
+import {swapCallParameters, sanitizeSwapArgs} from "./router";
 import { fetchPairData } from "./fetch";
 import { createTrade } from "./trade";
 import { createRoute } from "./route";
@@ -48,7 +48,7 @@ export function execCall(args: Args_execCall): Ethereum_TxResponse {
   return Ethereum_Module.callContractMethod({
     address: UNISWAP_ROUTER_CONTRACT,
     method: getSwapMethodAbi(swapParameters.methodName),
-    args: swapParameters.args,
+    args: sanitizeSwapArgs(swapParameters.methodName, swapParameters.args),
     connection: {
       node: null,
       networkNameOrChainId: getChainIdKey(chainId),
@@ -102,7 +102,7 @@ export function approve(args: Args_approve): Ethereum_TxResponse {
     address: args.token.address,
     method:
       "function approve(address spender, uint value) external returns (bool)",
-    args: [UNISWAP_ROUTER_CONTRACT, toHex(amount)],
+    args: [UNISWAP_ROUTER_CONTRACT, amount.toString()],
     connection: {
       node: null,
       networkNameOrChainId: getChainIdKey(args.token.chainId),

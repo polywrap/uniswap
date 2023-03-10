@@ -1,7 +1,7 @@
-import { ClientConfig, PolywrapClient } from "@polywrap/client-js";
+import { PolywrapClient } from "@polywrap/client-js";
 import * as path from "path";
 import { getPairData, getTokenList, getUniPairs } from "../testUtils";
-import { getPlugins, initInfra, stopInfra } from "../infraUtils";
+import { getBuilder, initInfra, stopInfra } from "../infraUtils";
 import * as uni from "@uniswap/sdk";
 import * as App from "./types/wrap";
 
@@ -19,8 +19,7 @@ describe('Route', () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const config: Partial<ClientConfig> = getPlugins();
-    client = new PolywrapClient(config);
+    client = new PolywrapClient(getBuilder().build());
     // deploy api
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../..");
     fsUri = "fs/" + wrapperAbsPath + '/build';
@@ -75,7 +74,7 @@ describe('Route', () => {
       const inputToken = inputTokens[i];
       const outputToken = outputTokens[i];
       // actual route
-      const actualRoute = await client.invoke<App.Route>({
+      const result = await client.invoke<App.Route>({
         uri: fsUri,
         method: "createRoute",
         args: {
@@ -84,6 +83,7 @@ describe('Route', () => {
           output: outputToken,
         }
       });
+      if (result.ok === false) throw result.error;
       // expected route
       const uniInputToken: uni.Token = new uni.Token(
         1,
@@ -101,15 +101,15 @@ describe('Route', () => {
       )
       const expectedRoute = new uni.Route(uniPairs, uniInputToken, uniOutputToken);
       // compare input
-      const actualRouteInput: string = actualRoute.data?.input.address ?? "";
+      const actualRouteInput: string = result.value.input.address ?? "";
       const expectedRouteInput: string = (expectedRoute.input as uni.Token).address;
       expect(actualRouteInput).toStrictEqual(expectedRouteInput);
       // compare output
-      const actualRouteOutput: string = actualRoute.data?.output.address ?? "";
+      const actualRouteOutput: string = result.value.output.address ?? "";
       const expectedRouteOutput: string = (expectedRoute.output as uni.Token).address;
       expect(actualRouteOutput).toStrictEqual(expectedRouteOutput);
       // compare path
-      const actualRoutePath: string[] = actualRoute.data?.path?.map(token => token.address) ?? [];
+      const actualRoutePath: string[] = result.value.path?.map(token => token.address) ?? [];
       const expectedRoutePath: string[] = expectedRoute.path.map(token => token.address);
       expect(actualRoutePath).toStrictEqual(expectedRoutePath);
     }
@@ -131,6 +131,7 @@ describe('Route', () => {
           output: outputToken,
         }
       });
+      if (actualRoute.ok === false) throw actualRoute.error;
       // expected route
       const uniInputToken: uni.Token = new uni.Token(
         1,
@@ -148,15 +149,16 @@ describe('Route', () => {
       )
       const expectedRoute = new uni.Route(uniPairs, uniInputToken, uniOutputToken);
       // actual midPrice
-      const actualMidPrice = await client.invoke<string>({
+      const result = await client.invoke<string>({
         uri: fsUri,
         method: "routeMidPrice",
         args: {
-          route: actualRoute?.data,
+          route: actualRoute.value,
         }
       });
+      if (result.ok === false) throw result.error;
       // make sure price is correct
-      const actualRouteMidPrice: string = actualMidPrice.data!
+      const actualRouteMidPrice: string = result.value
       const expectedRouteMidPrice: string = expectedRoute.midPrice.toFixed(18);
       expect(actualRouteMidPrice).toStrictEqual(expectedRouteMidPrice);
     }

@@ -1,23 +1,23 @@
 import { runCLI } from "@polywrap/test-env-js";
 import axios from "axios";
-import {CoreClientConfig, IUriPackage} from "@polywrap/client-js";
+import {ClientConfigBuilder, IClientConfigBuilder, IWrapPackage} from "@polywrap/client-js";
 import {Connection, Connections, ethereumProviderPlugin} from "@polywrap/ethereum-provider-js";
-import {Uri} from "@polywrap/core-js";
+import {DefaultBundle} from "@polywrap/client-config-builder-js";
 
-export function getPlugins(): IUriPackage[] {
-  return [
-      {
-        uri: Uri.from("wrap://ens/ethereum.polywrap.eth"),
-        package: ethereumProviderPlugin({
-          connections: new Connections({
-            networks: {
-              MAINNET: new Connection({ provider: "http://localhost:8546" }),
-            },
-            defaultNetwork: "MAINNET"
-          }),
-        }),
-      }
-    ];
+export function getBuilder(): IClientConfigBuilder {
+  return new ClientConfigBuilder()
+    .addDefaults()
+    .addPackage(
+    DefaultBundle.plugins.ethereumProvider.uri.uri,
+    ethereumProviderPlugin({
+      connections: new Connections({
+        networks: {
+          MAINNET: new Connection({ provider: "http://localhost:8546" }),
+        },
+        defaultNetwork: "MAINNET"
+      }),
+    }) as IWrapPackage
+  );
 }
 
 export async function initInfra(): Promise<void> {

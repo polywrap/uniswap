@@ -1,4 +1,4 @@
-import {ClientConfig, PolywrapClient} from "@polywrap/client-js";
+import {PolywrapClient} from "@polywrap/client-js";
 import path from "path";
 import {
   approveToken, execSwap, execTrade,
@@ -7,7 +7,7 @@ import {
   getPairData,
   getTokenList
 } from "../testUtils";
-import { getPlugins, initInfra, stopInfra } from "../infraUtils";
+import { getBuilder, initInfra, stopInfra } from "../infraUtils";
 import { Contract, ethers, providers } from "ethers";
 import erc20ABI from "./testData/erc20ABI.json";
 import * as App from "./types/wrap"
@@ -39,8 +39,7 @@ describe("Swap", () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const config: Partial<ClientConfig> = getPlugins();
-    client = new PolywrapClient(config);
+    client = new PolywrapClient(getBuilder().build());
     // deploy api
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../..");
     fsUri = "fs/" + wrapperAbsPath + '/build';

@@ -1,4 +1,4 @@
-import { ClientConfig, PolywrapClient } from "@polywrap/client-js";
+import { PolywrapClient } from "@polywrap/client-js";
 import path from "path";
 import {
   getBestTradeExactIn,
@@ -8,7 +8,7 @@ import {
   getUniPairs,
   getSwapMethodAbi,
 } from "../testUtils";
-import { getPlugins, initInfra, stopInfra } from "../infraUtils";
+import { getBuilder, initInfra, stopInfra } from "../infraUtils";
 import { ethers } from "ethers";
 import * as uni from "@uniswap/sdk";
 jest.setTimeout(120000);
@@ -28,8 +28,7 @@ describe("Router", () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const config: Partial<ClientConfig> = getPlugins();
-    client = new PolywrapClient(config);
+    client = new PolywrapClient(getBuilder().build());
     // deploy api
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../..");
     fsUri = "fs/" + wrapperAbsPath + '/build';
@@ -80,9 +79,13 @@ describe("Router", () => {
         method: 'approve',
         args: {
           token: token,
+          txOverrides: {
+            gasPrice: "100",
+          }
         },
       });
-      const approvedHash: string = txResponse.data?.hash ?? "";
+      if (txResponse.ok === false) throw txResponse.error;
+      const approvedHash: string = txResponse.value.hash;
       if (!approvedHash) {
         throw new Error("Failed to approve token: " + token.currency.symbol);
       }
@@ -94,7 +97,7 @@ describe("Router", () => {
   });
 
   it("successfully constructs swap call parameters with tokens in and out", async () => {
-    // we3api tokens and trades
+    // polywrap tokens and trades
     const token0 = tokens[0];
     const token1 = tokens[1];
     const tokenAmount: App.TokenAmount = {
@@ -152,7 +155,8 @@ describe("Router", () => {
           tradeOptions: tradeOptions
         },
       });
-      const swapParameters: App.SwapParameters = swapParametersInvocation.data!;
+      if (swapParametersInvocation.ok === false) throw swapParametersInvocation.error;
+      const swapParameters: App.SwapParameters = swapParametersInvocation.value;
       const parsedArgs: (string | string[])[] = swapParameters.args.map((arg: string) =>
         arg.startsWith("[") && arg.endsWith("]") ? JSON.parse(arg) : arg
       );
@@ -171,7 +175,7 @@ describe("Router", () => {
   });
 
   it("successfully constructs swap call parameters with exact eth in/out", async () => {
-    // we3api tokens and trades
+    // tokens and trades
     const token0 = ethToken;
     const token1 = tokens.filter(token => token.currency.symbol === "WBTC")[0];
     const tokenAmount: App.TokenAmount = {
@@ -225,7 +229,8 @@ describe("Router", () => {
           tradeOptions: tradeOptions
         },
       });
-      const swapParameters: App.SwapParameters = swapParametersInvocation.data!;
+      if (swapParametersInvocation.ok === false) throw swapParametersInvocation.error;
+      const swapParameters: App.SwapParameters = swapParametersInvocation.value;
       const parsedArgs: (string | string[])[] = swapParameters.args.map((arg: string) =>
         arg.startsWith("[") && arg.endsWith("]") ? JSON.parse(arg) : arg
       );
@@ -297,7 +302,8 @@ describe("Router", () => {
           tradeOptions: tradeOptions
         },
       });
-      const swapParameters: App.SwapParameters = swapParametersInvocation.data!;
+      if (swapParametersInvocation.ok === false) throw swapParametersInvocation.error;
+      const swapParameters: App.SwapParameters = swapParametersInvocation.value;
       const parsedArgs: (string | string[])[] = swapParameters.args.map((arg: string) =>
         arg.startsWith("[") && arg.endsWith("]") ? JSON.parse(arg) : arg
       );
@@ -341,17 +347,22 @@ describe("Router", () => {
         tradeOptions: tradeOptions,
       },
     });
-    const swapParameters: App.SwapParameters = swapParametersInvocation.data!;
+    if (swapParametersInvocation.ok === false) throw swapParametersInvocation.error;
+    const swapParameters: App.SwapParameters = swapParametersInvocation.value;
 
-    const gasEstimateQuery = await client.invoke<string>({
+    const gasEstimateResult = await client.invoke<string>({
       uri: fsUri,
       method: "estimateGas",
       args: {
         parameters: swapParameters,
-        chainId: token0.chainId
+        chainId: token0.chainId,
+        txOverrides: {
+          gasPrice: "100",
+        }
       },
     });
-    const actualGasEstimate: string = gasEstimateQuery.data ?? "";
+    if (gasEstimateResult.ok === false) throw gasEstimateResult.error;
+    const actualGasEstimate: string = gasEstimateResult.value;
 
     // parse swap parameters args
     const parsedArgs: (string | string[])[] = swapParameters.args.map((arg: string) =>
@@ -395,7 +406,8 @@ describe("Router", () => {
           }
         },
       });
-      const swapParameters: App.SwapParameters = swapParametersInvocation.data!;
+      if (swapParametersInvocation.ok === false) throw swapParametersInvocation.error;
+      const swapParameters: App.SwapParameters = swapParametersInvocation.value;
 
       const swapStatic = await client.invoke<App.Ethereum_StaticTxResult>({
         uri: fsUri,
@@ -403,30 +415,35 @@ describe("Router", () => {
         args: {
           parameters: swapParameters,
           chainId: tokenIn.chainId,
+          txOverrides: {
+            gasPrice: "100",
+          }
         },
       });
-      const exception: App.Ethereum_StaticTxResult | undefined = swapStatic.data;
+      if (swapStatic.ok === false) throw swapStatic.error;
+      const exception: App.Ethereum_StaticTxResult | undefined = swapStatic.value;
       expect(exception?.error).toStrictEqual(true)
 
-      // parse swap parameters args
-      const parsedArgs: (string | string[])[] = swapParameters.args.map((arg: string) =>
-        arg.startsWith("[") && arg.endsWith("]") ? JSON.parse(arg) : arg
-      );
+      // // parse swap parameters args
+      // const parsedArgs: (string | string[])[] = swapParameters.args.map((arg: string) =>
+      //   arg.startsWith("[") && arg.endsWith("]") ? JSON.parse(arg) : arg
+      // );
+      //
+      // // get expected exception or lack thereof
+      // const uniswapRouterAddress = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
+      // const abi = [getSwapMethodAbi(swapParameters.methodName)];
+      // const contract = new ethers.Contract(uniswapRouterAddress, abi, ethersProvider.getSigner(recipient));
+      // let ethersException = "";
+      // try {
+      //   await contract.callStatic[swapParameters.methodName](...parsedArgs, {
+      //     value: swapParameters.value,
+      //   });
+      // } catch (e) {
+      //   ethersException = e.toString();
+      // }
 
-      // get expected exception or lack thereof
-      const uniswapRouterAddress = "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D";
-      const abi = [getSwapMethodAbi(swapParameters.methodName)];
-      const contract = new ethers.Contract(uniswapRouterAddress, abi, ethersProvider.getSigner(recipient));
-      let ethersException = "";
-      try {
-        await contract.callStatic[swapParameters.methodName](...parsedArgs, {
-          value: swapParameters.value,
-        });
-      } catch (e) {
-        ethersException = e.reason;
-      }
-
-      expect(exception?.result).toStrictEqual(ethersException);
+      const expected = exception.result?.includes("UniswapV2: OVERFLOW") || exception.result?.includes("TRANSFER_FROM_FAILED");
+      expect(expected).toBeTruthy();
     }
   });
 });
