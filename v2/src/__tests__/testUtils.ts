@@ -23,7 +23,7 @@ export async function getTokenList(): Promise<App.Token[]> {
 }
 
 export async function getPairData(token0: App.Token, token1: App.Token, client: PolywrapClient, ensUri: string): Promise<App.Pair | undefined> {
-  const pairData = await client.invoke<App.Pair>({
+  const result = await client.invoke<App.Pair>({
     uri: ensUri,
     method: "fetchPairData",
     args: {
@@ -31,12 +31,8 @@ export async function getPairData(token0: App.Token, token1: App.Token, client: 
       token1: token1
     },
   });
-
-  if (pairData.error) {
-    throw pairData.error;
-  }
-
-  return pairData.data;
+  if (!result.ok) throw result.error;
+  return result.value;
 }
 
 export function getUniPairs(pairs: App.Pair[], chainId: number): uni.Pair[] {
@@ -74,7 +70,7 @@ export async function getBestTradeExactIn(
   client: PolywrapClient,
   ensUri: string
 ): Promise<App.Trade[]> {
-  const invocation = await client.invoke<App.Trade[]>({
+  const result = await client.invoke<App.Trade[]>({
     uri: ensUri,
     method: "bestTradeExactIn",
     args: {
@@ -84,11 +80,8 @@ export async function getBestTradeExactIn(
       options: bestTradeOptions ?? null
     }
   })
-  const result: App.Trade[] | undefined = invocation.data
-  if (invocation.error) {
-    console.log(invocation.error)
-  }
-  return result!
+  if (!result.ok) throw result.error;
+  return result.value;
 }
 
 export async function getBestTradeExactOut(
@@ -99,7 +92,7 @@ export async function getBestTradeExactOut(
   client: PolywrapClient,
   ensUri: string
 ): Promise<App.Trade[]> {
-  const invocation = await client.invoke<App.Trade[]>({
+  const result = await client.invoke<App.Trade[]>({
     uri: ensUri,
     method: "bestTradeExactOut",
     args: {
@@ -109,11 +102,8 @@ export async function getBestTradeExactOut(
       options: bestTradeOptions ?? null
     }
   })
-  const result: App.Trade[] | undefined = invocation.data
-  if (invocation.error) {
-    console.log(invocation.error)
-  }
-  return result!
+  if (!result.ok) throw result.error;
+  return result.value;
 }
 
 export async function approveToken(
@@ -121,18 +111,15 @@ export async function approveToken(
   client: PolywrapClient,
   ensUri: string
 ): Promise<App.Ethereum_TxResponse> {
-  const invocation = await client.invoke<App.Ethereum_TxResponse>({
+  const result = await client.invoke<App.Ethereum_TxResponse>({
     uri: ensUri,
     method: "approve",
     args: {
       token,
     },
   });
-  const result: App.Ethereum_TxResponse | undefined = invocation.data
-  if (invocation.error) {
-    console.log(invocation.error)
-  }
-  return result!;
+  if (!result.ok) throw result.error;
+  return result.value;
 }
 
 export async function execTrade(
@@ -141,7 +128,7 @@ export async function execTrade(
   client: PolywrapClient,
   uri: string
 ): Promise<App.Ethereum_TxResponse> {
-  const invocation = await client.invoke<App.Ethereum_TxResponse>({
+  const result = await client.invoke<App.Ethereum_TxResponse>({
     uri: uri,
     method: "exec",
     args: {
@@ -149,11 +136,8 @@ export async function execTrade(
       tradeOptions,
     },
   });
-  const result: App.Ethereum_TxResponse | undefined = invocation.data
-  if (invocation.error) {
-    console.log(invocation.error)
-  }
-  return result!;
+  if (!result.ok) throw result.error;
+  return result.value;
 }
 
 export async function execSwap(
@@ -165,7 +149,7 @@ export async function execSwap(
   client: PolywrapClient,
   uri: string
 ): Promise<App.Ethereum_TxResponse> {
-  const invocation = await client.invoke<App.Ethereum_TxResponse>({
+  const result = await client.invoke<App.Ethereum_TxResponse>({
     uri: uri,
     method: "swap",
     args: {
@@ -176,11 +160,8 @@ export async function execSwap(
       tradeOptions: tradeOptions
     },
   });
-  const result: App.Ethereum_TxResponse | undefined = invocation.data
-  if (invocation.error) {
-    console.log(invocation.error)
-  }
-  return result!;
+  if (!result.ok) throw result.error;
+  return result.value;
 }
 
 export function getSwapMethodAbi(methodName: string): string {

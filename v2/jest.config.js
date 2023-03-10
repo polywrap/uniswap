@@ -6,8 +6,9 @@ module.exports = {
   modulePathIgnorePatterns: [
     './src/__tests__/entities',
     './src/__tests__/utils',
-    `.polywrap`
+    `/.polywrap`
   ],
+  testPathIgnorePatterns: [`/.polywrap`],
   globals: {
     'ts-jest': {
       tsconfig: "tsconfig.ts.json",

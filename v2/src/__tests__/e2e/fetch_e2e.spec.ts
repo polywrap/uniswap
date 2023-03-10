@@ -1,4 +1,4 @@
-import { ClientConfig, PolywrapClient } from "@polywrap/client-js";
+import { CoreClientConfig, PolywrapClient } from "@polywrap/client-js";
 import path from "path";
 import { getTokenList } from "../testUtils";
 import { getPlugins, initInfra, stopInfra } from "../infraUtils";
@@ -21,7 +21,7 @@ describe("Fetch", () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const config: Partial<ClientConfig> = getPlugins();
+    const config: Partial<CoreClientConfig> = getPlugins();
     client = new PolywrapClient(config);
     // deploy api
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../..");
