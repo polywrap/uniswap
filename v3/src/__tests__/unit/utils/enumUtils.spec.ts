@@ -1,16 +1,18 @@
 import { getFeeAmountEnum } from "../../../utils";
 import { FeeAmount, PermitV } from "../../../wrap";
-import { feeAmountToTickSpacing, getFeeAmount, getPermitV } from "../../..";
+import { Module } from "../../..";
+
+const module: Module = new Module();
 
 describe('Enum utils', () => {
 
   it('getFeeAmount', () => {
-    expect(getFeeAmount({ feeAmount: FeeAmount.LOWEST })).toStrictEqual(100);
-    expect(getFeeAmount({ feeAmount: FeeAmount.LOW })).toStrictEqual(500);
-    expect(getFeeAmount({ feeAmount: FeeAmount.MEDIUM })).toStrictEqual(3000);
-    expect(getFeeAmount({ feeAmount: FeeAmount.HIGH })).toStrictEqual(10000);
+    expect(module.getFeeAmount({ feeAmount: FeeAmount.LOWEST })).toStrictEqual(100);
+    expect(module.getFeeAmount({ feeAmount: FeeAmount.LOW })).toStrictEqual(500);
+    expect(module.getFeeAmount({ feeAmount: FeeAmount.MEDIUM })).toStrictEqual(3000);
+    expect(module.getFeeAmount({ feeAmount: FeeAmount.HIGH })).toStrictEqual(10000);
 
-    const error = (): void => { getFeeAmount({ feeAmount: 7 }) };
+    const error = (): void => { module.getFeeAmount({ feeAmount: 7 }) };
     expect(error).toThrow();
   });
 
@@ -24,22 +26,22 @@ describe('Enum utils', () => {
   });
 
   it('getTickSpacings', () => {
-    expect(feeAmountToTickSpacing({ feeAmount: FeeAmount.LOWEST})).toStrictEqual(1);
-    expect(feeAmountToTickSpacing({ feeAmount: FeeAmount.LOW})).toStrictEqual(10);
-    expect(feeAmountToTickSpacing({ feeAmount: FeeAmount.MEDIUM})).toStrictEqual(60);
-    expect(feeAmountToTickSpacing({ feeAmount: FeeAmount.HIGH})).toStrictEqual(200);
+    expect(module.feeAmountToTickSpacing({ feeAmount: FeeAmount.LOWEST})).toStrictEqual(1);
+    expect(module.feeAmountToTickSpacing({ feeAmount: FeeAmount.LOW})).toStrictEqual(10);
+    expect(module.feeAmountToTickSpacing({ feeAmount: FeeAmount.MEDIUM})).toStrictEqual(60);
+    expect(module.feeAmountToTickSpacing({ feeAmount: FeeAmount.HIGH})).toStrictEqual(200);
 
-    const error = (): void => { feeAmountToTickSpacing({ feeAmount: 7 }) };
+    const error = (): void => { module.feeAmountToTickSpacing({ feeAmount: 7 }) };
     expect(error).toThrow();
   });
 
   it('getPermitV', () => {
-    expect(getPermitV({ permitV: PermitV.v_0 })).toStrictEqual(0);
-    expect(getPermitV({ permitV: PermitV.v_1 })).toStrictEqual(1);
-    expect(getPermitV({ permitV: PermitV.v_27 })).toStrictEqual(27);
-    expect(getPermitV({ permitV: PermitV.v_28 })).toStrictEqual(28);
+    expect(module.getPermitV({ permitV: PermitV.v_0 })).toStrictEqual(0);
+    expect(module.getPermitV({ permitV: PermitV.v_1 })).toStrictEqual(1);
+    expect(module.getPermitV({ permitV: PermitV.v_27 })).toStrictEqual(27);
+    expect(module.getPermitV({ permitV: PermitV.v_28 })).toStrictEqual(28);
 
-    const error = (): void => { getPermitV({ permitV: 7 }) };
+    const error = (): void => { module.getPermitV({ permitV: 7 }) };
     expect(error).toThrow();
   });
 });
