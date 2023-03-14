@@ -1,13 +1,8 @@
 import { Box, BigInt } from "@polywrap/wasm-as";
-import {
-  createRoute,
-  bestTradeExactIn,
-  bestTradeExactOut,
-  createTrade,
-  tradeMaximumAmountIn,
-  tradeMinimumAmountOut
-} from "../../index";
+import { Module } from "../../index";
 import { ChainId, Pair, Token, TradeType } from "../../wrap";
+
+const module: Module = new Module();
 
 const token0: Token = {
   chainId: ChainId.MAINNET,
@@ -127,8 +122,8 @@ const empty_pair_0_1: Pair = {
 //   }
 // }
 
-const exactIn = createTrade({
-  route: createRoute({
+const exactIn = module.createTrade({
+  route: module.createRoute({
     pairs: [pair_0_1, pair_1_2],
     input: token0,
     output: null,
@@ -139,8 +134,8 @@ const exactIn = createTrade({
   },
   tradeType: TradeType.EXACT_INPUT
 })
-const exactOut = createTrade({
-  route: createRoute({
+const exactOut = module.createTrade({
+  route: module.createRoute({
     pairs: [pair_0_1, pair_1_2],
     input: token0,
     output: null,
@@ -157,7 +152,7 @@ describe("Trade", () => {
   describe("bestTradeExactIn", () => {
     test("throws with empty pairs", () => {
       expect(() => {
-        bestTradeExactIn({
+        module.bestTradeExactIn({
           pairs: [],
           amountIn: {
             token: token0,
@@ -171,7 +166,7 @@ describe("Trade", () => {
 
     test("throws with max hops of 0", () => {
       expect(() => {
-        bestTradeExactIn({
+        module.bestTradeExactIn({
           pairs: [pair_0_2],
           amountIn: {
             token: token0,
@@ -187,7 +182,7 @@ describe("Trade", () => {
     })
 
     test("provides best route", () => {
-      const result = bestTradeExactIn({
+      const result = module.bestTradeExactIn({
         pairs: [
           pair_0_1, pair_0_2, pair_1_2
         ],
@@ -215,7 +210,7 @@ describe("Trade", () => {
     });
 
     test("doesn't throw for zero liquidity pairs", () => {
-      const result =  bestTradeExactIn({
+      const result =  module.bestTradeExactIn({
         pairs: [empty_pair_0_1],
         amountIn: {
           token: token0,
@@ -228,7 +223,7 @@ describe("Trade", () => {
     });
 
     test("respects maxHops", () => {
-      const result =  bestTradeExactIn({
+      const result =  module.bestTradeExactIn({
         pairs: [pair_0_1, pair_0_2, pair_1_2],
         amountIn: {
           token: token0,
@@ -247,7 +242,7 @@ describe("Trade", () => {
     });
 
     test("insufficient input for one pair", () => {
-      const result =  bestTradeExactIn({
+      const result =  module.bestTradeExactIn({
         pairs: [pair_0_1, pair_0_2, pair_1_2],
         amountIn: {
           token: token0,
@@ -271,7 +266,7 @@ describe("Trade", () => {
 
 
     test("respects n", () => {
-      const result =  bestTradeExactIn({
+      const result =  module.bestTradeExactIn({
         pairs: [pair_0_1, pair_0_2, pair_1_2],
         amountIn: {
           token: token0,
@@ -289,7 +284,7 @@ describe("Trade", () => {
     });
 
     test("no path", () => {
-      const result =  bestTradeExactIn({
+      const result =  module.bestTradeExactIn({
         pairs: [pair_0_1, pair_0_3, pair_1_3],
         amountIn: {
           token: token0,
@@ -304,7 +299,7 @@ describe("Trade", () => {
 
     // TODO: WETH bestTrade as-pect unit tests are not compiling correctly (e.g. the expected token is changing values without being modified and more)
     // test("exactIn accepts Eth input", () => {
-    //   const result =  bestTradeExactIn({
+    //   const result =  module.bestTradeExactIn({
     //     pairs: [pair_weth_1, pair_0_1, pair_0_3, pair_1_3],
     //     amountIn: {
     //       token: tokenEth,
@@ -323,7 +318,7 @@ describe("Trade", () => {
     // });
     //
     // test("exactIn accepts Eth output", () => {
-    //   const result =  bestTradeExactIn({
+    //   const result =  module.bestTradeExactIn({
     //     pairs: [pair_weth_1, pair_0_1, pair_0_3, pair_1_3],
     //     amountIn: {
     //       token: token1,
@@ -339,7 +334,7 @@ describe("Trade", () => {
     // });
     //
     // test("exactOut accepts Eth input", () => {
-    //   const result =  bestTradeExactOut({
+    //   const result =  module.bestTradeExactOut({
     //     pairs: [pair_weth_1, pair_0_1, pair_0_3, pair_1_3],
     //     amountOut: {
     //       token: token1,
@@ -355,7 +350,7 @@ describe("Trade", () => {
     // });
     //
     // test("exactOut accepts Eth output", () => {
-    //   const result =  bestTradeExactOut({
+    //   const result =  module.bestTradeExactOut({
     //     pairs: [pair_weth_1, pair_0_1, pair_0_3, pair_1_3],
     //     amountOut: {
     //       token: tokenEth,
@@ -378,7 +373,7 @@ describe("Trade", () => {
   describe("bestTradeExactOut", () => {
     test("throws with empty pairs", () => {
       expect(() => {
-        bestTradeExactOut({
+        module.bestTradeExactOut({
           pairs: [],
           amountOut: {
             token: token2,
@@ -392,7 +387,7 @@ describe("Trade", () => {
 
     test("throws with max hops of 0", () => {
       expect(() => {
-        bestTradeExactOut({
+        module.bestTradeExactOut({
           pairs: [pair_0_2],
           amountOut: {
             token: token2,
@@ -408,7 +403,7 @@ describe("Trade", () => {
     })
 
     test("provides best route", () => {
-      const result = bestTradeExactOut({
+      const result = module.bestTradeExactOut({
         pairs: [
           pair_0_1, pair_0_2, pair_1_2
         ],
@@ -444,7 +439,7 @@ describe("Trade", () => {
     });
 
     test("doesn't throw for zero liquidity pairs", () => {
-      const result =  bestTradeExactOut({
+      const result =  module.bestTradeExactOut({
         pairs: [empty_pair_0_1],
         amountOut: {
           token: token1,
@@ -457,7 +452,7 @@ describe("Trade", () => {
     });
 
     test("respects maxHops", () => {
-      const result =  bestTradeExactOut({
+      const result =  module.bestTradeExactOut({
         pairs: [pair_0_1, pair_0_2, pair_1_2],
         amountOut: {
           token: token2,
@@ -476,7 +471,7 @@ describe("Trade", () => {
     });
 
     test("insufficient liquidity", () => {
-      const result =  bestTradeExactOut({
+      const result =  module.bestTradeExactOut({
         pairs: [pair_0_1, pair_0_2, pair_1_2],
         amountOut: {
           token: token2,
@@ -490,7 +485,7 @@ describe("Trade", () => {
     });
 
     test("insufficient liquidity in one pair but not the other", () => {
-      const result =  bestTradeExactOut({
+      const result =  module.bestTradeExactOut({
         pairs: [pair_0_1, pair_0_2, pair_1_2],
         amountOut: {
           token: token2,
@@ -504,7 +499,7 @@ describe("Trade", () => {
     });
 
     test("respects n", () => {
-      const result =  bestTradeExactOut({
+      const result =  module.bestTradeExactOut({
         pairs: [pair_0_1, pair_0_2, pair_1_2],
         amountOut: {
           token: token2,
@@ -522,7 +517,7 @@ describe("Trade", () => {
     });
 
     test("no path", () => {
-      const result =  bestTradeExactOut({
+      const result =  module.bestTradeExactOut({
         pairs: [pair_0_1, pair_0_3, pair_1_3],
         amountOut: {
           token: token2,
@@ -543,14 +538,14 @@ describe("Trade", () => {
     describe("tradeType = EXACT_INPUT", () => {
       test("throws if less than 0", () => {
         expect(() => {
-          tradeMinimumAmountOut({
+          module.tradeMinimumAmountOut({
           trade: exactIn,
           slippageTolerance: "-1"
         })}).toThrow()
       })
 
       test("returns  exact if nonzero", () => {
-        expect(tradeMinimumAmountOut({
+        expect(module.tradeMinimumAmountOut({
           trade: exactIn,
           slippageTolerance: "2"
         })).toStrictEqual({
@@ -558,7 +553,7 @@ describe("Trade", () => {
           amount: BigInt.fromString("23")
         })
 
-        expect(tradeMinimumAmountOut({
+        expect(module.tradeMinimumAmountOut({
           trade: exactIn,
           slippageTolerance: "0.05"
         })).toStrictEqual({
@@ -566,7 +561,7 @@ describe("Trade", () => {
           amount: BigInt.fromString("65")
         })
 
-        expect(tradeMinimumAmountOut({
+        expect(module.tradeMinimumAmountOut({
           trade: exactIn,
           slippageTolerance: "0"
         })).toStrictEqual({
@@ -579,14 +574,14 @@ describe("Trade", () => {
     describe("tradeType = EXACT_OUTPUT", () => {
       test("throws if less than 0", () => {
         expect(() => {
-          tradeMinimumAmountOut({
+          module.tradeMinimumAmountOut({
           trade: exactOut,
           slippageTolerance: "-1"
         })}).toThrow()
       })
 
       test("returns exact if nonzero", () => {
-        expect(tradeMinimumAmountOut({
+        expect(module.tradeMinimumAmountOut({
           trade: exactOut,
           slippageTolerance: "2"
         })).toStrictEqual({
@@ -594,7 +589,7 @@ describe("Trade", () => {
           amount: BigInt.fromString("100")
         })
 
-        expect(tradeMinimumAmountOut({
+        expect(module.tradeMinimumAmountOut({
           trade: exactOut,
           slippageTolerance: "0.05"
         })).toStrictEqual({
@@ -602,7 +597,7 @@ describe("Trade", () => {
           amount: BigInt.fromString("100")
         })
 
-        expect(tradeMinimumAmountOut({
+        expect(module.tradeMinimumAmountOut({
           trade: exactOut,
           slippageTolerance: "0"
         })).toStrictEqual({
@@ -618,14 +613,14 @@ describe("Trade", () => {
     describe("tradeType = EXACT_INPUT", () => {
       test("throws if less than 0", () => {
         expect(() => {
-          tradeMaximumAmountIn({
+          module.tradeMaximumAmountIn({
           trade: exactIn,
           slippageTolerance: "-1"
         })}).toThrow()
       })
 
       test("returns  exact if nonzero", () => {
-        expect(tradeMaximumAmountIn({
+        expect(module.tradeMaximumAmountIn({
           trade: exactIn,
           slippageTolerance: "2"
         })).toStrictEqual({
@@ -633,7 +628,7 @@ describe("Trade", () => {
           amount: BigInt.fromString("100")
         })
 
-        expect(tradeMaximumAmountIn({
+        expect(module.tradeMaximumAmountIn({
           trade: exactIn,
           slippageTolerance: "0.05"
         })).toStrictEqual({
@@ -641,7 +636,7 @@ describe("Trade", () => {
           amount: BigInt.fromString("100")
         })
 
-        expect(tradeMaximumAmountIn({
+        expect(module.tradeMaximumAmountIn({
           trade: exactIn,
           slippageTolerance: "0"
         })).toStrictEqual({
@@ -654,14 +649,14 @@ describe("Trade", () => {
     describe("tradeType = EXACT_OUTPUT", () => {
       test("throws if less than 0", () => {
         expect(() => {
-          tradeMaximumAmountIn({
+          module.tradeMaximumAmountIn({
           trade: exactOut,
           slippageTolerance: "-1"
         })}).toThrow()
       })
 
       test("returns  exact if nonzero", () => {
-        expect(tradeMaximumAmountIn({
+        expect(module.tradeMaximumAmountIn({
           trade: exactOut,
           slippageTolerance: "2"
         })).toStrictEqual({
@@ -669,7 +664,7 @@ describe("Trade", () => {
           amount: BigInt.fromString("468")
         })
 
-        expect(tradeMaximumAmountIn({
+        expect(module.tradeMaximumAmountIn({
           trade: exactOut,
           slippageTolerance: "0.05"
         })).toStrictEqual({
@@ -677,7 +672,7 @@ describe("Trade", () => {
           amount: BigInt.fromString("163")
         })
 
-        expect(tradeMaximumAmountIn({
+        expect(module.tradeMaximumAmountIn({
           trade: exactOut,
           slippageTolerance: "0"
         })).toStrictEqual({

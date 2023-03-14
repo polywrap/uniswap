@@ -1,8 +1,11 @@
-import { createRoute, createTrade, swapCallParameters, toHex } from "../../index";
+import { Module } from "../../index";
 import { ChainId, Pair, Token, TradeType, } from "../../wrap";
 import { ETHER } from "../../utils";
 import { getWETH9 } from "../../utils/utils";
 import { Box, BigInt } from "@polywrap/wasm-as";
+import {toHex} from "../../entities";
+
+const module: Module = new Module();
 
 const token0: Token = {
   chainId: ChainId.MAINNET,
@@ -55,8 +58,8 @@ describe("toHex", () => {
 describe("swapCallParameters", () => {
   describe("exact in", () => {
     test("ether to token1", () => {
-      const exactIn = createTrade({
-        route: createRoute({
+      const exactIn = module.createTrade({
+        route: module.createRoute({
           pairs: [pair_weth_0, pair_0_1],
           input: {
             currency: ETHER,
@@ -75,7 +78,7 @@ describe("swapCallParameters", () => {
         },
         tradeType: TradeType.EXACT_INPUT
       })
-      const result = swapCallParameters({
+      const result = module.swapCallParameters({
         trade: exactIn,
         tradeOptions: {
           ttl: Box.from<u32>(50),
@@ -99,8 +102,8 @@ describe("swapCallParameters", () => {
     });
 
     test("deadline specified", () => {
-      const exactIn = createTrade({
-        route: createRoute({
+      const exactIn = module.createTrade({
+        route: module.createRoute({
           pairs: [pair_weth_0, pair_0_1],
           input: {
             currency: ETHER,
@@ -119,7 +122,7 @@ describe("swapCallParameters", () => {
         },
         tradeType: TradeType.EXACT_INPUT
       })
-      const result = swapCallParameters({
+      const result = module.swapCallParameters({
         trade: exactIn,
         tradeOptions: {
           ttl: null,
@@ -141,8 +144,8 @@ describe("swapCallParameters", () => {
     });
 
     test("token1 to ether", () => {
-      const exactIn = createTrade({
-        route: createRoute({
+      const exactIn = module.createTrade({
+        route: module.createRoute({
           pairs: [pair_0_1, pair_weth_0],
           input: token1,
           output: {
@@ -157,7 +160,7 @@ describe("swapCallParameters", () => {
         },
         tradeType: TradeType.EXACT_INPUT
       });
-      const result = swapCallParameters({
+      const result = module.swapCallParameters({
         trade: exactIn,
         tradeOptions: {
           ttl: Box.from<u32>(50),
@@ -182,8 +185,8 @@ describe("swapCallParameters", () => {
     });
 
     test("token0 to token1", () => {
-      const exactIn = createTrade({
-        route: createRoute({
+      const exactIn = module.createTrade({
+        route: module.createRoute({
           pairs: [pair_0_1],
           input: token0,
           output: token1
@@ -194,7 +197,7 @@ describe("swapCallParameters", () => {
         },
         tradeType: TradeType.EXACT_INPUT
       });
-      const result = swapCallParameters({
+      const result = module.swapCallParameters({
         trade: exactIn,
         tradeOptions: {
           ttl: Box.from<u32>(50),
@@ -221,8 +224,8 @@ describe("swapCallParameters", () => {
 
   describe("exact out", () => {
     test("ether to token1", () => {
-      const exactOut = createTrade({
-        route: createRoute({
+      const exactOut = module.createTrade({
+        route: module.createRoute({
           pairs: [pair_weth_0, pair_0_1],
           input: {
             currency: ETHER,
@@ -237,7 +240,7 @@ describe("swapCallParameters", () => {
         },
         tradeType: TradeType.EXACT_OUTPUT
       })
-      const result = swapCallParameters({
+      const result = module.swapCallParameters({
         trade: exactOut,
         tradeOptions: {
           ttl: Box.from<u32>(50),
@@ -261,8 +264,8 @@ describe("swapCallParameters", () => {
     });
 
     test("token1 to ether", () => {
-      const exactOut = createTrade({
-        route: createRoute({
+      const exactOut = module.createTrade({
+        route: module.createRoute({
           pairs: [pair_0_1, pair_weth_0],
           input: token1,
           output: {
@@ -281,7 +284,7 @@ describe("swapCallParameters", () => {
         },
         tradeType: TradeType.EXACT_OUTPUT
       });
-      const result = swapCallParameters({
+      const result = module.swapCallParameters({
         trade: exactOut,
         tradeOptions: {
           ttl: Box.from<u32>(50),
@@ -306,8 +309,8 @@ describe("swapCallParameters", () => {
     });
 
     test("token0 to token1", () => {
-      const exactOut = createTrade({
-        route: createRoute({
+      const exactOut = module.createTrade({
+        route: module.createRoute({
           pairs: [pair_0_1],
           input: token0,
           output: token1
@@ -318,7 +321,7 @@ describe("swapCallParameters", () => {
         },
         tradeType: TradeType.EXACT_OUTPUT
       });
-      const result = swapCallParameters({
+      const result = module.swapCallParameters({
         trade: exactOut,
         tradeOptions: {
           ttl: Box.from<u32>(50),
@@ -346,8 +349,8 @@ describe("swapCallParameters", () => {
   describe("supporting fee on transfer", () => {
     describe("exact in", () => {
       test("ether to token1", () => {
-        const exactIn = createTrade({
-          route: createRoute({
+        const exactIn = module.createTrade({
+          route: module.createRoute({
             pairs: [pair_weth_0, pair_0_1],
             input: {
               currency: ETHER,
@@ -366,7 +369,7 @@ describe("swapCallParameters", () => {
           },
           tradeType: TradeType.EXACT_INPUT
         })
-        const result = swapCallParameters({
+        const result = module.swapCallParameters({
           trade: exactIn,
           tradeOptions: {
             ttl: Box.from<u32>(50),
@@ -390,8 +393,8 @@ describe("swapCallParameters", () => {
       });
 
       test("token1 to ether", () => {
-        const exactIn = createTrade({
-          route: createRoute({
+        const exactIn = module.createTrade({
+          route: module.createRoute({
             pairs: [pair_0_1, pair_weth_0],
             input: token1,
             output: {
@@ -406,7 +409,7 @@ describe("swapCallParameters", () => {
           },
           tradeType: TradeType.EXACT_INPUT
         });
-        const result = swapCallParameters({
+        const result = module.swapCallParameters({
           trade: exactIn,
           tradeOptions: {
             ttl: Box.from<u32>(50),
@@ -431,8 +434,8 @@ describe("swapCallParameters", () => {
       });
 
       test("token0 to token1", () => {
-        const exactIn = createTrade({
-          route: createRoute({
+        const exactIn = module.createTrade({
+          route: module.createRoute({
             pairs: [pair_0_1],
             input: token0,
             output: token1
@@ -443,7 +446,7 @@ describe("swapCallParameters", () => {
           },
           tradeType: TradeType.EXACT_INPUT
         });
-        const result = swapCallParameters({
+        const result = module.swapCallParameters({
           trade: exactIn,
           tradeOptions: {
             ttl: Box.from<u32>(50),
@@ -471,8 +474,8 @@ describe("swapCallParameters", () => {
     describe("exact out", () => {
       test("ether to token1", () => {
         expect(() => {
-          const exactOut = createTrade({
-            route: createRoute({
+          const exactOut = module.createTrade({
+            route: module.createRoute({
               pairs: [pair_weth_0, pair_0_1],
               input: {
                 currency: ETHER,
@@ -487,7 +490,7 @@ describe("swapCallParameters", () => {
             },
             tradeType: TradeType.EXACT_OUTPUT
           });
-          swapCallParameters({
+          module.swapCallParameters({
             trade: exactOut,
             tradeOptions: {
               ttl: Box.from<u32>(50),
@@ -503,8 +506,8 @@ describe("swapCallParameters", () => {
 
       test("token1 to ether", () => {
         expect(() => {
-          const exactOut = createTrade({
-            route: createRoute({
+          const exactOut = module.createTrade({
+            route: module.createRoute({
               pairs: [pair_0_1, pair_weth_0],
               input: token1,
               output: {
@@ -523,7 +526,7 @@ describe("swapCallParameters", () => {
             },
             tradeType: TradeType.EXACT_OUTPUT
           });
-          swapCallParameters({
+          module.swapCallParameters({
             trade: exactOut,
             tradeOptions: {
               ttl: Box.from<u32>(50),
@@ -539,8 +542,8 @@ describe("swapCallParameters", () => {
 
       test("token0 to token1", () => {
         expect(() => {
-          const exactOut = createTrade({
-            route: createRoute({
+          const exactOut = module.createTrade({
+            route: module.createRoute({
               pairs: [pair_0_1],
               input: token0,
               output: token1
@@ -551,7 +554,7 @@ describe("swapCallParameters", () => {
             },
             tradeType: TradeType.EXACT_OUTPUT
           });
-          swapCallParameters({
+          module.swapCallParameters({
             trade: exactOut,
             tradeOptions: {
               ttl: Box.from<u32>(50),

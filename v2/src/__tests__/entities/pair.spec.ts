@@ -1,13 +1,8 @@
 import { ChainId, Pair, Token, TokenAmount } from "../../wrap";
-import {
-  pairLiquidityMinted,
-  pairLiquidityValue,
-  pairReserves,
-  pairToken0Price,
-  pairToken1Price,
-  tokenSortsBefore
-} from "../../index";
+import { Module } from "../../index";
 import { Box, BigInt, BigNumber } from "@polywrap/wasm-as";
+
+const module: Module = new Module();
 
 const token0: Token = {
   chainId: ChainId.MAINNET,
@@ -104,10 +99,10 @@ describe('Pair core', () => {
   test("pairReserves", () => {
     for (let i = 0; i < pairs.length; i++) {
       const pair: Pair = pairs[i];
-      const reserves: TokenAmount[] = pairReserves({ pair });
+      const reserves: TokenAmount[] = module.pairReserves({ pair });
       let tokenAmount0: TokenAmount;
       let tokenAmount1: TokenAmount;
-      if (tokenSortsBefore({ token: pair.tokenAmount0.token, other: pair.tokenAmount1.token })) {
+      if (module.tokenSortsBefore({ token: pair.tokenAmount0.token, other: pair.tokenAmount1.token })) {
         tokenAmount0 = reserves[0];
         tokenAmount1 = reserves[1];
       } else {
@@ -124,7 +119,7 @@ describe('Pair core', () => {
   test("pairToken0Price",() => {
     for (let i = 0; i < pairs.length; i++) {
       const pair: Pair = pairs[i];
-      const price: string = pairToken0Price({ pair });
+      const price: string = module.pairToken0Price({ pair });
       const expectedPrice: BigNumber = BigNumber.fromFraction(pair.tokenAmount1.amount, pair.tokenAmount0.amount);
       expect(BigNumber.fromString(price).toFixed(18)).toStrictEqual(expectedPrice.toFixed(18));
     }
@@ -133,7 +128,7 @@ describe('Pair core', () => {
   test("pairToken1Price", () => {
     for (let i = 0; i < pairs.length; i++) {
       const pair = pairs[i];
-      const price: string = pairToken1Price({ pair });
+      const price: string = module.pairToken1Price({ pair });
       const expectedPrice: BigNumber = BigNumber.fromFraction(pair.tokenAmount0.amount, pair.tokenAmount1.amount);
       expect(price).toStrictEqual(expectedPrice.toFixed(18));
     }
@@ -161,7 +156,7 @@ describe('Pair miscellaneous', () => {
     const tokenAmount0: TokenAmount = { token: token0, amount: BigInt.fromString("1001") };
     const tokenAmount1: TokenAmount = { token: token1, amount: BigInt.fromString("1001") };
 
-    const minted: TokenAmount = pairLiquidityMinted({ pair, totalSupply, tokenAmount0, tokenAmount1 });
+    const minted: TokenAmount = module.pairLiquidityMinted({ pair, totalSupply, tokenAmount0, tokenAmount1 })!;
     expect(minted.amount.toString()).toStrictEqual('1');
   });
 
@@ -181,7 +176,7 @@ describe('Pair miscellaneous', () => {
     const tokenAmount0: TokenAmount = { token: token0, amount: BigInt.fromString("2000") };
     const tokenAmount1: TokenAmount = { token: token1, amount: BigInt.fromString("2000") };
 
-    const minted: TokenAmount = pairLiquidityMinted({ pair, totalSupply, tokenAmount0, tokenAmount1 });
+    const minted: TokenAmount = module.pairLiquidityMinted({ pair, totalSupply, tokenAmount0, tokenAmount1 })!;
     expect(minted.amount.toString()).toStrictEqual('2000');
 
   });
@@ -221,12 +216,12 @@ describe('Pair miscellaneous', () => {
       },
       amount: BigInt.fromString("500") };
 
-    const liquidityValueA = pairLiquidityValue({ pair: pair, totalSupply: totalSupply, liquidity: liquidity1000, feeOn: null, kLast: null });
+    const liquidityValueA = module.pairLiquidityValue({ pair: pair, totalSupply: totalSupply, liquidity: liquidity1000, feeOn: null, kLast: null });
     expect(liquidityValueA[0].token).toStrictEqual(token0);
     expect(liquidityValueA[1].token).toStrictEqual(token1);
     expect(liquidityValueA[0].amount.toString()).toStrictEqual("1000");
     expect(liquidityValueA[1].amount.toString()).toStrictEqual("1000");
-    const liquidityValueB = pairLiquidityValue({ pair: pair, totalSupply: totalSupply, liquidity: liquidity500, feeOn: Box.from(false), kLast: null });
+    const liquidityValueB = module.pairLiquidityValue({ pair: pair, totalSupply: totalSupply, liquidity: liquidity500, feeOn: Box.from(false), kLast: null });
     expect(liquidityValueB[0].token).toStrictEqual(token0);
     expect(liquidityValueB[0].amount.toString()).toStrictEqual("500");
   })
@@ -257,7 +252,7 @@ describe('Pair miscellaneous', () => {
       amount: BigInt.fromString("500") };
     const kLast: BigInt = BigInt.fromString("250000");
 
-    const liquidityValue = pairLiquidityValue({ pair: pair, totalSupply: totalSupply, liquidity: liquidity, feeOn: Box.from(true), kLast: kLast });
+    const liquidityValue = module.pairLiquidityValue({ pair: pair, totalSupply: totalSupply, liquidity: liquidity, feeOn: Box.from(true), kLast: kLast });
     expect(liquidityValue[0].token).toStrictEqual(token0);
     expect(liquidityValue[0].amount.toString()).toStrictEqual("917"); // ceiling(1000 - (500 * (1 / 6)))
   })

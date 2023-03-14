@@ -1,14 +1,16 @@
-import { tokenAmountEquals, tokenEquals, tokenSortsBefore } from "../../index";
+import { Module } from "../../index";
 import { ChainId } from "../../wrap";
 
 import { BigInt } from "@polywrap/wasm-as";
+
+const module: Module = new Module();
 
 const ADDRESS_ONE = '0x0000000000000000000000000000000000000001'
 const ADDRESS_TWO = '0x0000000000000000000000000000000000000002'
 
 describe('tokenEquals', () => {
   test("returns false if address differs", () => {
-    const result = tokenEquals({
+    const result = module.tokenEquals({
       token: {
         chainId: ChainId.MAINNET,
         address: ADDRESS_ONE,
@@ -33,7 +35,7 @@ describe('tokenEquals', () => {
   });
 
   test("returns false if chain id differse", () => {
-    const result = tokenEquals({
+    const result = module.tokenEquals({
       token: {
         chainId: ChainId.MAINNET,
         address: ADDRESS_ONE,
@@ -58,7 +60,7 @@ describe('tokenEquals', () => {
   });
 
   test("returns true if only decimals differ", () => {
-    const result = tokenEquals({
+    const result = module.tokenEquals({
       token: {
         chainId: ChainId.MAINNET,
         address: ADDRESS_ONE,
@@ -83,7 +85,7 @@ describe('tokenEquals', () => {
   });
 
   test("returns true if address is the same", () => {
-    const result = tokenEquals({
+    const result = module.tokenEquals({
       token: {
         chainId: ChainId.MAINNET,
         address: ADDRESS_ONE,
@@ -108,7 +110,7 @@ describe('tokenEquals', () => {
   });
 
   test("returns true if name/symbol/decimals differ", () => {
-    const result = tokenEquals({
+    const result = module.tokenEquals({
       token: {
         chainId: ChainId.MAINNET,
         address: ADDRESS_ONE,
@@ -136,7 +138,7 @@ describe('tokenEquals', () => {
 describe('tokenAmountEquals', () => {
 
   test("returns true if TokenAmounts have same token and same amounts", () => {
-    const result = tokenAmountEquals({
+    const result = module.tokenAmountEquals({
       tokenAmount0: {
         token: {
           chainId: ChainId.MAINNET,
@@ -167,7 +169,7 @@ describe('tokenAmountEquals', () => {
   });
 
   test("returns false if TokenAmounts have same token and different amounts", () => {
-    const result = tokenAmountEquals({
+    const result = module.tokenAmountEquals({
       tokenAmount0: {
         token: {
           chainId: ChainId.MAINNET,
@@ -198,7 +200,7 @@ describe('tokenAmountEquals', () => {
   });
 
   test("returns false if TokenAmounts have different tokens and same amounts", () => {
-    const result = tokenAmountEquals({
+    const result = module.tokenAmountEquals({
       tokenAmount0: {
         token: {
           chainId: ChainId.MAINNET,
@@ -233,7 +235,7 @@ describe('tokenAmountEquals', () => {
 describe('tokenSortsBefore', () => {
 
   test("returns true if address sorts before other", () => {
-    const result = tokenSortsBefore({
+    const result = module.tokenSortsBefore({
       token: {
         chainId: ChainId.MAINNET,
         address: ADDRESS_ONE,
@@ -258,7 +260,7 @@ describe('tokenSortsBefore', () => {
   });
 
   test("returns false if address sorts after other", () => {
-    const result = tokenSortsBefore({
+    const result = module.tokenSortsBefore({
       token: {
         chainId: ChainId.MAINNET,
         address: ADDRESS_TWO,
@@ -283,7 +285,7 @@ describe('tokenSortsBefore', () => {
   });
 
   test("returns false if addresses are the same", () => {
-    const result = tokenSortsBefore({
+    const result = module.tokenSortsBefore({
       token: {
         chainId: ChainId.MAINNET,
         address: ADDRESS_ONE,

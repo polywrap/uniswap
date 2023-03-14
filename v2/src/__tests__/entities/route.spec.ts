@@ -1,6 +1,8 @@
 import { ChainId, Pair, Route, Token } from "../../wrap";
-import { createRoute, routeMidPrice } from "../../index";
+import { Module } from "../../index";
 import { BigInt, BigNumber } from "@polywrap/wasm-as";
+
+const module: Module = new Module();
 
 const token0: Token = {
   chainId: ChainId.MAINNET,
@@ -34,7 +36,7 @@ const pair_1_weth: Pair = { tokenAmount0: {token: token1, amount: BigInt.fromStr
 describe('Route', () => {
 
   it('constructs a path from the tokens', () => {
-    const route: Route = createRoute({
+    const route: Route = module.createRoute({
       pairs: [pair_0_1],
       input: token0,
       output: token1,
@@ -46,7 +48,7 @@ describe('Route', () => {
   });
 
   it('can have a token as both input and output', () => {
-    const route: Route = createRoute({
+    const route: Route = module.createRoute({
       pairs: [pair_0_weth, pair_0_1, pair_1_weth],
       input: weth,
       output: weth,
@@ -58,33 +60,33 @@ describe('Route', () => {
   });
 
   it('returns route midPrice:0', () => {
-    const route: Route = createRoute({
+    const route: Route = module.createRoute({
       pairs: [pair_0_weth, pair_0_1, pair_1_weth],
       input: weth,
       output: weth,
     });
-    const midPrice: string = routeMidPrice({ route });
+    const midPrice: string = module.routeMidPrice({ route });
     expect(midPrice).toStrictEqual("1.142857142857142857");
   });
 
   it('returns route midPrice:1', () => {
-    const route: Route = createRoute({
+    const route: Route = module.createRoute({
       pairs: [pair_1_weth, pair_0_1],
       input: weth,
       output: token0,
     });
-    const midPrice: string = routeMidPrice({ route });
+    const midPrice: string = module.routeMidPrice({ route });
     const amount: string = BigNumber.fromString(midPrice).toString();
     expect(amount).toStrictEqual("0.875");
   });
 
   it('returns route midPrice:2', () => {
-    const route: Route = createRoute({
+    const route: Route = module.createRoute({
       pairs: [pair_0_weth, pair_1_weth],
       input: token0,
       output: token1,
     });
-    const midPrice: string = routeMidPrice({ route });
+    const midPrice: string = module.routeMidPrice({ route });
     const amount: string = BigNumber.fromString(midPrice).toString();
     expect(amount).toStrictEqual("1.75");
   });
