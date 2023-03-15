@@ -1,19 +1,10 @@
 import { BigInt, BigNumber } from "@polywrap/wasm-as";
 import { ChainId, FeeAmount, Pool, PoolChangeResult, Price, Token, TokenAmount } from "../../../wrap";
 import { getWrappedNative } from "../../../token";
-import {
-  createPool,
-  encodeSqrtRatioX96, getPoolInputAmount, getPoolOutputAmount,
-  getTickAtSqrtRatio,
-  nearestUsableTick,
-  poolChainId,
-  poolInvolvesToken,
-  poolPriceOf,
-  poolToken0Price,
-  poolToken1Price, tokenEquals
-} from "../../..";
+import { Module } from "../../..";
 import { _MAX_TICK, _MIN_TICK, _feeAmountToTickSpacing } from "../../../utils";
 
+const module: Module = new Module();
 
 const ONE_ETHER: BigInt = BigInt.pow(BigInt.fromUInt16(10), 18);
 
@@ -44,11 +35,11 @@ describe('Pool', () => {
 
     it('cannot be used for tokens on different chains', () => {
       const error = (): void => {
-        createPool({
+        module.createPool({
           tokenA: USDC,
           tokenB: getWrappedNative({ chainId: ChainId.ROPSTEN }),
           fee: FeeAmount.MEDIUM,
-          sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+          sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
           liquidity: BigInt.ZERO,
           tickCurrent: 0,
           ticks: [],
@@ -59,11 +50,11 @@ describe('Pool', () => {
 
     it('cannot be given two of the same token', () => {
       const error = (): void => {
-        createPool({
+        module.createPool({
           tokenA: USDC,
           tokenB: USDC,
           fee: FeeAmount.MEDIUM,
-          sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+          sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
           liquidity: BigInt.ZERO,
           tickCurrent: 0,
           ticks: [],
@@ -74,11 +65,11 @@ describe('Pool', () => {
 
     it('price must be within tick price bounds', () => {
       const error = (): void => {
-        createPool({
+        module.createPool({
           tokenA: USDC,
           tokenB: getWrappedNative({ chainId: ChainId.MAINNET }),
           fee: FeeAmount.MEDIUM,
-          sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+          sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
           liquidity: BigInt.ZERO,
           tickCurrent: 1,
           ticks: [],
@@ -87,11 +78,11 @@ describe('Pool', () => {
       expect(error).toThrow("PRICE_BOUNDS: sqrtRatioX96 is invalid for current tick");
 
       const errorNeg = (): void => {
-        createPool({
+        module.createPool({
           tokenA: USDC,
           tokenB: getWrappedNative({ chainId: ChainId.MAINNET }),
           fee: FeeAmount.MEDIUM,
-          sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }).addInt(1),
+          sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }).addInt(1),
           liquidity: BigInt.ZERO,
           tickCurrent: -1,
           ticks: [],
@@ -102,11 +93,11 @@ describe('Pool', () => {
 
     it('works with valid arguments for empty pool medium fee', () => {
       const noError = (): void => {
-        createPool({
+        module.createPool({
           tokenA: USDC,
           tokenB: getWrappedNative({ chainId: ChainId.MAINNET }),
           fee: FeeAmount.MEDIUM,
-          sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+          sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
           liquidity: BigInt.ZERO,
           tickCurrent: 0,
           ticks: [],
@@ -117,11 +108,11 @@ describe('Pool', () => {
 
     it('works with valid arguments for empty pool low fee', () => {
       const noError = (): void => {
-        createPool({
+        module.createPool({
           tokenA: USDC,
           tokenB: getWrappedNative({ chainId: ChainId.MAINNET }),
           fee: FeeAmount.LOW,
-          sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+          sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
           liquidity: BigInt.ZERO,
           tickCurrent: 0,
           ticks: [],
@@ -132,11 +123,11 @@ describe('Pool', () => {
 
     it('works with valid arguments for empty pool lowest fee', () => {
       const noError = (): void => {
-        createPool({
+        module.createPool({
           tokenA: USDC,
           tokenB: getWrappedNative({ chainId: ChainId.MAINNET }),
           fee: FeeAmount.LOWEST,
-          sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+          sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
           liquidity: BigInt.ZERO,
           tickCurrent: 0,
           ticks: [],
@@ -147,11 +138,11 @@ describe('Pool', () => {
 
     it('works with valid arguments for empty pool high fee', () => {
       const noError = (): void => {
-        createPool({
+        module.createPool({
           tokenA: USDC,
           tokenB: getWrappedNative({ chainId: ChainId.MAINNET }),
           fee: FeeAmount.HIGH,
-          sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+          sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
           liquidity: BigInt.ZERO,
           tickCurrent: 0,
           ticks: [],
@@ -163,22 +154,22 @@ describe('Pool', () => {
 
   describe('token0', () => {
     it('always is the token that sorts before', () => {
-        const poolA: Pool = createPool({
+        const poolA: Pool = module.createPool({
           tokenA: USDC,
           tokenB: DAI,
           fee: FeeAmount.LOW,
-          sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+          sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
           liquidity: BigInt.ZERO,
           tickCurrent: 0,
           ticks: [],
         });
       expect(poolA.token0).toStrictEqual(DAI);
 
-      const poolB: Pool = createPool({
+      const poolB: Pool = module.createPool({
         tokenA: DAI,
         tokenB: USDC,
         fee: FeeAmount.LOW,
-        sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+        sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
         liquidity: BigInt.ZERO,
         tickCurrent: 0,
         ticks: [],
@@ -189,22 +180,22 @@ describe('Pool', () => {
 
   describe('token1', () => {
     it('always is the token that sorts after', () => {
-      const poolA: Pool = createPool({
+      const poolA: Pool = module.createPool({
         tokenA: USDC,
         tokenB: DAI,
         fee: FeeAmount.LOW,
-        sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+        sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
         liquidity: BigInt.ZERO,
         tickCurrent: 0,
         ticks: [],
       });
       expect(poolA.token1).toStrictEqual(USDC);
 
-      const poolB: Pool = createPool({
+      const poolB: Pool = module.createPool({
         tokenA: DAI,
         tokenB: USDC,
         fee: FeeAmount.LOW,
-        sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+        sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
         liquidity: BigInt.ZERO,
         tickCurrent: 0,
         ticks: [],
@@ -217,17 +208,17 @@ describe('Pool', () => {
     it('returns price of token0 in terms of token1', () => {
       const amount1: BigInt = BigInt.fromString("101000000");
       const amount0: BigInt = BigInt.fromString("100000000000000000000");
-      const sqrtRatioX96: BigInt = encodeSqrtRatioX96({ amount1, amount0 });
-      const poolA: Pool = createPool({
+      const sqrtRatioX96: BigInt = module.encodeSqrtRatioX96({ amount1, amount0 });
+      const poolA: Pool = module.createPool({
         tokenA: USDC,
         tokenB: DAI,
         fee: FeeAmount.LOW,
         sqrtRatioX96: sqrtRatioX96,
         liquidity: BigInt.ZERO,
-        tickCurrent: getTickAtSqrtRatio({ sqrtRatioX96 }),
+        tickCurrent: module.getTickAtSqrtRatio({ sqrtRatioX96 }),
         ticks: [],
       });
-      const priceA: Price = poolToken0Price({
+      const priceA: Price = module.poolToken0Price({
         token0: poolA.token0,
         token1: poolA.token1,
         sqrtRatioX96: poolA.sqrtRatioX96
@@ -235,16 +226,16 @@ describe('Pool', () => {
       expect(BigNumber.from(priceA.price).toSignificant(5)).toStrictEqual("1.01");
       expect(priceA).toStrictEqual(poolA.token0Price);
 
-      const poolB: Pool = createPool({
+      const poolB: Pool = module.createPool({
         tokenA: DAI,
         tokenB: USDC,
         fee: FeeAmount.LOW,
         sqrtRatioX96: sqrtRatioX96,
         liquidity: BigInt.ZERO,
-        tickCurrent: getTickAtSqrtRatio({ sqrtRatioX96 }),
+        tickCurrent: module.getTickAtSqrtRatio({ sqrtRatioX96 }),
         ticks: [],
       });
-      const priceB: Price = poolToken0Price({
+      const priceB: Price = module.poolToken0Price({
         token0: poolB.token0,
         token1: poolB.token1,
         sqrtRatioX96: poolB.sqrtRatioX96
@@ -259,17 +250,17 @@ describe('Pool', () => {
     it('returns price of token1 in terms of token0', () => {
       const amount1: BigInt = BigInt.fromString("101000000");
       const amount0: BigInt = BigInt.fromString("100000000000000000000");
-      const sqrtRatioX96: BigInt = encodeSqrtRatioX96({ amount1, amount0 });
-      const poolA: Pool = createPool({
+      const sqrtRatioX96: BigInt = module.encodeSqrtRatioX96({ amount1, amount0 });
+      const poolA: Pool = module.createPool({
         tokenA: USDC,
         tokenB: DAI,
         fee: FeeAmount.LOW,
         sqrtRatioX96: sqrtRatioX96,
         liquidity: BigInt.ZERO,
-        tickCurrent: getTickAtSqrtRatio({ sqrtRatioX96 }),
+        tickCurrent: module.getTickAtSqrtRatio({ sqrtRatioX96 }),
         ticks: [],
       });
-      const priceA: Price = poolToken1Price({
+      const priceA: Price = module.poolToken1Price({
         token0: poolA.token0,
         token1: poolA.token1,
         sqrtRatioX96: poolA.sqrtRatioX96
@@ -278,16 +269,16 @@ describe('Pool', () => {
       expect(priceRoundedA).toStrictEqual("0.9901");
       expect(priceA).toStrictEqual(poolA.token1Price);
 
-      const poolB: Pool = createPool({
+      const poolB: Pool = module.createPool({
         tokenA: DAI,
         tokenB: USDC,
         fee: FeeAmount.LOW,
         sqrtRatioX96: sqrtRatioX96,
         liquidity: BigInt.ZERO,
-        tickCurrent: getTickAtSqrtRatio({ sqrtRatioX96 }),
+        tickCurrent: module.getTickAtSqrtRatio({ sqrtRatioX96 }),
         ticks: [],
       });
-      const priceB: Price = poolToken1Price({
+      const priceB: Price = module.poolToken1Price({
         token0: poolB.token0,
         token1: poolB.token1,
         sqrtRatioX96: poolB.sqrtRatioX96
@@ -301,31 +292,31 @@ describe('Pool', () => {
   describe('poolPriceOf', () => {
 
     it('returns price of token in terms of other token', () => {
-      const pool: Pool = createPool({
+      const pool: Pool = module.createPool({
         tokenA: USDC,
         tokenB: DAI,
         fee: FeeAmount.LOW,
-        sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+        sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
         liquidity: BigInt.ZERO,
         tickCurrent: 0,
         ticks: [],
       });
-      expect(poolPriceOf({ token: DAI, pool: pool })).toStrictEqual(pool.token0Price);
-      expect(poolPriceOf({ token: USDC, pool: pool })).toStrictEqual(pool.token1Price);
+      expect(module.poolPriceOf({ token: DAI, pool: pool })).toStrictEqual(pool.token0Price);
+      expect(module.poolPriceOf({ token: USDC, pool: pool })).toStrictEqual(pool.token1Price);
     });
 
     it('throws if invalid token', () => {
       const error = (): void => {
-        const pool: Pool = createPool({
+        const pool: Pool = module.createPool({
           tokenA: USDC,
           tokenB: DAI,
           fee: FeeAmount.LOW,
-          sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+          sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
           liquidity: BigInt.ZERO,
           tickCurrent: 0,
           ticks: [],
         });
-        poolPriceOf({ token: getWrappedNative({ chainId: ChainId.MAINNET }), pool: pool });
+        module.poolPriceOf({ token: getWrappedNative({ chainId: ChainId.MAINNET }), pool: pool });
       };
       expect(error).toThrow("TOKEN: Cannot return the price of a token that is not in the pool");
     });
@@ -333,65 +324,65 @@ describe('Pool', () => {
 
   describe('chainId', () => {
     it('returns the token0 chainId', () => {
-      const poolA: Pool = createPool({
+      const poolA: Pool = module.createPool({
         tokenA: USDC,
         tokenB: DAI,
         fee: FeeAmount.LOW,
-        sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+        sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
         liquidity: BigInt.ZERO,
         tickCurrent: 0,
         ticks: [],
       });
-      expect(poolChainId({ pool: poolA })).toStrictEqual(ChainId.MAINNET);
+      expect(module.poolChainId({ pool: poolA })).toStrictEqual(ChainId.MAINNET);
 
-      const poolB: Pool = createPool({
+      const poolB: Pool = module.createPool({
         tokenA: DAI,
         tokenB: USDC,
         fee: FeeAmount.LOW,
-        sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+        sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
         liquidity: BigInt.ZERO,
         tickCurrent: 0,
         ticks: [],
       });
-      expect(poolChainId({ pool: poolB })).toStrictEqual(ChainId.MAINNET);
+      expect(module.poolChainId({ pool: poolB })).toStrictEqual(ChainId.MAINNET);
     });
   });
 
   describe('involvesToken', () => {
     it('returns true iff token is in pool', () => {
-      const pool: Pool = createPool({
+      const pool: Pool = module.createPool({
         tokenA: USDC,
         tokenB: DAI,
         fee: FeeAmount.LOW,
-        sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+        sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
         liquidity: BigInt.ZERO,
         tickCurrent: 0,
         ticks: [],
       });
-      expect(poolInvolvesToken({ token: USDC, pool: pool })).toStrictEqual(true);
-      expect(poolInvolvesToken({ token: DAI, pool: pool })).toStrictEqual(true);
-      expect(poolInvolvesToken({ token: getWrappedNative({ chainId: ChainId.MAINNET }), pool: pool })).toStrictEqual(false);
+      expect(module.poolInvolvesToken({ token: USDC, pool: pool })).toStrictEqual(true);
+      expect(module.poolInvolvesToken({ token: DAI, pool: pool })).toStrictEqual(true);
+      expect(module.poolInvolvesToken({ token: getWrappedNative({ chainId: ChainId.MAINNET }), pool: pool })).toStrictEqual(false);
     });
   });
 
   describe('swaps', () => {
 
     beforeAll(() => {
-      swapPool = createPool({
+      swapPool = module.createPool({
         tokenA: USDC,
         tokenB: DAI,
         fee: FeeAmount.LOW,
-        sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+        sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
         liquidity: ONE_ETHER,
         tickCurrent: 0,
         ticks: [
           {
-            index: nearestUsableTick({ tick: _MIN_TICK, tickSpacing: _feeAmountToTickSpacing(FeeAmount.LOW) }),
+            index: module.nearestUsableTick({ tick: _MIN_TICK, tickSpacing: _feeAmountToTickSpacing(FeeAmount.LOW) }),
             liquidityNet: ONE_ETHER,
             liquidityGross: ONE_ETHER
           },
           {
-            index: nearestUsableTick({ tick: _MAX_TICK, tickSpacing: _feeAmountToTickSpacing(FeeAmount.LOW) }),
+            index: module.nearestUsableTick({ tick: _MAX_TICK, tickSpacing: _feeAmountToTickSpacing(FeeAmount.LOW) }),
             liquidityNet: ONE_ETHER.opposite(),
             liquidityGross: ONE_ETHER
           }],
@@ -405,9 +396,9 @@ describe('Pool', () => {
           token: USDC,
           amount: BigInt.fromUInt16(100),
         };
-        const poolChangeResult: PoolChangeResult = getPoolOutputAmount({ inputAmount, sqrtPriceLimitX96: null, pool: swapPool });
+        const poolChangeResult: PoolChangeResult = module.getPoolOutputAmount({ inputAmount, sqrtPriceLimitX96: null, pool: swapPool });
         const outputAmount: TokenAmount = poolChangeResult.amount;
-        expect(tokenEquals({ tokenA: outputAmount.token, tokenB: DAI })).toStrictEqual(true);
+        expect(module.tokenEquals({ tokenA: outputAmount.token, tokenB: DAI })).toStrictEqual(true);
         expect(outputAmount.amount.toInt32()).toStrictEqual(98);
       });
 
@@ -416,9 +407,9 @@ describe('Pool', () => {
           token: DAI,
           amount: BigInt.fromUInt16(100),
         };
-        const poolChangeResult: PoolChangeResult = getPoolOutputAmount({ inputAmount, sqrtPriceLimitX96: null, pool: swapPool });
+        const poolChangeResult: PoolChangeResult = module.getPoolOutputAmount({ inputAmount, sqrtPriceLimitX96: null, pool: swapPool });
         const outputAmount: TokenAmount = poolChangeResult.amount;
-        expect(tokenEquals({ tokenA: outputAmount.token, tokenB: USDC })).toStrictEqual(true);
+        expect(module.tokenEquals({ tokenA: outputAmount.token, tokenB: USDC })).toStrictEqual(true);
         expect(outputAmount.amount.toInt32()).toStrictEqual(98);
       });
     });
@@ -430,9 +421,9 @@ describe('Pool', () => {
           token: DAI,
           amount: BigInt.fromUInt16(98),
         };
-        const poolChangeResult: PoolChangeResult = getPoolInputAmount({ outputAmount, sqrtPriceLimitX96: null, pool: swapPool });
+        const poolChangeResult: PoolChangeResult = module.getPoolInputAmount({ outputAmount, sqrtPriceLimitX96: null, pool: swapPool });
         const inputAmount: TokenAmount = poolChangeResult.amount;
-        expect(tokenEquals({ tokenA: inputAmount.token, tokenB: USDC })).toStrictEqual(true);
+        expect(module.tokenEquals({ tokenA: inputAmount.token, tokenB: USDC })).toStrictEqual(true);
         expect(inputAmount.amount.toInt32()).toStrictEqual(100);
       });
 
@@ -441,9 +432,9 @@ describe('Pool', () => {
           token: USDC,
           amount: BigInt.fromUInt16(98),
         };
-        const poolChangeResult: PoolChangeResult = getPoolInputAmount({ outputAmount, sqrtPriceLimitX96: null, pool: swapPool });
+        const poolChangeResult: PoolChangeResult = module.getPoolInputAmount({ outputAmount, sqrtPriceLimitX96: null, pool: swapPool });
         const inputAmount: TokenAmount = poolChangeResult.amount;
-        expect(tokenEquals({ tokenA: inputAmount.token, tokenB: DAI })).toStrictEqual(true);
+        expect(module.tokenEquals({ tokenA: inputAmount.token, tokenB: DAI })).toStrictEqual(true);
         expect(inputAmount.amount.toInt32()).toStrictEqual(100);
       });
     });

@@ -1,15 +1,17 @@
 import { BigInt } from "@polywrap/wasm-as";
-import { encodeSqrtRatioX96, maxLiquidityForAmounts } from "../../..";
+import { Module } from "../../..";
 import { MAX_UINT_256 } from "../../../utils";
+
+const module: Module = new Module();
 
 describe('maxLiquidityForAmounts', () => {
   describe('imprecise', () => {
     describe('price inside', () => {
       it('100 token0, 200 token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: BigInt.fromString("100"),
           amount1: BigInt.fromString("200"),
           useFullPrecision: false,
@@ -18,10 +20,10 @@ describe('maxLiquidityForAmounts', () => {
       });
 
       it('100 token0, max token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: BigInt.fromString("100"),
           amount1: MAX_UINT_256,
           useFullPrecision: false,
@@ -30,10 +32,10 @@ describe('maxLiquidityForAmounts', () => {
       });
 
       it('max token0, 200 token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: MAX_UINT_256,
           amount1: BigInt.fromString("200"),
           useFullPrecision: false,
@@ -44,10 +46,10 @@ describe('maxLiquidityForAmounts', () => {
 
     describe('price below', () => {
       it('100 token0, 200 token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(99), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(99), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: BigInt.fromString("100"),
           amount1: BigInt.fromString("200"),
           useFullPrecision: false,
@@ -56,10 +58,10 @@ describe('maxLiquidityForAmounts', () => {
       });
 
       it('100 token0, max token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(99), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(99), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: BigInt.fromString("100"),
           amount1: MAX_UINT_256,
           useFullPrecision: false,
@@ -68,10 +70,10 @@ describe('maxLiquidityForAmounts', () => {
       });
 
       it('max token0, 200 token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(99), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(99), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: MAX_UINT_256,
           amount1: BigInt.fromString("200"),
           useFullPrecision: false,
@@ -82,10 +84,10 @@ describe('maxLiquidityForAmounts', () => {
 
     describe('price above', () => {
       it('100 token0, 200 token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-            sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(111), amount0: BigInt.fromUInt16(100)}),
-            sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-            sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+            sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(111), amount0: BigInt.fromUInt16(100)}),
+            sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+            sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
             amount0: BigInt.fromString("100"),
             amount1: BigInt.fromString("200"),
             useFullPrecision: false,
@@ -94,10 +96,10 @@ describe('maxLiquidityForAmounts', () => {
       });
 
       it('100 token0, max token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(111), amount0: BigInt.fromUInt16(100)}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(111), amount0: BigInt.fromUInt16(100)}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: BigInt.fromString("100"),
           amount1: MAX_UINT_256,
           useFullPrecision: false,
@@ -106,10 +108,10 @@ describe('maxLiquidityForAmounts', () => {
       });
 
       it('max token0, 200 token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(111), amount0: BigInt.fromUInt16(100)}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(111), amount0: BigInt.fromUInt16(100)}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: MAX_UINT_256,
           amount1: BigInt.fromString("200"),
           useFullPrecision: false,
@@ -122,10 +124,10 @@ describe('maxLiquidityForAmounts', () => {
   describe('precise', () => {
     describe('price inside', () => {
       it('100 token0, 200 token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: BigInt.fromString("100"),
           amount1: BigInt.fromString("200"),
           useFullPrecision: true,
@@ -134,10 +136,10 @@ describe('maxLiquidityForAmounts', () => {
       });
 
       it('100 token0, max token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: BigInt.fromString("100"),
           amount1: MAX_UINT_256,
           useFullPrecision: true,
@@ -146,10 +148,10 @@ describe('maxLiquidityForAmounts', () => {
       });
 
       it('max token0, 200 token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: MAX_UINT_256,
           amount1: BigInt.fromString("200"),
           useFullPrecision: true,
@@ -160,10 +162,10 @@ describe('maxLiquidityForAmounts', () => {
 
     describe('price below', () => {
       it('100 token0, 200 token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(99), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(99), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: BigInt.fromString("100"),
           amount1: BigInt.fromString("200"),
           useFullPrecision: true,
@@ -172,10 +174,10 @@ describe('maxLiquidityForAmounts', () => {
       });
 
       it('100 token0, max token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(99), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(99), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: BigInt.fromString("100"),
           amount1: MAX_UINT_256,
           useFullPrecision: true,
@@ -184,10 +186,10 @@ describe('maxLiquidityForAmounts', () => {
       });
 
       it('max token0, 200 token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(99), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(99), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: MAX_UINT_256,
           amount1: BigInt.fromString("200"),
           useFullPrecision: true,
@@ -198,10 +200,10 @@ describe('maxLiquidityForAmounts', () => {
 
     describe('price above', () => {
       it('100 token0, 200 token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(111), amount0: BigInt.fromUInt16(100)}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(111), amount0: BigInt.fromUInt16(100)}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: BigInt.fromString("100"),
           amount1: BigInt.fromString("200"),
           useFullPrecision: true,
@@ -210,10 +212,10 @@ describe('maxLiquidityForAmounts', () => {
       });
 
       it('100 token0, max token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(111), amount0: BigInt.fromUInt16(100)}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(111), amount0: BigInt.fromUInt16(100)}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: BigInt.fromString("100"),
           amount1: MAX_UINT_256,
           useFullPrecision: true,
@@ -222,10 +224,10 @@ describe('maxLiquidityForAmounts', () => {
       });
 
       it('max token0, 200 token1', () => {
-        const result: BigInt = maxLiquidityForAmounts({
-          sqrtRatioCurrentX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(111), amount0: BigInt.fromUInt16(100)}),
-          sqrtRatioAX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
-          sqrtRatioBX96: encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
+        const result: BigInt = module.maxLiquidityForAmounts({
+          sqrtRatioCurrentX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(111), amount0: BigInt.fromUInt16(100)}),
+          sqrtRatioAX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(100), amount0: BigInt.fromUInt16(110)}),
+          sqrtRatioBX96: module.encodeSqrtRatioX96({ amount1: BigInt.fromUInt16(110), amount0: BigInt.fromUInt16(100)}),
           amount0: MAX_UINT_256,
           amount1: BigInt.fromString("200"),
           useFullPrecision: true,

@@ -1,14 +1,10 @@
 import { getWrappedNative } from "../../../token";
 import { ChainId, Currency, FeeAmount, Pool, Price, Route, Token } from "../../../wrap";
-import {
-  createPool,
-  encodeSqrtRatioX96,
-  getTickAtSqrtRatio,
-  createRoute,
-  routeChainId,
-  routeMidPrice,
-} from "../../..";
 import { BigInt, BigNumber } from "@polywrap/wasm-as";
+import {encodeSqrtRatioX96} from "../../../utils";
+import {createPool} from "../../../pool";
+import {createRoute, routeChainId, routeMidPrice} from "../../../route";
+import {getTickAtSqrtRatio} from "../../../tickList";
 
 const ETHER: Currency = {
   decimals: 18,

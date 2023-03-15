@@ -10,24 +10,20 @@ import {
   TradeType
 } from "../../../wrap";
 import { getWrappedNative } from "../../../token";
+import { BigInt, BigNumber, Box } from "@polywrap/wasm-as";
+import {_feeAmountToTickSpacing, _MAX_TICK, _MIN_TICK, encodeSqrtRatioX96, Price} from "../../../utils";
 import {
-  bestTradeExactIn,
-  bestTradeExactOut,
-  createPool,
-  createRoute,
+  bestTradeExactIn, bestTradeExactOut,
   createTradeFromRoute,
   createTradeFromRoutes,
   createUncheckedTrade,
-  createUncheckedTradeWithMultipleRoutes,
-  encodeSqrtRatioX96,
-  getTickAtSqrtRatio,
-  nearestUsableTick, tradeExecutionPrice,
-  tradeMaximumAmountIn,
-  tradeMinimumAmountOut, tradePriceImpact,
-  tradeWorstExecutionPrice
-} from "../../..";
-import { BigInt, BigNumber, Box } from "@polywrap/wasm-as";
-import { _feeAmountToTickSpacing, _MAX_TICK, _MIN_TICK, Price } from "../../../utils";
+  createUncheckedTradeWithMultipleRoutes, tradeExecutionPrice, tradeMaximumAmountIn,
+  tradeMinimumAmountOut,
+  tradePriceImpact, tradeWorstExecutionPrice
+} from "../../../trade";
+import {createPool} from "../../../pool";
+import {getTickAtSqrtRatio, nearestUsableTick} from "../../../tickList";
+import {createRoute} from "../../../route";
 
 const ETHER: Currency = {
   decimals: 18,

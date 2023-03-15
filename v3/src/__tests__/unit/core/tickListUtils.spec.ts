@@ -3,7 +3,7 @@ import { BigInt } from "@polywrap/wasm-as";
 import { _MAX_TICK, _MIN_TICK, _feeAmountToTickSpacing } from "../../../utils";
 import * as TickList from "../../../tickList/index";
 import * as TickListUtils from "../../../tickList/utils";
-import { nearestUsableTick } from "../../..";
+import {nearestUsableTick} from "../../../tickList";
 
 let highTick: Tick;
 let lowTick: Tick;

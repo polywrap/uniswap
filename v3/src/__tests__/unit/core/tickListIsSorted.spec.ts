@@ -1,6 +1,6 @@
-import { tickListIsSorted } from "../../..";
 import { Tick } from "../../../wrap";
 import { BigInt } from "@polywrap/wasm-as";
+import {tickListIsSorted} from "../../../tickList";
 
 const tick1: Tick = {
     index: 1,

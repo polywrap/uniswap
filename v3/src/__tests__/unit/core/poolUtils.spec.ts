@@ -1,7 +1,10 @@
 import { ChainId, FeeAmount, Pool, Token } from "../../../wrap";
-import { createPool, encodeSqrtRatioX96, nearestUsableTick, simulateSwap } from "../../..";
+import { Module } from "../../..";
 import { BigInt } from "@polywrap/wasm-as";
 import { _MAX_SQRT_RATIO, _MAX_TICK, _MIN_SQRT_RATIO, _MIN_TICK, _feeAmountToTickSpacing } from "../../../utils";
+import {simulateSwap} from "../../../pool";
+
+const module: Module = new Module();
 
 const USDC: Token = {
   chainId: ChainId.MAINNET,
@@ -23,21 +26,21 @@ const DAI: Token = {
 };
 const ONE_ETHER: BigInt = BigInt.pow(BigInt.fromUInt16(10), 18);
 
-const pool: Pool = createPool({
+const pool: Pool = module.createPool({
   tokenA: USDC,
   tokenB: DAI,
   fee: FeeAmount.LOW,
-  sqrtRatioX96: encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
+  sqrtRatioX96: module.encodeSqrtRatioX96({ amount1: BigInt.ONE, amount0: BigInt.ONE }),
   liquidity: ONE_ETHER,
   tickCurrent: 0,
   ticks: [
     {
-      index: nearestUsableTick({ tick: _MIN_TICK, tickSpacing: _feeAmountToTickSpacing(FeeAmount.LOW) }),
+      index: module.nearestUsableTick({ tick: _MIN_TICK, tickSpacing: _feeAmountToTickSpacing(FeeAmount.LOW) }),
       liquidityNet: ONE_ETHER,
       liquidityGross: ONE_ETHER
     },
     {
-      index: nearestUsableTick({ tick: _MAX_TICK, tickSpacing: _feeAmountToTickSpacing(FeeAmount.LOW) }),
+      index: module.nearestUsableTick({ tick: _MAX_TICK, tickSpacing: _feeAmountToTickSpacing(FeeAmount.LOW) }),
       liquidityNet: ONE_ETHER.opposite(),
       liquidityGross: ONE_ETHER
     }],

@@ -1,7 +1,7 @@
 import { ChainId, Args_priceToClosestTick, Args_tickToPrice, Token, Price as PriceType } from "../../../wrap";
-import { priceToClosestTick, tickToPrice } from "../../..";
 import {Price} from "../../../utils";
 import { BigInt, BigNumber } from "@polywrap/wasm-as";
+import {priceToClosestTick, tickToPrice} from "../../../tickList";
 
 /**
  * Creates an example token with a specific sort order

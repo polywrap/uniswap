@@ -1,6 +1,6 @@
-import { getTick, validateTickList } from "../../..";
 import { BigInt } from "@polywrap/wasm-as";
 import { Tick } from "../../../wrap";
+import {getTick, validateTickList} from "../../../tickList";
 
 describe('TickListDataProvider', () => {
 

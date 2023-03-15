@@ -1,11 +1,22 @@
 import { ChainId, FeeAmount, MintAmounts, Pool, Position, Token } from "../../../wrap";
-import { createPool, encodeSqrtRatioX96, getTickAtSqrtRatio, nearestUsableTick, burnAmountsWithSlippage,
+import { BigInt } from "@polywrap/wasm-as";
+import {
+  _MAX_SQRT_RATIO,
+  _MAX_TICK,
+  _MIN_SQRT_RATIO,
+  _MIN_TICK,
+  _feeAmountToTickSpacing,
+  encodeSqrtRatioX96
+} from "../../../utils";
+import {getTickAtSqrtRatio, nearestUsableTick} from "../../../tickList";
+import {createPool} from "../../../pool";
+import {
+  burnAmountsWithSlippage,
   createPosition, mintAmounts,
   mintAmountsWithSlippage,
   positionAmount0,
-  positionAmount1 } from "../../..";
-import { BigInt } from "@polywrap/wasm-as";
-import { _MAX_SQRT_RATIO, _MAX_TICK, _MIN_SQRT_RATIO, _MIN_TICK, _feeAmountToTickSpacing } from "../../../utils";
+  positionAmount1
+} from "../../../position";
 
 const USDC: Token = {
   chainId: ChainId.MAINNET,
