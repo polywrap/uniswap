@@ -6,7 +6,7 @@ import * as ethers from "ethers";
 import {
   initInfra, stopInfra, getConfig,
   getUniswapPool, getPoolFromAddress, getTokens, isDefined, toUniToken,
-  Pool, Route, Token, Price, buildDependencies
+  Pool, Route, Token, Price,
 } from "../helpers";
 
 jest.setTimeout(360000);
@@ -27,8 +27,7 @@ describe("Route (mainnet fork)", () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const { sha3Uri, graphUri } = await buildDependencies();
-    const config = getConfig(sha3Uri, graphUri);
+    const config = getConfig().build();
     client = new PolywrapClient(config);
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");

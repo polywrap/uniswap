@@ -21,7 +21,7 @@ export async function constant<T>(client: PolywrapClient, uri: string, method: s
     uri: uri,
     method: method,
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -39,7 +39,7 @@ export async function createPool(client: PolywrapClient, uri: string, tokenA: To
       ticks,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -52,7 +52,7 @@ export async function encodeSqrtRatioX96(client: PolywrapClient, uri: string, am
       amount0: amount0.toString(),
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -66,7 +66,7 @@ export async function createRoute(client: PolywrapClient, uri: string, pools: Po
       outToken,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -79,7 +79,7 @@ export async function encodeRouteToPath(client: PolywrapClient, uri: string, rou
       exactOutput,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -93,7 +93,7 @@ export async function encodeUnwrapWETH9(client: PolywrapClient, uri: string, amo
       feeOptions: feeOptions ?? null,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -108,7 +108,7 @@ export async function encodeSweepToken(client: PolywrapClient, uri: string, toke
       feeOptions: feeOptions ?? null,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -117,7 +117,7 @@ export async function encodeRefundETH(client: PolywrapClient, uri: string): Prom
     uri: uri,
     method: "encodeRefundETH",
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -129,7 +129,7 @@ export async function encodeMulticall(client: PolywrapClient, uri: string, calld
       calldatas,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -141,7 +141,7 @@ export async function getTickAtSqrtRatio(client: PolywrapClient, uri: string, sq
       sqrtRatioX96: sqrtRatioX96.toString(),
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -154,7 +154,7 @@ export async function nearestUsableTick(client: PolywrapClient, uri: string, tic
       tickSpacing,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -166,7 +166,7 @@ export async function getSqrtRatioAtTick(client: PolywrapClient, uri: string, ti
      tick,
    },
  });
- if (invocation.ok == false) throw invocation.error
+ if (invocation.ok === false) throw invocation.error
  return invocation.value;
 }
 
@@ -178,7 +178,7 @@ export async function feeAmountToTickSpacing(client: PolywrapClient, uri: string
       feeAmount: typeof feeAmount === "string" ? feeAmount : FeeAmountEnum[feeAmount],
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -191,7 +191,7 @@ export async function createTradeFromRoute(client: PolywrapClient, uri: string, 
       tradeType,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -204,7 +204,7 @@ export async function createTradeFromRoutes(client: PolywrapClient, uri: string,
       tradeType,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -217,7 +217,7 @@ export async function swapCallParameters(client: PolywrapClient, uri: string, tr
       options,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -232,7 +232,7 @@ export async function quoteCallParameters(client: PolywrapClient, uri: string, r
       options: options ?? null,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -245,7 +245,7 @@ export async function collectRewards(client: PolywrapClient, uri: string, incent
       options,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -258,7 +258,7 @@ export async function withdrawToken(client: PolywrapClient, uri: string, incenti
       options,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -270,7 +270,7 @@ export async function encodeDeposit(client: PolywrapClient, uri: string, incenti
       incentiveKeys,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -282,7 +282,7 @@ export async function safeTransferFromParameters(client: PolywrapClient, uri: st
       options,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -294,7 +294,7 @@ export async function createCallParameters(client: PolywrapClient, uri: string, 
       pool
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -307,7 +307,7 @@ export async function addCallParameters(client: PolywrapClient, uri: string, pos
       options,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -319,7 +319,7 @@ export async function collectCallParameters(client: PolywrapClient, uri: string,
       options
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -332,7 +332,7 @@ export async function removeCallParameters(client: PolywrapClient, uri: string, 
       options,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -347,7 +347,7 @@ export async function createPosition(client: PolywrapClient, uri: string, pool: 
       liquidity: liquidity.toString(),
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -362,7 +362,7 @@ export async function bestTradeExactIn(client: PolywrapClient, uri: string, pool
       options,
     },
   });
-  if (invocation.ok == false) throw invocation.error;
+  if (invocation.ok === false) throw invocation.error;
   return invocation.value;
 }
 
@@ -377,7 +377,7 @@ export async function bestTradeExactOut(client: PolywrapClient, uri: string, poo
      options,
    },
  });
-  if (invocation.ok == false) throw invocation.error
+  if (invocation.ok === false) throw invocation.error
   return invocation.value;
 }
 
@@ -389,7 +389,7 @@ export async function getNative(client: PolywrapClient, uri: string, chainId: Ch
      chainId: typeof chainId === "string" ? chainId : ChainIdEnum[chainId],
    },
  });
-  if (invocation.ok == false) throw invocation.error
+  if (invocation.ok === false) throw invocation.error
   return invocation.value;
 }
 
@@ -401,6 +401,6 @@ export async function getWrappedNative(client: PolywrapClient, uri: string, chai
      chainId: typeof chainId === "string" ? chainId : ChainIdEnum[chainId],
    },
  });
-  if (invocation.ok == false) throw invocation.error
+  if (invocation.ok === false) throw invocation.error
   return invocation.value;
 }

@@ -3,7 +3,7 @@ import {
   ChainIdEnum, Pool, Token,
   getConfig, initInfra, stopInfra,
   getFeeAmount, getPools, getTokens, getUniPools,
-  getUniswapPool, buildDependencies, Tick
+  getUniswapPool, Tick
 } from "../helpers";
 import path from "path";
 import * as uni from "@uniswap/v3-sdk";
@@ -23,8 +23,7 @@ describe("Fetch (mainnet fork)", () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const { sha3Uri, graphUri } = await buildDependencies();
-    const config = getConfig(sha3Uri, graphUri);
+    const config = getConfig().build();
     client = new PolywrapClient(config);
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");

@@ -9,7 +9,7 @@ import {
   Trade,
   getPoolFromAddress, getPools, getTokens,
   bestTradeExactOut, getNative, swapCallParameters,
-  getConfig, initInfra, stopInfra, buildDependencies
+  getConfig, initInfra, stopInfra,
 } from "../helpers";
 import path from "path";
 import * as ethers from "ethers";
@@ -30,8 +30,7 @@ describe("Call (mainnet fork)", () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const { sha3Uri, graphUri } = await buildDependencies();
-    const config = getConfig(sha3Uri, graphUri);
+    const config = getConfig().build();
     client = new PolywrapClient(config);
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
