@@ -320,13 +320,13 @@ export function swapCallParameters(
 
 function routerAbi(methodName: string): string {
   if (methodName == "exactInputSingle") {
-    return "function exactInputSingle(tuple(address tokenIn, address tokenOut, uint24 fee, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum, uint160 sqrtPriceLimitX96) calldata params) external payable returns (uint256 amountOut)";
+    return "function exactInputSingle((address, address, uint24, address, uint256, uint256, uint256, uint160) calldata params) external payable returns (uint256 amountOut)";
   } else if (methodName == "exactOutputSingle") {
-    return "function exactOutputSingle(tuple(address tokenIn, address tokenOut, uint24 fee, address recipient, uint256 deadline, uint256 amountOut, uint256 amountInMaximum, uint160 sqrtPriceLimitX96) calldata params) external payable returns (uint256 amountIn)";
+    return "function exactOutputSingle((address, address, uint24, address, uint256, uint256, uint256, uint160) calldata params) external payable returns (uint256 amountIn)";
   } else if (methodName == "exactInput") {
-    return "function exactInput(tuple(bytes path, address recipient, uint256 deadline, uint256 amountIn, uint256 amountOutMinimum) calldata params) external payable returns (uint256 amountOut)";
+    return "function exactInput((bytes, address, uint256, uint256, uint256) calldata params) external payable returns (uint256 amountOut)";
   } else if (methodName == "exactOutput") {
-    return "function exactOutput(tuple(bytes path, address recipient, uint256 deadline, uint256 amountOut, uint256 amountInMaximum) calldata params) external payable returns (uint256 amountIn)";
+    return "function exactOutput((bytes, address, uint256, uint256, uint256) calldata params) external payable returns (uint256 amountIn)";
   } else {
     throw new Error("Invalid method name: " + methodName);
   }

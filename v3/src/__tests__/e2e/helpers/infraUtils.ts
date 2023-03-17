@@ -1,19 +1,27 @@
 import { runCli } from "@polywrap/cli-js";
 import axios from "axios";
-import {ClientConfigBuilder, DefaultBundle, IClientConfigBuilder, IWrapPackage} from "@polywrap/client-js";
-import { ethereumProviderPlugin, Connections, Connection } from "ethereum-provider-js";
+import { ClientConfigBuilder, DefaultBundle, IClientConfigBuilder, IWrapPackage } from "@polywrap/client-js";
+import { ethereumProviderPlugin, Connections, Connection } from "@polywrap/ethereum-provider-js";
 
-export function getConfig(): Partial<IClientConfigBuilder> {
-  const builder = new ClientConfigBuilder();
-  return builder
+export function getSimpleConfig(): IClientConfigBuilder {
+  return new ClientConfigBuilder()
+    .addDefaults()
+    .addPackage(
+      "ens/wraps.eth:ethereum-provider@2.0.0",
+      ethereumProviderPlugin({ connections: new Connections({ networks: { } }) }) as IWrapPackage
+    );
+}
+
+export function getMainnetForkConfig(): IClientConfigBuilder {
+  return new ClientConfigBuilder()
     .addDefaults()
     .addEnv(DefaultBundle.embeds.ipfsResolver.source.uri, {
-    provider: DefaultBundle.ipfsProviders[0],
-    fallbackProviders: DefaultBundle.ipfsProviders.slice(1).concat(["http://localhost:48084", "http://127.0.0.1:45005"]),
-    retries: { tryResolveUri: 2, getFile: 2 },
-  })
+      provider: DefaultBundle.ipfsProviders[0],
+      fallbackProviders: DefaultBundle.ipfsProviders.slice(1).concat(["http://localhost:48084", "http://127.0.0.1:45005"]),
+      retries: { tryResolveUri: 2, getFile: 2 },
+    })
     .addPackage(
-      DefaultBundle.plugins.ethereumProvider.uri.uri,
+      "ens/wraps.eth:ethereum-provider@2.0.0",
       ethereumProviderPlugin({
         connections: new Connections({
           networks: {

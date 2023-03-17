@@ -10,6 +10,7 @@ import {
   createRoute,
   encodeRouteToPath,
   getFakeTestToken,
+  getSimpleConfig,
 } from "../helpers";
 import path from "path";
 
@@ -54,7 +55,9 @@ describe('encodeRouteToPath (SDK test replication)', () => {
 
   beforeAll(async () => {
     // get client
-    client = new PolywrapClient();
+    client = new PolywrapClient(
+      getSimpleConfig().build()
+    );
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
     fsUri = "fs/" + wrapperAbsPath + '/build';

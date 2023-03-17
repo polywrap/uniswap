@@ -196,7 +196,7 @@ export function encodeMulticall(input: Input_encodeMulticall): string {
     : Ethereum_Query.encodeFunction({
         method:
           "function multicall(bytes[] calldata data) external payable returns (bytes[] memory results)",
-        args: ['["' + calldatas.join('", "') + '"]'],
+        args: ['["' + calldatas.join('","') + '"]'],
       }).unwrap();
 }
 ```

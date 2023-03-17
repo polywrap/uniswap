@@ -17,6 +17,7 @@ import {
   SafeTransferOptions,
   Token,
   TokenAmount,
+  Logger_Module
 } from "../wrap";
 import {
   encodeMulticall,
@@ -161,7 +162,7 @@ export function addCallParameters(
     calldatas.push(
       Ethereum_Module.encodeFunction({
         method: nfpmAbi("mint"),
-        args: [paramsToJsonString(args)],
+        args: [paramsToEthAbiString(args)],
       }).unwrap()
     );
   } else {
@@ -177,7 +178,7 @@ export function addCallParameters(
     calldatas.push(
       Ethereum_Module.encodeFunction({
         method: nfpmAbi("increaseLiquidity"),
-        args: [paramsToJsonString(args)],
+        args: [paramsToEthAbiString(args)],
       }).unwrap()
     );
   }
@@ -288,7 +289,7 @@ export function removeCallParameters(
   calldatas.push(
     Ethereum_Module.encodeFunction({
       method: nfpmAbi("decreaseLiquidity"),
-      args: [paramsToJsonString(decreaseLiqArgs)],
+      args: [paramsToEthAbiString(decreaseLiqArgs)],
     }).unwrap()
   );
 
@@ -403,7 +404,7 @@ function encodeCollect(options: CollectOptions): string[] {
   calldatas.push(
     Ethereum_Module.encodeFunction({
       method: nfpmAbi("collect"),
-      args: [paramsToJsonString(collectArgs)],
+      args: [paramsToEthAbiString(collectArgs)],
     }).unwrap()
   );
 
@@ -442,15 +443,15 @@ function nfpmAbi(methodName: string): string {
   if (methodName == "createAndInitializePoolIfNecessary") {
     return "function createAndInitializePoolIfNecessary(address token0, address token1, uint24 fee, uint160 sqrtPriceX96) external payable returns (address pool)";
   } else if (methodName == "collect") {
-    return "function collect(tuple(uint256 tokenId, address recipient, uint128 amount0Max, uint128 amount1Max) calldata params) external payable returns (uint256 amount0, uint256 amount1)";
+    return "function collect((uint256, address, uint128, uint128) calldata params) external payable returns (uint256 amount0, uint256 amount1)";
   } else if (methodName == "mint") {
-    return "function mint(tuple(address token0, address token1, uint24 fee, int24 tickLower, int24 tickUpper, uint256 amount0Desired, uint256 amount1Desired, uint256 amount0Min, uint256 amount1Min, address recipient, uint256 deadline) calldata params) external payable returns (uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1)";
+    return "function mint((address, address, uint24, int24, int24, uint256, uint256, uint256, uint256, address, uint256) calldata params) external payable returns (uint256 tokenId, uint128 liquidity, uint256 amount0, uint256 amount1)";
   } else if (methodName == "increaseLiquidity") {
-    return "function increaseLiquidity(tuple(uint256 tokenId, uint256 amount0Desired, uint256 amount1Desired, uint256 amount0Min, uint256 amount1Min, uint256 deadline) calldata params) external payable returns (uint128 liquidity, uint256 amount0, uint256 amount1)";
+    return "function increaseLiquidity((uint256, uint256, uint256, uint256, uint256, uint256) calldata params) external payable returns (uint128 liquidity, uint256 amount0, uint256 amount1)";
   } else if (methodName == "permit") {
     return "function permit(address spender, uint256  deadline, bytes32 r, bytes32 s) external payable";
   } else if (methodName == "decreaseLiquidity") {
-    return "function decreaseLiquidity(tuple(uint256 tokenId, uint128 liquidity, uint256 amount0Min, uint256 amount1Min, uint256 deadline) calldata params) external payable returns (uint256 amount0, uint256 amount1)";
+    return "function decreaseLiquidity((uint256, uint128, uint256, uint256, uint256) calldata params) external payable returns (uint256 amount0, uint256 amount1)";
   } else if (methodName == "burn") {
     return "function burn(uint256 tokenId) external payable";
   } else if (methodName == "safeTransferFrom") {
@@ -462,7 +463,7 @@ function nfpmAbi(methodName: string): string {
   }
 }
 
-function paramsToJsonString<T>(params: T): string {
+function paramsToEthAbiString<T>(params: T): string {
   if (params instanceof CollectArgs) {
     return `{
       "tokenId": "${params.tokenId}",
@@ -471,19 +472,8 @@ function paramsToJsonString<T>(params: T): string {
       "amount1Max": "${params.amount1Max}"
     }`;
   } else if (params instanceof MintArgs) {
-    return `{
-      "token0": "${params.token0}",
-      "token1": "${params.token1}",
-      "fee": ${params.fee},
-      "tickLower": ${params.tickLower},
-      "tickUpper": ${params.tickUpper},
-      "amount0Desired": "${params.amount0Desired}",
-      "amount1Desired": "${params.amount1Desired}",
-      "amount0Min": "${params.amount0Min}",
-      "amount1Min": "${params.amount1Min}",
-      "recipient": "${params.recipient}",
-      "deadline": "${params.deadline}"
-    }`;
+    // tuple(address token0, address token1, uint24 fee, int24 tickLower, int24 tickUpper, uint256 amount0Desired, uint256 amount1Desired, uint256 amount0Min, uint256 amount1Min, address recipient, uint256 deadline)
+    return `(${params.token0},${params.token1},${params.fee},${params.tickLower},${params.tickUpper},${params.amount0Desired},${params.amount1Desired},${params.amount0Min},${params.amount1Min},${params.recipient},${params.deadline})`;
   } else if (params instanceof IncreaseLiquidityArgs) {
     return `{
       "tokenId": "${params.tokenId}",

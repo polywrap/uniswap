@@ -16,7 +16,8 @@ import {
   SafeTransferOptions,
   Token,
   TokenAmount,
-  getFakeTestToken
+  getFakeTestToken,
+  getSimpleConfig
 } from "../helpers";
 
 jest.setTimeout(120000);
@@ -57,7 +58,9 @@ describe('NonfungiblePositionManager (SDK test replication)', () => {
 
   beforeAll(async () => {
     // get client
-    client = new PolywrapClient();
+    client = new PolywrapClient(
+      getSimpleConfig().build()
+    );
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
     fsUri = "fs/" + wrapperAbsPath + '/build';
@@ -80,7 +83,7 @@ describe('NonfungiblePositionManager (SDK test replication)', () => {
     })
   })
 
-  describe('addCallParameters', () => {
+  describe.only('addCallParameters', () => {
     it('throws if liquidity is 0', async () => {
       await expect(
         addCallParameters(client, fsUri,

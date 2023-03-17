@@ -105,7 +105,7 @@ export function encodeDeposit(args: Args_encodeDeposit): string {
     }
     data = Ethereum_Module.encodeParams({
       types: [`${stakerAbi("INCENTIVE_KEY_ABI")}[]`],
-      values: ["[" + keys.join(", ") + "]"],
+      values: ["[" + keys.join(",") + "]"],
     }).unwrap();
   } else {
     data = Ethereum_Module.encodeParams({
@@ -174,7 +174,7 @@ function encodeIncentiveKey(incentiveKey: IncentiveKey): string {
 
 function stakerAbi(methodName: string): string {
   if (methodName == "INCENTIVE_KEY_ABI") {
-    return "tuple(address rewardToken, address pool, uint256 startTime, uint256 endTime, address refundee)";
+    return "(address, address, uint256, uint256, address)";
   } else if (methodName == "unstakeToken") {
     return `function unstakeToken(${stakerAbi("INCENTIVE_KEY_ABI")} memory key, uint256 tokenId) external`; // eslint-disable-line
   } else if (methodName == "stakeToken") {
