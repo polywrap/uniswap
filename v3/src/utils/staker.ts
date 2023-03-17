@@ -40,7 +40,7 @@ export function collectRewards(args: Args_collectRewards): MethodParameters {
         method: stakerAbi("stakeToken"),
         args: [
           encodeIncentiveKey(incentiveKey),
-          toHex({ value: options.tokenId }),
+          options.tokenId.toString(),
         ],
       }).unwrap()
     );
@@ -77,7 +77,7 @@ export function withdrawToken(args: Args_withdrawToken): MethodParameters {
     Ethereum_Module.encodeFunction({
       method: stakerAbi("withdrawToken"),
       args: [
-        toHex({ value: options.tokenId }),
+        options.tokenId.toString(),
         owner,
         options.data === null ? ZERO_HEX : options.data!,
       ],
@@ -132,7 +132,7 @@ function encodeClaim(
       method: stakerAbi("unstakeToken"),
       args: [
         encodeIncentiveKey(incentiveKey),
-        toHex({ value: options.tokenId }),
+        options.tokenId.toString(),
       ],
     }).unwrap()
   );
@@ -145,7 +145,7 @@ function encodeClaim(
       args: [
         incentiveKey.rewardToken.address,
         recipient,
-        toHex({ value: amount }),
+        amount.toString(),
       ],
     }).unwrap()
   );
@@ -166,8 +166,8 @@ function encodeIncentiveKey(incentiveKey: IncentiveKey): string {
       fee: incentiveKey.pool.fee,
       initCodeHashManualOverride: null,
     })}",
-    "startTime": "${toHex({ value: incentiveKey.startTime })}",
-    "endTime": "${toHex({ value: incentiveKey.endTime })}",
+    "startTime": "${incentiveKey.startTime.toString()}",
+    "endTime": "${incentiveKey.endTime.toString()}",
     "refundee": "${getChecksumAddress(incentiveKey.refundee)}"
   }`;
 }

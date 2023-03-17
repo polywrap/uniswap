@@ -1,7 +1,7 @@
 import { runCli } from "@polywrap/cli-js";
 import axios from "axios";
 import {ClientConfigBuilder, DefaultBundle, IClientConfigBuilder, IWrapPackage} from "@polywrap/client-js";
-import { ethereumProviderPlugin, Connections, Connection } from "@polywrap/ethereum-provider-js";
+import { ethereumProviderPlugin, Connections, Connection } from "ethereum-provider-js";
 
 export function getConfig(): Partial<IClientConfigBuilder> {
   const builder = new ClientConfigBuilder();

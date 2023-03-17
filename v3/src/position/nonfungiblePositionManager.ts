@@ -43,8 +43,6 @@ import { tokenEquals, _isNative, _wrapToken } from "../token";
 
 import { BigInt } from "@polywrap/wasm-as";
 
-const MAX_UINT_128_HEX = toHex({ value: BigInt.ONE.leftShift(128).subInt(1) });
-
 class MintArgs {
   token0: string;
   token1: string;
@@ -113,10 +111,10 @@ export function addCallParameters(
     position,
     slippageTolerance: options.slippageTolerance,
   });
-  const amount0Min: string = toHex({ value: minimumAmounts.amount0 });
-  const amount1Min: string = toHex({ value: minimumAmounts.amount1 });
+  const amount0Min: string = minimumAmounts.amount0.toString();
+  const amount1Min: string = minimumAmounts.amount1.toString();
 
-  const deadline: string = toHex({ value: options.deadline });
+  const deadline: string = options.deadline.toString();
 
   // create pool if needed
   if (
@@ -153,8 +151,8 @@ export function addCallParameters(
       fee: _getFeeAmount(position.pool.fee),
       tickLower: position.tickLower,
       tickUpper: position.tickUpper,
-      amount0Desired: toHex({ value: amount0Desired }),
-      amount1Desired: toHex({ value: amount1Desired }),
+      amount0Desired: amount0Desired.toString(),
+      amount1Desired: amount1Desired.toString(),
       amount0Min,
       amount1Min,
       recipient: getChecksumAddress(options.recipient!),
@@ -169,9 +167,9 @@ export function addCallParameters(
   } else {
     // increase
     const args: IncreaseLiquidityArgs = {
-      tokenId: toHex({ value: options.tokenId! }),
-      amount0Desired: toHex({ value: amount0Desired }),
-      amount1Desired: toHex({ value: amount1Desired }),
+      tokenId: options.tokenId!.toString(),
+      amount0Desired: amount0Desired.toString(),
+      amount1Desired: amount1Desired.toString(),
       amount0Min,
       amount1Min,
       deadline,
@@ -240,8 +238,8 @@ export function removeCallParameters(
 
   const calldatas: string[] = [];
 
-  const deadline: string = toHex({ value: options.deadline });
-  const tokenId: string = toHex({ value: options.tokenId });
+  const deadline: string = options.deadline.toString();
+  const tokenId: string = options.tokenId.toString();
   const liqPercent: Fraction = Fraction.fromString(options.liquidityPercentage);
 
   // construct a partial position with a percentage of liquidity
@@ -270,7 +268,7 @@ export function removeCallParameters(
         args: [
           getChecksumAddress(options.permit!.spender),
           tokenId,
-          toHex({ value: options.permit!.deadline }),
+          options.permit!.deadline.toString(),
           _getPermitV(options.permit!.v).toString(),
           options.permit!.r,
           options.permit!.s,
@@ -282,9 +280,9 @@ export function removeCallParameters(
   // remove liquidity
   const decreaseLiqArgs: DecreaseLiquidityArgs = {
     tokenId,
-    liquidity: toHex({ value: partialPosition.liquidity }),
-    amount0Min: toHex({ value: amount0Min }),
-    amount1Min: toHex({ value: amount1Min }),
+    liquidity: partialPosition.liquidity.toString(),
+    amount0Min: amount0Min.toString(),
+    amount1Min: amount1Min.toString(),
     deadline,
   };
   calldatas.push(
@@ -351,14 +349,14 @@ export function safeTransferFromParameters(
       args: [
         sender,
         recipient,
-        toHex({ value: options.tokenId }),
+        options.tokenId.toString(),
         options.data!,
       ],
     }).unwrap();
   } else {
     calldata = Ethereum_Module.encodeFunction({
       method: nfpmAbi("_safeTransferFrom"),
-      args: [sender, recipient, toHex({ value: options.tokenId })],
+      args: [sender, recipient, options.tokenId.toString()],
     }).unwrap();
   }
 
@@ -379,7 +377,7 @@ function encodeCreate(pool: Pool): string {
       pool.token0.address,
       pool.token1.address,
       _getFeeAmount(pool.fee).toString(),
-      toHex({ value: pool.sqrtRatioX96 }),
+      pool.sqrtRatioX96.toString(),
     ],
   }).unwrap();
 }
@@ -387,18 +385,20 @@ function encodeCreate(pool: Pool): string {
 function encodeCollect(options: CollectOptions): string[] {
   const calldatas: string[] = [];
 
-  const tokenId: string = toHex({ value: options.tokenId });
+  const tokenId: string = options.tokenId.toString();
   const recipient: string = getChecksumAddress(options.recipient);
   const involvesETH: boolean =
     _isNative(options.expectedCurrencyOwed0.token) ||
     _isNative(options.expectedCurrencyOwed1.token);
 
+  const MAX_UINT_128 = BigInt.ONE.leftShift(128).subInt(1).toString();
+
   // collect
   const collectArgs: CollectArgs = {
     tokenId,
     recipient: involvesETH ? ADDRESS_ZERO : recipient,
-    amount0Max: MAX_UINT_128_HEX,
-    amount1Max: MAX_UINT_128_HEX,
+    amount0Max: MAX_UINT_128,
+    amount1Max: MAX_UINT_128,
   };
   calldatas.push(
     Ethereum_Module.encodeFunction({
