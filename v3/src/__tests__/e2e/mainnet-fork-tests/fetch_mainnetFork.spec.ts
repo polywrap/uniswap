@@ -78,8 +78,8 @@ describe("Fetch (mainnet fork)", () => {
       const pool = poolData.value;
       const uniPool: uni.Pool = uniPools[i];
 
-      expect(pool.token0.address).toEqual(uniPool.token0.address.toLowerCase());
-      expect(pool.token1.address).toEqual(uniPool.token1.address.toLowerCase());
+      expect(pool.token0.address).toEqual(uniPool.token0.address);
+      expect(pool.token1.address).toEqual(uniPool.token1.address);
       expect(getFeeAmount(pool.fee)).toEqual(uniPool.fee.valueOf());
       expect(pool.sqrtRatioX96).toEqual(uniPool.sqrtRatioX96.toString());
       expect(pool.liquidity).toEqual(uniPool.liquidity.toString());
