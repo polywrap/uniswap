@@ -46,7 +46,7 @@ jobs:
       - name: PR New URI
         uses: peter-evans/create-pull-request@v3
         with:
-          branch: ipfs-http-client-cd-pr-${{github.event.number}}
-          commit-message: "[CD] ipfs-http-client"
-          title: "[CD] ipfs-http-client"
+          branch: uniswap-v2-cd-pr-${{github.event.number}}
+          commit-message: "[CD] uniswap-v2"
+          title: "[CD] uniswap-v2"
           body: "Triggered by: https://github.com/${{github.repository}}/pull/${{github.event.number}}"
