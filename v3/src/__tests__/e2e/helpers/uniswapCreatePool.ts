@@ -56,7 +56,7 @@ async function getPoolTicks(address: string, skip: number = 0): Promise<Tick[]> 
   const APIURL = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3';
   const tokensQuery = `
     query {
-      ticks(first: 1000, skip: ${skip}, where: { poolAddress: "${address}" }, orderBy: tickIdx) {
+      ticks(first: 1000, skip: ${skip}, where: { poolAddress: "${address.toLowerCase()}" }, orderBy: tickIdx) {
         tickIdx
         liquidityGross
         liquidityNet
@@ -74,7 +74,7 @@ async function getPoolTicks(address: string, skip: number = 0): Promise<Tick[]> 
 async function getAllPoolTicks(address: string): Promise<Tick[]> {
   let skip: number = 0;
   let ticks: Tick[] = await getPoolTicks(address, skip);
-  while (ticks.length % 1000 === 0) {
+  while (ticks.length % 1000 === 0 && skip + 1000 <= 5000) {
     skip += 1000;
     const query = await getPoolTicks(address, skip);
     ticks = ticks.concat(query);

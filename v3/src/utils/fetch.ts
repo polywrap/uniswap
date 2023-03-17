@@ -183,7 +183,7 @@ function fetchPoolTicksSubgraph(
     subgraphName: endpoint.name,
     query: `
       query {
-        ticks(first: 1000, skip: ${skip}, where: { poolAddress: "${address}" }, orderBy: tickIdx) {
+        ticks(first: 1000, skip: ${skip}, where: { poolAddress: "${address.toLowerCase()}" }, orderBy: tickIdx) {
           tickIdx
           liquidityGross
           liquidityNet
@@ -211,7 +211,7 @@ function fetchPoolTicksSubgraph(
 function fetchAllTicks(address: string, chainId: ChainId): Tick[] {
   let skip: i32 = 0;
   let ticks: Tick[] = fetchPoolTicksSubgraph(address, chainId, skip);
-  while (ticks.length % 1000 === 0) {
+  while (ticks.length % 1000 === 0 && skip + 1000 <= 5000) {
     skip += 1000;
     const query = fetchPoolTicksSubgraph(address, chainId, skip);
     ticks = ticks.concat(query);
