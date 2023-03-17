@@ -33,7 +33,7 @@
     "polywrap": "~0.10.0-pre",
     "@polywrap/client-js": "~0.10.0-pre",
     "@polywrap/cli-js": "~0.10.0-pre",
-    "@polywrap/ethereum-provider-js": "0.2.4",
+    "@polywrap/ethereum-provider-js": "0.3.0",
     "assemblyscript": "0.19.23",
     "eslint": "7.16.0",
     "eslint-config-prettier": "7.1.0",
