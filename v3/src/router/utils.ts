@@ -22,7 +22,8 @@ import {
   getChecksumAddress,
 } from "../utils";
 
-import { BigInt } from "@polywrap/wasm-as";
+import {BigInt, JSON} from "@polywrap/wasm-as";
+import * as Types from "../wrap";
 
 class EncodeRouteStep {
   inToken: Token;
@@ -99,8 +100,8 @@ export function encodePermit(args: Args_encodePermit): string {
         method: selfPermitAbi("selfPermitAllowed"),
         args: [
           token.address,
-          toHex({ value: options.nonce! }),
-          toHex({ value: options.expiry! }),
+          options.nonce!.toString(),
+          options.expiry!.toString(),
           _getPermitV(options.v).toString(),
           options.r,
           options.s,
@@ -110,8 +111,8 @@ export function encodePermit(args: Args_encodePermit): string {
         method: selfPermitAbi("selfPermit"),
         args: [
           token.address,
-          toHex({ value: options.amount! }),
-          toHex({ value: options.deadline! }),
+          options.amount!.toString(),
+          options.deadline!.toString(),
           _getPermitV(options.v).toString(),
           options.r,
           options.s,
@@ -130,12 +131,12 @@ export function encodeUnwrapWETH9(args: Args_encodeUnwrapWETH9): string {
 
     return Ethereum_Module.encodeFunction({
       method: paymentsAbi("unwrapWETH9WithFee"),
-      args: [toHex({ value: amountMinimum }), recipient, feeBips, feeRecipient],
+      args: [amountMinimum.toString(), recipient, feeBips, feeRecipient],
     }).unwrap();
   } else {
     return Ethereum_Module.encodeFunction({
       method: paymentsAbi("unwrapWETH9"),
-      args: [toHex({ value: amountMinimum }), recipient],
+      args: [amountMinimum.toString(), recipient],
     }).unwrap();
   }
 }
@@ -154,7 +155,7 @@ export function encodeSweepToken(args: Args_encodeSweepToken): string {
       method: paymentsAbi("sweepTokenWithFee"),
       args: [
         token.address,
-        toHex({ value: amountMinimum }),
+        amountMinimum.toString(),
         recipient,
         feeBips,
         feeRecipient,
@@ -163,7 +164,7 @@ export function encodeSweepToken(args: Args_encodeSweepToken): string {
   } else {
     return Ethereum_Module.encodeFunction({
       method: paymentsAbi("sweepToken"),
-      args: [token.address, toHex({ value: amountMinimum }), recipient],
+      args: [token.address, amountMinimum.toString(), recipient],
     }).unwrap();
   }
 }
@@ -182,7 +183,7 @@ export function encodeMulticall(args: Args_encodeMulticall): string {
     : Ethereum_Module.encodeFunction({
         method:
           "function multicall(bytes[] calldata data) external payable returns (bytes[] memory results)",
-        args: ['["' + calldatas.join('", "') + '"]'],
+        args: ['[' + calldatas.join(', ') + ']'],
       }).unwrap();
 }
 
@@ -199,7 +200,7 @@ function selfPermitAbi(methodName: string): string {
 function encodeFeeBips(fee: string): string {
   const feeFraction: Fraction = Fraction.fromString(fee);
   const tenK: Fraction = new Fraction(BigInt.fromUInt32(10000));
-  return toHex({ value: feeFraction.mul(tenK).quotient() });
+  return feeFraction.mul(tenK).quotient().toString();
 }
 
 function paymentsAbi(methodName: string): string {

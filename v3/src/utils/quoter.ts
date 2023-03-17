@@ -27,7 +27,7 @@ export function quoteCallParameters(
   const options: QuoteOptions | null = args.options;
 
   const singleHop: boolean = route.pools.length == 1;
-  const quoteAmount: string = toHex({ value: tokenAmount.amount });
+  const quoteAmount: string = tokenAmount.amount.toString();
   let calldata: string;
 
   if (singleHop) {
@@ -40,7 +40,7 @@ export function quoteCallParameters(
           _getFeeAmount(route.pools[0].fee).toString(),
           quoteAmount,
           options !== null && options.sqrtPriceLimitX96 !== null
-            ? toHex({ value: options.sqrtPriceLimitX96! })
+            ? options.sqrtPriceLimitX96!.toString()
             : ZERO_HEX,
         ],
       }).unwrap();
@@ -53,7 +53,7 @@ export function quoteCallParameters(
           _getFeeAmount(route.pools[0].fee).toString(),
           quoteAmount,
           options !== null && options.sqrtPriceLimitX96 !== null
-            ? toHex({ value: options.sqrtPriceLimitX96! })
+            ? options.sqrtPriceLimitX96!.toString()
             : ZERO_HEX,
         ],
       }).unwrap();

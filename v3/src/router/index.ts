@@ -161,7 +161,7 @@ export function swapCallParameters(
   }
 
   const recipient: string = getChecksumAddress(options.recipient);
-  const deadline: string = toHex({ value: options.deadline });
+  const deadline: string = options.deadline.toString()
 
   for (let i = 0; i < trades.length; i++) {
     const trade: Trade = trades[i];
@@ -170,20 +170,16 @@ export function swapCallParameters(
       const inputAmount: TokenAmount = trade.swaps[j].inputAmount;
       const outputAmount: TokenAmount = trade.swaps[j].outputAmount;
 
-      const amountIn: string = toHex({
-        value: tradeMaximumAmountIn({
+      const amountIn: string = tradeMaximumAmountIn({
           slippageTolerance: options.slippageTolerance,
           amountIn: inputAmount,
           tradeType: trade.tradeType,
-        }).amount,
-      });
-      const amountOut: string = toHex({
-        value: tradeMinimumAmountOut({
+        }).amount.toString();
+      const amountOut: string = tradeMinimumAmountOut({
           slippageTolerance: options.slippageTolerance,
           amountOut: outputAmount,
           tradeType: trade.tradeType,
-        }).amount,
-      });
+        }).amount.toString();
 
       // flag for whether the trade is single hop or not
       const singleHop = route.pools.length == 1;
@@ -201,7 +197,7 @@ export function swapCallParameters(
             sqrtPriceLimitX96:
               options.sqrtPriceLimitX96 === null
                 ? ZERO_HEX
-                : toHex({ value: options.sqrtPriceLimitX96! }),
+                : options.sqrtPriceLimitX96!.toString(),
           };
 
           calldatas.push(
@@ -222,7 +218,7 @@ export function swapCallParameters(
             sqrtPriceLimitX96:
               options.sqrtPriceLimitX96 === null
                 ? ZERO_HEX
-                : toHex({ value: options.sqrtPriceLimitX96! }),
+                : options.sqrtPriceLimitX96!.toString(),
           };
 
           calldatas.push(
