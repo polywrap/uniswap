@@ -25,7 +25,7 @@ import {
   Trade,
   TradeRoute,
   TradeSwap,
-  TradeType,
+  TradeType, Logger_Module,
 } from "../wrap";
 import {
   tokenAmountEquals,
@@ -478,6 +478,7 @@ function _bestTradeExactIn(
 
   const amountIn = _wrapAmount(nextAmountIn);
   const tokenOut = _wrapToken(currencyOut);
+
   for (let i = 0; i < pools.length; i++) {
     const pool = pools[i];
     // pool irrelevant

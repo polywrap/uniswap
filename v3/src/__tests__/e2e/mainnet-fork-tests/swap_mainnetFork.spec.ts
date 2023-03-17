@@ -9,7 +9,7 @@ import {
   Trade, TradeTypeEnum,
   getPoolFromAddress, getTokens,
   bestTradeExactOut, bestTradeExactIn, getNative,
-  getConfig, initInfra, stopInfra,
+  getMainnetForkConfig, initInfra, stopInfra,
 } from "../helpers";
 import path from "path";
 import * as ethers from "ethers";
@@ -37,7 +37,7 @@ describe("Swap (mainnet fork)", () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const config = getConfig().build();
+    const config = getMainnetForkConfig().build();
     client = new PolywrapClient(config);
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");

@@ -4,7 +4,7 @@ import * as uni from "@uniswap/v3-sdk";
 import * as uniCore from "@uniswap/sdk-core";
 import * as ethers from "ethers";
 import {
-  initInfra, stopInfra, getConfig,
+  initInfra, stopInfra, getMainnetForkConfig,
   getUniswapPool, getPoolFromAddress, getTokens, isDefined, toUniToken,
   Pool, Route, Token, Price,
 } from "../helpers";
@@ -27,7 +27,7 @@ describe("Route (mainnet fork)", () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const config = getConfig().build();
+    const config = getMainnetForkConfig().build();
     client = new PolywrapClient(config);
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
@@ -59,29 +59,18 @@ describe("Route (mainnet fork)", () => {
       tokens.find((token: Token) => token.currency.symbol === "USDT"),
     ].filter(isDefined);
 
-    const routeQuery = await client.query<{
-      createRoute: Route;
-    }>({
+    const routeQuery = await client.invoke<Route>({
       uri: fsUri,
-      query: `
-        query {
-          createRoute(
-            pools: $pools
-            inToken: $inToken
-            outToken: $outToken
-          )
-        }
-      `,
-      variables: {
+      method: "createRoute",
+      args: {
         pools: pools,
         inToken: inToken,
         outToken: outToken,
       },
     });
-    expect(routeQuery.errors).toBeFalsy();
-    expect(routeQuery.data?.createRoute).toBeTruthy();
+    if (routeQuery.ok == false) throw routeQuery.error;
 
-    const route: Route = routeQuery.data!.createRoute;
+    const route: Route = routeQuery.value;
     const uniRoute: uni.Route<uniCore.Token, uniCore.Token> = new uni.Route(uniPools, toUniToken(inToken), toUniToken(outToken));
 
     const midPriceInvocation = await client.invoke<Price>({

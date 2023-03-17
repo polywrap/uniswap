@@ -1,7 +1,7 @@
 import {  PolywrapClient } from "@polywrap/client-js";
 import {
   ChainIdEnum, Pool, Token,
-  getConfig, initInfra, stopInfra,
+  getMainnetForkConfig, initInfra, stopInfra,
   getFeeAmount, getPools, getTokens, getUniPools,
   getUniswapPool, Tick
 } from "../helpers";
@@ -23,7 +23,7 @@ describe("Fetch (mainnet fork)", () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const config = getConfig().build();
+    const config = getMainnetForkConfig().build();
     client = new PolywrapClient(config);
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
@@ -78,8 +78,8 @@ describe("Fetch (mainnet fork)", () => {
       const pool = poolData.value;
       const uniPool: uni.Pool = uniPools[i];
 
-      expect(pool.token0.address).toEqual(uniPool.token0.address);
-      expect(pool.token1.address).toEqual(uniPool.token1.address);
+      expect(pool.token0.address).toEqual(uniPool.token0.address.toLowerCase());
+      expect(pool.token1.address).toEqual(uniPool.token1.address.toLowerCase());
       expect(getFeeAmount(pool.fee)).toEqual(uniPool.fee.valueOf());
       expect(pool.sqrtRatioX96).toEqual(uniPool.sqrtRatioX96.toString());
       expect(pool.liquidity).toEqual(uniPool.liquidity.toString());

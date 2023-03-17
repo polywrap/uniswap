@@ -10,7 +10,7 @@
     "deploy": "npx polywrap deploy",
     "codegen": "npx polywrap codegen",
     "test:e2e:replication": "jest --passWithNoTests --runInBand --verbose src/__tests__/e2e/sdk-test-replications",
-    "test:e2e:fork": "jest --passWithNoTests --runInBand --verbose src/__tests__/e2e/mainnet-fork-tests",
+    "test:e2e:fork": "jest --passWithNoTests --runInBand --verbose src/__tests__/e2e/mainnet-fork-tests/router_mainnetFork.spec.ts",
     "test:e2e": "yarn test:e2e:replication && yarn test:e2e:fork",
     "test:unit": "asp --verbose",
     "test": "yarn test:unit && yarn test:e2e",

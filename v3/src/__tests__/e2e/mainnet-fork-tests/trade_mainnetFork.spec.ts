@@ -2,7 +2,7 @@ import { PolywrapClient } from "@polywrap/client-js";
 import {
   ChainIdEnum, Pool, Tick, Token, TokenAmount, Trade,
   getPools, getTokens, getUniPools,
-  getConfig, initInfra, stopInfra,
+  getMainnetForkConfig, initInfra, stopInfra,
 } from "../helpers";
 import path from "path";
 import * as uni from "@uniswap/v3-sdk";
@@ -23,7 +23,7 @@ describe("Trade (mainnet fork)", () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const config = getConfig().build();
+    const config = getMainnetForkConfig().build();
     client = new PolywrapClient(config);
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
@@ -60,13 +60,14 @@ describe("Trade (mainnet fork)", () => {
         if (tokens[i] === tokens[j]) {
           continue;
         }
+
         // get best trades
         const amountIn: TokenAmount = {
           token: tokens[i],
           amount: "10000000000"
         }
         const tokenOut = tokens[j];
-        const query = await client.invoke<Trade[]>({
+        const result = await client.invoke<Trade[]>({
           uri: fsUri,
           method: "bestTradeExactIn",
           args: {
@@ -76,8 +77,10 @@ describe("Trade (mainnet fork)", () => {
             options: null,
           },
         });
-        if (query.ok == false) fail(query.error);
-        const actualTrades: Trade[] = query.value!;
+        if (result.ok == false) {
+          throw result.error;
+        }
+        const actualTrades: Trade[] = result.value;
 
         // get expected best trades
         const uniTokenIn: uniCore.Token = amountIn.token.address === ""
@@ -108,8 +111,8 @@ describe("Trade (mainnet fork)", () => {
           const expectedTrade = expectedTrades[k];
           expect(actualTrade.swaps.length).toStrictEqual(expectedTrade.swaps.length);
           for (let m = 0; m < actualTrade.swaps.length; m++) {
-            const actualRoutePath: string[] = actualTrade.swaps[m].route.path.map(token => token.address) ?? [];
-            const expectedRoutePath: string[] = expectedTrade.swaps[m].route.tokenPath.map(token => token.address);
+            const actualRoutePath: string[] = actualTrade.swaps[m].route.path.map(token => token.address.toLowerCase()) ?? [];
+            const expectedRoutePath: string[] = expectedTrade.swaps[m].route.tokenPath.map(token => token.address.toLowerCase());
             expect(actualRoutePath).toStrictEqual(expectedRoutePath);
           }
         }
@@ -182,8 +185,8 @@ describe("Trade (mainnet fork)", () => {
           const expectedTrade = expectedTrades[k];
           expect(actualTrade.swaps.length).toStrictEqual(expectedTrade.swaps.length);
           for (let m = 0; m < actualTrade.swaps.length; m++) {
-            const actualRoutePath: string[] = actualTrade.swaps[m].route.path.map(token => token.address) ?? [];
-            const expectedRoutePath: string[] = expectedTrade.swaps[m].route.tokenPath.map(token => token.address);
+            const actualRoutePath: string[] = actualTrade.swaps[m].route.path.map(token => token.address.toLowerCase()) ?? [];
+            const expectedRoutePath: string[] = expectedTrade.swaps[m].route.tokenPath.map(token => token.address.toLowerCase());
             expect(actualRoutePath).toStrictEqual(expectedRoutePath);
           }
         }

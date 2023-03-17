@@ -4,7 +4,7 @@ import {
   getPoolFromAddress,
   getWrappedNative,
   initInfra,
-  getConfig,
+  getMainnetForkConfig,
   stopInfra,
 } from "../helpers";
 import path from "path";
@@ -21,7 +21,7 @@ describe("Deploy pool (mainnet fork)", () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const config = getConfig().build();
+    const config = getMainnetForkConfig().build();
     client = new PolywrapClient(config);
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");

@@ -25,7 +25,7 @@ export function currencyEquals(args: Args_currencyEquals): boolean {
 export function tokenEquals(args: Args_tokenEquals): boolean {
   const tokenA: Token = args.tokenA;
   const tokenB: Token = args.tokenB;
-  return tokenA.chainId == tokenB.chainId && tokenA.address == tokenB.address;
+  return tokenA.chainId == tokenB.chainId && tokenA.address.toLowerCase() == tokenB.address.toLowerCase();
 }
 
 // compares two TokenAmount types for equality, returning true if they have the

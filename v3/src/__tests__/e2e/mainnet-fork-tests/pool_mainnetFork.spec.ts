@@ -1,7 +1,7 @@
 import { PolywrapClient } from "@polywrap/client-js";
 import {
   Pool, TokenAmount, PoolChangeResult,
-  getConfig, initInfra, stopInfra,
+  getMainnetForkConfig, initInfra, stopInfra,
   getUniswapPool,
   getPoolFromAddress, getPools,
 } from "../helpers";
@@ -26,7 +26,7 @@ describe("Pool (mainnet fork)", () => {
   beforeAll(async () => {
     await initInfra();
     // get client
-    const config = getConfig().build();
+    const config = getMainnetForkConfig().build();
     client = new PolywrapClient(config);
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
@@ -81,7 +81,7 @@ describe("Pool (mainnet fork)", () => {
     const [uniCurrencyAmount, uniPool] = await uniPool0.getOutputAmount(uniInputAmount);
 
     // output amount
-    expect(invocation.value.amount.token.address).toEqual(uniCurrencyAmount.currency.address);
+    expect(invocation.value.amount.token.address).toEqual(uniCurrencyAmount.currency.address.toLowerCase());
     expect(invocation.value.amount.amount).toEqual(uniCurrencyAmount.numerator.toString());
     // pool state
     expect(invocation.value.nextPool.sqrtRatioX96).toEqual(uniPool.sqrtRatioX96.toString());
@@ -111,7 +111,7 @@ describe("Pool (mainnet fork)", () => {
     const [uniCurrencyAmount, uniPool] = await uniPool0.getInputAmount(unitOutputAmount);
 
     // input amount
-    expect(invocation.value.amount.token.address).toEqual(uniCurrencyAmount.currency.address);
+    expect(invocation.value.amount.token.address).toEqual(uniCurrencyAmount.currency.address.toLowerCase());
     expect(invocation.value.amount.amount).toEqual(uniCurrencyAmount.numerator.toString());
     // pool state
     expect(invocation.value.nextPool.sqrtRatioX96).toEqual(uniPool.sqrtRatioX96.toString());
