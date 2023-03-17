@@ -1,8 +1,8 @@
 {
   "name": "@polywrap/uniswap-v3",
-  "description": "Polywrap Uniswap V3 Wasm Wrapper",
+  "description": "Uniswap V3 Wasm Wrapper",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.1.0",
   "scripts": {
     "reset": "yarn clean && yarn && yarn build",
     "clean": "rimraf ./node_modules ./build ./coverage ./.polywrap ./**/wrap",
