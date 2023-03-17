@@ -1,0 +1,6 @@
+version: '3'
+services:
+  mainnet-fork:
+    build: ./
+    ports:
+      - '8546:8546'
