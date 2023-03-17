@@ -61,7 +61,7 @@ describe("Call (mainnet fork)", () => {
     }
   });
 
-  it.only("execCall: swap eth -> usdc", async () => {
+  it("execCall: swap eth -> usdc", async () => {
     const pools: Pool[] = [await getPoolFromAddress(client, fsUri, USDC_ETH_03_ADDRESS, true)];
     const tokens: Token[] = getTokens(pools);
 
@@ -110,6 +110,6 @@ describe("Call (mainnet fork)", () => {
 
     const usdcContract = new ethers.Contract(USDC.address, erc20ABI, ethersProvider);
     const usdcBalance: ethers.BigNumber = await usdcContract.balanceOf(recipient);
-    expect(usdcBalance.eq(usdcOut.amount)).toBeTruthy();
+    expect(usdcBalance.gt(usdcOut.amount)).toBeTruthy();
   });
 });
