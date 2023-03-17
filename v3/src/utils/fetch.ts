@@ -17,6 +17,7 @@ import {
 import { createPool, getPoolAddress } from "../pool";
 import { _wrapToken } from "../token";
 import { getFeeAmountEnum } from "./enumUtils";
+import { getChecksumAddress } from "./addressUtils";
 import {
   getSubgraphEndpoint,
   SubgraphEndpoint,
@@ -114,7 +115,7 @@ export function fetchPoolFromTokens(args: Args_fetchPoolFromTokens): Pool {
  */
 export function fetchPoolFromAddress(args: Args_fetchPoolFromAddress): Pool {
   const chainId: ChainId = args.chainId;
-  const address: string = args.address.toLowerCase();
+  const address: string = args.address;
   const fetchTicks = args.fetchTicks;
   // fetch data
   const immutables: PoolImmutables = fetchPoolImmutables(address, chainId);
@@ -147,8 +148,8 @@ function fetchPoolImmutables(
   address: string,
   chainId: ChainId
 ): PoolImmutables {
-  const token0: string = ethCallView(address, chainId, poolAbi("token0"));
-  const token1: string = ethCallView(address, chainId, poolAbi("token1"));
+  const token0: string = getChecksumAddress(ethCallView(address, chainId, poolAbi("token0")));
+  const token1: string = getChecksumAddress(ethCallView(address, chainId, poolAbi("token1")));
   const fee: string = ethCallView(address, chainId, poolAbi("fee"));
   return {
     token0,
