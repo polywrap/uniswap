@@ -55,9 +55,7 @@ describe('encodeRouteToPath (SDK test replication)', () => {
 
   beforeAll(async () => {
     // get client
-    client = new PolywrapClient(
-      getSimpleConfig().build()
-    );
+    client = new PolywrapClient(getSimpleConfig().build());
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
     fsUri = "fs/" + wrapperAbsPath + '/build';

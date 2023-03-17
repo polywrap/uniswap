@@ -8,7 +8,7 @@ import {
   constant,
   createRoute,
   quoteCallParameters,
-  Token, ChainIdEnum, FeeAmountEnum, Pool, Trade, TradeTypeEnum, MethodParameters
+  Token, ChainIdEnum, FeeAmountEnum, Pool, Trade, TradeTypeEnum, MethodParameters, getSimpleConfig
 } from "../helpers";
 import { PolywrapClient } from "@polywrap/client-js";
 import path from "path";
@@ -75,7 +75,7 @@ describe('SwapQuoter (SDK test replication)', () => {
 
   beforeAll(async () => {
     // get client
-    client = new PolywrapClient();
+    client = new PolywrapClient(getSimpleConfig().build());
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
     fsUri = "fs/" + wrapperAbsPath + '/build';

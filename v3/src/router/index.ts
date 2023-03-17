@@ -16,7 +16,6 @@ import {
   _getFeeAmount,
   getChecksumAddress,
   ADDRESS_ZERO,
-  ZERO_HEX,
 } from "../utils";
 import {
   encodePermit,
@@ -196,7 +195,7 @@ export function swapCallParameters(
             amountOutMinimum: amountOut,
             sqrtPriceLimitX96:
               options.sqrtPriceLimitX96 === null
-                ? ZERO_HEX
+                ? "0"
                 : options.sqrtPriceLimitX96!.toString(),
           };
 
@@ -217,7 +216,7 @@ export function swapCallParameters(
             amountInMaximum: amountIn,
             sqrtPriceLimitX96:
               options.sqrtPriceLimitX96 === null
-                ? ZERO_HEX
+                ? "0"
                 : options.sqrtPriceLimitX96!.toString(),
           };
 
@@ -334,43 +333,13 @@ function routerAbi(methodName: string): string {
 
 function paramsToJsonString<T>(params: T): string {
   if (params instanceof ExactInputSingleParams) {
-    return `{
-      "tokenIn": "${params.tokenIn}",
-      "tokenOut": "${params.tokenOut}",
-      "fee": ${params.fee},
-      "recipient": "${params.recipient}",
-      "deadline": "${params.deadline}",
-      "amountIn": "${params.amountIn}",
-      "amountOutMinimum": "${params.amountOutMinimum}",
-      "sqrtPriceLimitX96": "${params.sqrtPriceLimitX96}"
-    }`;
+    return `(${params.tokenIn},${params.tokenOut},${params.fee},${params.recipient},${params.deadline},${params.amountIn},${params.amountOutMinimum},${params.sqrtPriceLimitX96})`;
   } else if (params instanceof ExactOutputSingleParams) {
-    return `{
-      "tokenIn": "${params.tokenIn}",
-      "tokenOut": "${params.tokenOut}",
-      "fee": ${params.fee},
-      "recipient": "${params.recipient}",
-      "deadline": "${params.deadline}",
-      "amountOut": "${params.amountOut}",
-      "amountInMaximum": "${params.amountInMaximum}",
-      "sqrtPriceLimitX96": "${params.sqrtPriceLimitX96}"
-    }`;
+    return `(${params.tokenIn},${params.tokenOut},${params.fee},${params.recipient},${params.deadline},${params.amountOut},${params.amountInMaximum},${params.sqrtPriceLimitX96})`;
   } else if (params instanceof ExactInputParams) {
-    return `{
-      "path": "${params.path}",
-      "recipient": "${params.recipient}",
-      "deadline": "${params.deadline}",
-      "amountIn": "${params.amountIn}",
-      "amountOutMinimum": "${params.amountOutMinimum}"
-    }`;
+    return `(${params.path},${params.recipient},${params.deadline},${params.amountIn},${params.amountOutMinimum})`;
   } else if (params instanceof ExactOutputParams) {
-    return `{
-      "path": "${params.path}",
-      "recipient": "${params.recipient}",
-      "deadline": "${params.deadline}",
-      "amountOut": "${params.amountOut}",
-      "amountInMaximum": "${params.amountInMaximum}"
-    }`;
+    return `(${params.path},${params.recipient},${params.deadline},${params.amountOut},${params.amountInMaximum})`;
   } else {
     throw new Error("unknown router parameters type");
   }

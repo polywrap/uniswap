@@ -83,7 +83,7 @@ describe('NonfungiblePositionManager (SDK test replication)', () => {
     })
   })
 
-  describe.only('addCallParameters', () => {
+  describe('addCallParameters', () => {
     it('throws if liquidity is 0', async () => {
       await expect(
         addCallParameters(client, fsUri,

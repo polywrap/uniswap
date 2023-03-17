@@ -9,7 +9,7 @@ import {
   TokenAmount,
   TradeType,
 } from "../wrap";
-import { encodeRouteToPath, toHex } from "../router";
+import { encodeRouteToPath } from "../router";
 import { _getFeeAmount, ZERO_HEX } from "../utils";
 
 /**
@@ -41,7 +41,7 @@ export function quoteCallParameters(
           quoteAmount,
           options !== null && options.sqrtPriceLimitX96 !== null
             ? options.sqrtPriceLimitX96!.toString()
-            : ZERO_HEX,
+            : "0",
         ],
       }).unwrap();
     } else {
@@ -54,7 +54,7 @@ export function quoteCallParameters(
           quoteAmount,
           options !== null && options.sqrtPriceLimitX96 !== null
             ? options.sqrtPriceLimitX96!.toString()
-            : ZERO_HEX,
+            : "0",
         ],
       }).unwrap();
     }
@@ -71,12 +71,12 @@ export function quoteCallParameters(
     });
 
     if (tradeType == TradeType.EXACT_INPUT) {
-      calldata = calldata = Ethereum_Module.encodeFunction({
+      calldata = Ethereum_Module.encodeFunction({
         method: quoterAbi("quoteExactInput"),
         args: [path, quoteAmount],
       }).unwrap();
     } else {
-      calldata = calldata = Ethereum_Module.encodeFunction({
+      calldata = Ethereum_Module.encodeFunction({
         method: quoterAbi("quoteExactOutput"),
         args: [path, quoteAmount],
       }).unwrap();

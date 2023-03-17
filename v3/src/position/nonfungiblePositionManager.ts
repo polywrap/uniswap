@@ -17,7 +17,6 @@ import {
   SafeTransferOptions,
   Token,
   TokenAmount,
-  Logger_Module
 } from "../wrap";
 import {
   encodeMulticall,
@@ -465,32 +464,13 @@ function nfpmAbi(methodName: string): string {
 
 function paramsToEthAbiString<T>(params: T): string {
   if (params instanceof CollectArgs) {
-    return `{
-      "tokenId": "${params.tokenId}",
-      "recipient": "${params.recipient}",
-      "amount0Max": "${params.amount0Max}",
-      "amount1Max": "${params.amount1Max}"
-    }`;
+    return `(${params.tokenId},${params.recipient},${params.amount0Max},${params.amount1Max})`;
   } else if (params instanceof MintArgs) {
-    // tuple(address token0, address token1, uint24 fee, int24 tickLower, int24 tickUpper, uint256 amount0Desired, uint256 amount1Desired, uint256 amount0Min, uint256 amount1Min, address recipient, uint256 deadline)
     return `(${params.token0},${params.token1},${params.fee},${params.tickLower},${params.tickUpper},${params.amount0Desired},${params.amount1Desired},${params.amount0Min},${params.amount1Min},${params.recipient},${params.deadline})`;
   } else if (params instanceof IncreaseLiquidityArgs) {
-    return `{
-      "tokenId": "${params.tokenId}",
-      "amount0Desired": "${params.amount0Desired}",
-      "amount1Desired": "${params.amount1Desired}",
-      "amount0Min": "${params.amount0Min}",
-      "amount1Min": "${params.amount1Min}",
-      "deadline": "${params.deadline}"
-    }`;
+    return `(${params.tokenId},${params.amount0Desired},${params.amount1Desired},${params.amount0Min},${params.amount1Min},${params.deadline})`;
   } else if (params instanceof DecreaseLiquidityArgs) {
-    return `{
-      "tokenId": "${params.tokenId}",
-      "liquidity": "${params.liquidity}",
-      "amount0Min": "${params.amount0Min}",
-      "amount1Min": "${params.amount1Min}",
-      "deadline": "${params.deadline}"
-    }`;
+    return `(${params.tokenId},${params.liquidity},${params.amount0Min},${params.amount1Min},${params.deadline})`;
   } else {
     throw new Error("unknown router parameters type");
   }

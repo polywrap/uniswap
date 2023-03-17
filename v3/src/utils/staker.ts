@@ -10,7 +10,7 @@ import {
   Args_withdrawToken,
   MethodParameters,
 } from "../wrap";
-import { encodeMulticall, toHex } from "../router";
+import { encodeMulticall } from "../router";
 import { getChecksumAddress } from "./addressUtils";
 import { getPoolAddress } from "../pool";
 import { ZERO_HEX } from "./constants";
@@ -79,7 +79,7 @@ export function withdrawToken(args: Args_withdrawToken): MethodParameters {
       args: [
         options.tokenId.toString(),
         owner,
-        options.data === null ? ZERO_HEX : options.data!,
+        options.data === null ? "0" : options.data!,
       ],
     }).unwrap()
   );
@@ -158,18 +158,17 @@ function encodeClaim(
  * @returns An encoded IncentiveKey to be read by ethers
  */
 function encodeIncentiveKey(incentiveKey: IncentiveKey): string {
-  return `{
-    "rewardToken": "${incentiveKey.rewardToken.address}",
-    "pool": "${getPoolAddress({
-      tokenA: incentiveKey.pool.token0,
-      tokenB: incentiveKey.pool.token1,
-      fee: incentiveKey.pool.fee,
-      initCodeHashManualOverride: null,
-    })}",
-    "startTime": "${incentiveKey.startTime.toString()}",
-    "endTime": "${incentiveKey.endTime.toString()}",
-    "refundee": "${getChecksumAddress(incentiveKey.refundee)}"
-  }`;
+  const rewardToken = incentiveKey.rewardToken.address;
+  const pool = getPoolAddress({
+    tokenA: incentiveKey.pool.token0,
+    tokenB: incentiveKey.pool.token1,
+    fee: incentiveKey.pool.fee,
+    initCodeHashManualOverride: null,
+  });
+  const startTime = incentiveKey.startTime.toString();
+  const endTime = incentiveKey.endTime.toString();
+  const refundee = getChecksumAddress(incentiveKey.refundee);
+  return `(${rewardToken},${pool},${startTime},${endTime},${refundee})`;
 }
 
 function stakerAbi(methodName: string): string {
