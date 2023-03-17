@@ -76,7 +76,6 @@ describe("Call (mainnet fork)", () => {
       const approve: string = txResponse.value.hash;
       const approveTx = await ethersProvider.getTransaction(approve);
       await approveTx.wait();
-      console.log("HERERERE")
     }
 
     const ETH: Token = await getNative(client, fsUri, ChainIdEnum.MAINNET);

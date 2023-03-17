@@ -15,11 +15,6 @@ export function getSimpleConfig(): IClientConfigBuilder {
 export function getMainnetForkConfig(): IClientConfigBuilder {
   return new ClientConfigBuilder()
     .addDefaults()
-    .addEnv(DefaultBundle.embeds.ipfsResolver.source.uri, {
-      provider: DefaultBundle.ipfsProviders[0],
-      fallbackProviders: DefaultBundle.ipfsProviders.slice(1).concat(["http://localhost:48084", "http://127.0.0.1:45005"]),
-      retries: { tryResolveUri: 2, getFile: 2 },
-    })
     .addPackage(
       "ens/wraps.eth:ethereum-provider@2.0.0",
       ethereumProviderPlugin({
