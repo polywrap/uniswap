@@ -7,7 +7,7 @@
     "reset": "yarn clean && yarn && yarn build",
     "clean": "rimraf ./node_modules ./build ./coverage ./.polywrap ./**/wrap",
     "build": "npx polywrap build -s image",
-    "deploy": "npx polywrap deploy",
+    "deploy": "npx polywrap deploy --output-file deployment.json",
     "codegen": "npx polywrap codegen",
     "test:e2e:replication": "jest --passWithNoTests --runInBand --verbose src/__tests__/e2e/sdk-test-replications",
     "test:e2e:fork": "jest --passWithNoTests --runInBand --verbose src/__tests__/e2e/mainnet-fork-tests",

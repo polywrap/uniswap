@@ -1,0 +1,52 @@
+name: v2-cd
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+    paths:
+      - "v2/**"
+
+jobs:
+  cd:
+    name: v2-cd
+    if: |
+      github.event.pull_request.merged &&
+      startsWith(github.event.pull_request.title, '[CD]') != true &&
+      github.event.pull_request.user.login != 'github-actions'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Read .nvmrc
+        run: echo ::set-output name=NVMRC::$(cat .nvmrc)
+        id: nvm
+        working-directory: ./v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: '${{ steps.nvm.outputs.NVMRC }}'
+
+      - name: Install dependencies
+        run: yarn install --nonInteractive --frozen-lockfile --prefer-offline
+        working-directory: ./v2
+
+      - name: Build
+        run: yarn build
+        working-directory: ./v2
+
+      - name: Deploy
+        run: yarn deploy
+        working-directory: ./v2
+
+      - name: PR New URI
+        uses: peter-evans/create-pull-request@v3
+        with:
+          branch: ipfs-http-client-cd-pr-${{github.event.number}}
+          commit-message: "[CD] ipfs-http-client"
+          title: "[CD] ipfs-http-client"
+          body: "Triggered by: https://github.com/${{github.repository}}/pull/${{github.event.number}}"
