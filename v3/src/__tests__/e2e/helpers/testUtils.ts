@@ -10,7 +10,7 @@ export function getTokens(pools: Pool[]): Token[] {
   return pools
   .map<Token[]>((pool: Pool): Token[] => [pool.token0, pool.token1]) // get tokens
   .reduce((accum: Token[], current: Token[]) => accum.concat(current), []) // flatten array
-  .filter((val: Token, i: number, arr: Token[]) => arr.indexOf(val) === i); // remove duplicates
+  .filter((val: Token, i: number, arr: Token[]) => arr.map((t) => t.address).indexOf(val.address) === i); // remove duplicates
 }
 
 export async function getPools(client: PolywrapClient, ensUri: string, fetchTicks?: boolean, sliceStart?: number, sliceEnd?: number): Promise<Pool[]> {

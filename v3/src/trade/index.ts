@@ -25,7 +25,7 @@ import {
   Trade,
   TradeRoute,
   TradeSwap,
-  TradeType, Logger_Module,
+  TradeType
 } from "../wrap";
 import {
   tokenAmountEquals,

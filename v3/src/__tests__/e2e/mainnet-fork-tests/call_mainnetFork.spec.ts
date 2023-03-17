@@ -47,7 +47,6 @@ describe("Call (mainnet fork)", () => {
   it("successfully approves token transfers", async () => {
     const tokens: Token[] = getTokens(await getPools(client, fsUri));
     for (const token of tokens) {
-      if (token.currency.symbol === "USDT") continue; // TODO: why does USDT fail on the approve call?
       const txResponse = await client.invoke<Ethereum_TxResponse>({
         uri: fsUri,
         method: "approve",
@@ -62,7 +61,7 @@ describe("Call (mainnet fork)", () => {
     }
   });
 
-  it("execCall: swap eth -> usdc", async () => {
+  it.only("execCall: swap eth -> usdc", async () => {
     const pools: Pool[] = [await getPoolFromAddress(client, fsUri, USDC_ETH_03_ADDRESS, true)];
     const tokens: Token[] = getTokens(pools);
 
@@ -77,6 +76,7 @@ describe("Call (mainnet fork)", () => {
       const approve: string = txResponse.value.hash;
       const approveTx = await ethersProvider.getTransaction(approve);
       await approveTx.wait();
+      console.log("HERERERE")
     }
 
     const ETH: Token = await getNative(client, fsUri, ChainIdEnum.MAINNET);
