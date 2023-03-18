@@ -14,7 +14,7 @@ import { PolywrapClient } from "@polywrap/client-js";
 
 import ExampleSlide from "./components/ExampleSlide";
 import { uniswapV3Uri, examples } from "./constants";
-import { theme } from "./styles/theme"
+import {theme, displayHeadingProps, typography, colors} from "./styles/theme"
 
 const client = new PolywrapClient();
 
@@ -43,19 +43,55 @@ function Slides() {
         <Deck theme={theme} template={template}>
           <Slide>
             <FlexBox height="100%" flexDirection="column">
-              <Heading margin="0px" fontSize="h1">
-                Uniswap V3 Wrapper
+              <Heading
+                margin="0px"
+                color="secondary"
+                fontSize="h1"
+                fontWeight={800}
+                textAlign="center"
+                lineHeight={displayHeadingProps.lineHeight}
+                letterSpacing={displayHeadingProps.letterSpacing}
+                fontFamily={displayHeadingProps.fontFamily}
+                marginBottom="16px"
+              >
+                UNISWAP V3 WRAPPER
               </Heading>
-              <Heading margin="0px" color="primary" fontSize="h3">
+              <Heading
+                margin="0px"
+                color="primary"
+                fontSize="h3"
+                textAlign="center"
+                lineHeight={displayHeadingProps.lineHeight}
+                fontFamily={displayHeadingProps.fontFamily}
+              >
                 {uniswapV3Uri}
               </Heading>
-              <Heading margin="0px" color="primary" fontSize="h3">
+              <Heading
+                margin="0px"
+                color="primary"
+                fontSize="h3"
+                textAlign="center"
+                lineHeight={displayHeadingProps.lineHeight}
+                fontFamily={displayHeadingProps.fontFamily}
+              >
                 https://github.com/polywrap/uniswap
               </Heading>
             </FlexBox>
           </Slide>
           <Slide>
-            <Heading>Sections</Heading>
+            <Heading
+              margin="0px"
+              color="secondary"
+              fontSize="h1"
+              fontWeight={800}
+              textAlign="center"
+              lineHeight={displayHeadingProps.lineHeight}
+              letterSpacing={displayHeadingProps.letterSpacing}
+              fontFamily={displayHeadingProps.fontFamily}
+              marginBottom="16px"
+            >
+              Sections
+            </Heading>
             <UnorderedList>
               {examples.map((e) => (
                 <ListItem>{e.name}</ListItem>

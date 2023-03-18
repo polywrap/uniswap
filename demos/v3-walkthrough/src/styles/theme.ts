@@ -1,10 +1,10 @@
 import tokens from "./tokens.json"
 
-const easings = {
+export const easings = {
   cubic: "cubic-bezier(0.35, 1.5, 0.65, 1)",
 }
 
-const animations = {
+export const animations = {
   float: {
     "@keyframes float": {
       "0%, 100%": {
@@ -29,9 +29,9 @@ const animations = {
   }
 }
 
-const colors = {
+export const colors = {
   white: tokens.White[1000].value,
-  black: tokens.Primary.Black.value,
+  black: "000000", // tokens.Primary.Black.value,
   cyan: tokens.Primary.Cyan.value,
   iris: {
     500: tokens.Primary.Iris.value,
@@ -44,13 +44,13 @@ const colors = {
   green: tokens.Primary.Green.value,
 }
 
-const gradients = {
+export const gradients = {
   "Iris-Black": "linear-gradient(180deg, #06071a 39.58%, #1e2567 100%)",
   "Linear": "linear-gradient(135deg, #05d3fb 0%, #5361f8 14.58%, #d362df 41.15%, #f8ba26 67.19%, #49f128 85.42%, #05d3fb 100%)",
   "Button": "linear-gradient(180deg, #161839 0%, #06071a 100%)",
 }
 
-const gradientBorderStyles = {
+export const gradientBorderStyles = {
   border: `solid 2px transparent`,
   backgroundImage: `linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), ${gradients.Linear}`,
   backgroundOrigin: "border-box",
@@ -61,13 +61,13 @@ const gradientBorderStyles = {
   }
 }
 
-const fontFamilies =  {
+export const fontFamilies =  {
   extended: ['"Colton Display"', 'sans-serif'].join(','),
   sans: ['"Colton Primary"', 'sans-serif'].join(','),
   monospace: ['"IBM Plex Mono"', 'monospace'].join(','),
 }
 
-const fontSizes = {
+export const fontSizes = {
   1: 8,
   2: 10,
   3: 12,
@@ -84,27 +84,27 @@ const fontSizes = {
   14: 64,
 }
 
-const leading = {
+export const leading = {
   tight: tokens.Tight.value,
   normal: tokens.Normal.value,
   loose: tokens.Loose.value,
   "very-loose": tokens["Very Loose"].value,
 }
 
-const letterSpacing = {
+export const letterSpacing = {
   PrimaryHeading: tokens["Primary Heading"].value,
   PrimaryText: tokens["Primary Text"].value,
   UppercaseDisplay: "calc(var(--vmin, 1vmin) * 1)",
 }
 
-const displayHeadingProps = {
+export const displayHeadingProps = {
   fontFamily: fontFamilies.extended,
   fontStretch: "expanded",
   letterSpacing: letterSpacing.UppercaseDisplay,
   lineHeight: leading.tight,
 }
 
-const typography = {
+export const typography = {
   fontFamilies:{...fontFamilies},
   fontSizes: {...fontSizes},
   leading: {...leading},
@@ -139,7 +139,7 @@ const typography = {
 
 export const theme = {
   colors: {
-    primary: `${tokens.Primary.Iris.value}`,
+    primary: 'rgba(255, 255, 255, 0.8)',
     secondary: colors.white,
     tertiary: colors.black,
     quaternary: colors.yellow,
@@ -147,8 +147,8 @@ export const theme = {
   },
   fontSizes: {
     h1: typography.display.h1.fontSize,
-    h2: typography.display.h2.fontSize,
-    h3: typography.display.h3.fontSize,
+    h2: typography.display.h3.fontSize,
+    h3: typography.display.h5.fontSize,
     text: `${typography.fontSizes["10"]}px`,
     monospace: `${typography.fontSizes["10"]}px`,
   },
