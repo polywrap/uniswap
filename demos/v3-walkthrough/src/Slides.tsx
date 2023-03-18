@@ -14,17 +14,9 @@ import { PolywrapClient } from "@polywrap/client-js";
 
 import ExampleSlide from "./components/ExampleSlide";
 import { uniswapV3Uri, examples } from "./constants";
+import { theme } from "./styles/theme"
 
 const client = new PolywrapClient();
-
-// SPECTACLE_CLI_THEME_START
-const theme = {
-  fonts: {
-    header: 'monospace, Helvetica, Arial, sans-serif',
-    text: '"Open Sans Condensed", Helvetica, Arial, sans-serif'
-  }
-};
-// SPECTACLE_CLI_THEME_END
 
 // SPECTACLE_CLI_TEMPLATE_START
 const template = () => (

@@ -9,7 +9,7 @@ import {
   Trade,
   getPoolFromAddress, getPools, getTokens,
   bestTradeExactOut, getNative, swapCallParameters,
-  getMainnetForkConfig, initInfra, stopInfra,
+  getMainnetForkConfig, initInfra, stopInfra, Ethereum_TxReceipt,
 } from "../helpers";
 import path from "path";
 import * as ethers from "ethers";
@@ -111,4 +111,47 @@ describe("Call (mainnet fork)", () => {
     const usdcBalance: ethers.BigNumber = await usdcContract.balanceOf(recipient);
     expect(usdcBalance.gt(usdcOut.amount)).toBeTruthy();
   });
+
+
+  it.only("execCall: quoteCallParamters", async () => {
+    const quoterAddress = "0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6";
+    const quoteCallParameters = {
+        "calldata": "0xf7729d43000000000000000000000000c02aaa39b223fe8d0a0e5c4f27ead9083c756cc2000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb480000000000000000000000000000000000000000000000000000000000000bb80000000000000000000000000000000000000000000000000de0b6b3a76400000000000000000000000000000000000000000000000000000000000000000000",
+        "value": "0x00"
+      };
+
+    const result = await client.invoke<Ethereum_TxResponse>({
+      uri: fsUri,
+      method: "execCall",
+      args: {
+        parameters: quoteCallParameters,
+        address: quoterAddress,
+        chainId: ChainIdEnum[ChainIdEnum.MAINNET],
+        gasOptions: {
+          gasPrice: "23542809264"
+        }
+      },
+    });
+    if (result.ok == false) throw result.error;
+    expect(result.value).toBeTruthy();
+
+    const wait = await client.invoke<Ethereum_TxReceipt>({
+      uri: "wrap://ens/wraps.eth:ethereum@2.0.0",
+      method: "awaitTransaction",
+      args: {
+        txHash: result.value.hash,
+        confirmations: 1,
+      }
+    });
+    if (wait.ok == false) throw wait.error;
+
+    const quote = await ethersProvider.call({
+      to: quoterAddress,
+      data: quoteCallParameters.calldata
+    });
+
+    expect(quote).toBeTruthy();
+
+    console.log(ethers.BigNumber.from(quote).toString());
+  })
 });

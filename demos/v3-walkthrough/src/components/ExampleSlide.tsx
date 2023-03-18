@@ -81,7 +81,7 @@ function ExampleSlide(props: { example: Example, client: PolywrapClient }) {
             <Gear onClick={() => setInspect(!inspect)} />
           </Box>
         </FlexBox>
-        <FlexBox alignItems="center" justifyContent="center" flexDirection="column">
+        <FlexBox alignItems="center" justifyContent="center" flexDirection="column" overflow="auto">
           {result !== undefined ? (
             <>
               <Box overflow="auto" width="fill-available">
