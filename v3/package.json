@@ -11,7 +11,7 @@
     "codegen": "npx polywrap codegen",
     "test:e2e:replication": "jest --passWithNoTests --runInBand --verbose src/__tests__/e2e/sdk-test-replications",
     "test:e2e:fork": "jest --passWithNoTests --runInBand --verbose src/__tests__/e2e/mainnet-fork-tests/",
-    "test:e2e:fork:pt2": "jest --passWithNoTests --runInBand --verbose src/__tests__/e2e/mainnet-fork-tests-pt2/call_mainnetFork.spec.ts",
+    "test:e2e:fork:pt2": "jest --passWithNoTests --runInBand --verbose src/__tests__/e2e/mainnet-fork-tests-pt2/",
     "test:e2e": "yarn test:e2e:replication && yarn test:e2e:fork && yarn test:e2e:fork:pt2",
     "test:unit": "asp --verbose",
     "test": "yarn test:unit && yarn test:e2e",
