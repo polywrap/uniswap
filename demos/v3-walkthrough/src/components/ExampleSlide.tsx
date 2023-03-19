@@ -11,7 +11,9 @@ import {
 import { InvokeResult, PolywrapClient } from "@polywrap/client-js";
 import "./ExampleSlide.css";
 
-import { Example } from "../constants/examples";
+import { Example } from "../constants";
+import styled from "styled-components";
+import {displayHeadingProps, fontFamilies, letterSpacing} from "../styles/theme";
 
 const Spinner = () => <div className="loader"></div>;
 
@@ -20,6 +22,22 @@ const Play = (props: { onClick?: React.MouseEventHandler<unknown> | undefined })
 
 const Gear = (props: { onClick?: React.MouseEventHandler<unknown> | undefined }) =>
   <div onClick={props.onClick} className="gear"></div>;
+
+const StyledHeading = styled(Heading)`
+  margin: 0 0 16px 0;
+  font-weight: 800;
+  text-align: center;
+  line-height: ${displayHeadingProps.lineHeight};
+  letter-spacing: ${displayHeadingProps.letterSpacing};
+  font-family: ${displayHeadingProps.fontFamily};
+  font-stretch: expanded;
+`
+
+const StyledText = styled(Text)`
+  text-align: center;
+  letter-spacing: ${letterSpacing.PrimaryText};
+  font-family: ${fontFamilies.sans};
+`;
 
 function ExampleSlide(props: { example: Example, client: PolywrapClient }) {
   const { name, description, uri, method, args } = props.example;
@@ -45,10 +63,10 @@ function ExampleSlide(props: { example: Example, client: PolywrapClient }) {
   return (
     <Slide>
       <FlexBox alignItems="center" justifyContent="center" flexDirection="column" height="40%" width="100%">
-        <Heading>{name}</Heading>
-        <Text textAlign="center">
+        <StyledHeading>{name}</StyledHeading>
+        <StyledText textAlign="center">
           {description}
-        </Text>
+        </StyledText>
       </FlexBox>
       <Grid
         gridTemplateColumns="47.5% 5% 47.5%"
@@ -62,7 +80,7 @@ function ExampleSlide(props: { example: Example, client: PolywrapClient }) {
                 {JSON.stringify(args, null, 2)}
               </CodePane>
             ) : (
-              <CodePane language="ts">{`
+              <CodePane showLineNumbers={false} language="ts">{`
               await client.invoke({
                 uri: "${uri}",
                 method: "${method}",
@@ -85,7 +103,7 @@ function ExampleSlide(props: { example: Example, client: PolywrapClient }) {
           {result !== undefined ? (
             <>
               <Box overflow="auto" width="fill-available">
-                <CodePane language="json">
+                <CodePane showLineNumbers={false} language="json">
                   {JSON.stringify(result, null, 2)}
                 </CodePane>
               </Box>

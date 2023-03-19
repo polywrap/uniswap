@@ -1,34 +1,5 @@
 import tokens from "./tokens.json"
 
-export const easings = {
-  cubic: "cubic-bezier(0.35, 1.5, 0.65, 1)",
-}
-
-export const animations = {
-  float: {
-    "@keyframes float": {
-      "0%, 100%": {
-        transform: "translateY(-3%)",
-      },
-      "50%": {
-        transform: "translateY(0%)",
-      },
-    },
-  },
-  fadeUp: {
-    "@keyframes fadeUp": {
-      "0%": {
-        opacity: 0,
-        transform: "translateY(10%)",
-      },
-      "100%": {
-        opacity: 1,
-        transform: "translateY(0%)",
-      },
-    },
-  }
-}
-
 export const colors = {
   white: tokens.White[1000].value,
   black: "000000", // tokens.Primary.Black.value,
@@ -42,23 +13,6 @@ export const colors = {
   magenta: tokens.Primary.Magenta.value,
   yellow: tokens.Primary.Yellow.value,
   green: tokens.Primary.Green.value,
-}
-
-export const gradients = {
-  "Iris-Black": "linear-gradient(180deg, #06071a 39.58%, #1e2567 100%)",
-  "Linear": "linear-gradient(135deg, #05d3fb 0%, #5361f8 14.58%, #d362df 41.15%, #f8ba26 67.19%, #49f128 85.42%, #05d3fb 100%)",
-  "Button": "linear-gradient(180deg, #161839 0%, #06071a 100%)",
-}
-
-export const gradientBorderStyles = {
-  border: `solid 2px transparent`,
-  backgroundImage: `linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), ${gradients.Linear}`,
-  backgroundOrigin: "border-box",
-  backgroundClip: "content-box, border-box",
-  boxShadow: `2px 1000px 1px ${colors.black} inset`,
-  "&:hover": {
-    boxShadow: `2px 1000px 1px ${colors.iris[900]} inset`
-  }
 }
 
 export const fontFamilies =  {

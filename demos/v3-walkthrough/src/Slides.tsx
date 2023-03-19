@@ -14,7 +14,8 @@ import { PolywrapClient } from "@polywrap/client-js";
 
 import ExampleSlide from "./components/ExampleSlide";
 import { uniswapV3Uri, examples } from "./constants";
-import {theme, displayHeadingProps, typography, colors} from "./styles/theme"
+import {theme, displayHeadingProps, fontFamilies, letterSpacing} from "./styles/theme"
+import styled from "styled-components";
 
 const client = new PolywrapClient();
 
@@ -36,6 +37,23 @@ const template = () => (
 );
 // SPECTACLE_CLI_TEMPLATE_END
 
+const StyledHeading = styled(Heading)`
+  font-weight: 800;
+  text-align: center;
+  line-height: ${displayHeadingProps.lineHeight};
+  letter-spacing: ${letterSpacing.UppercaseDisplay};
+  font-family: ${displayHeadingProps.fontFamily};
+  font-stretch: expanded;
+`
+
+const StyledSubHeading = styled(Heading)`
+  margin: 0;
+  text-align: center;
+  line-height: ${displayHeadingProps.lineHeight};
+  letter-spacing: ${letterSpacing.PrimaryText};
+  font-family: ${fontFamilies.sans};
+`
+
 function Slides() {
   return (
     <div className="App">
@@ -43,55 +61,24 @@ function Slides() {
         <Deck theme={theme} template={template}>
           <Slide>
             <FlexBox height="100%" flexDirection="column">
-              <Heading
-                margin="0px"
-                color="secondary"
-                fontSize="h1"
-                fontWeight={800}
-                textAlign="center"
-                lineHeight={displayHeadingProps.lineHeight}
-                letterSpacing={displayHeadingProps.letterSpacing}
-                fontFamily={displayHeadingProps.fontFamily}
-                marginBottom="16px"
-              >
-                UNISWAP V3 WRAPPER
-              </Heading>
-              <Heading
-                margin="0px"
-                color="primary"
-                fontSize="h3"
-                textAlign="center"
-                lineHeight={displayHeadingProps.lineHeight}
-                fontFamily={displayHeadingProps.fontFamily}
-              >
+              <StyledHeading color="secondary" fontSize="h1" margin={"-32px"}>
+                UNISWAP V3
+              </StyledHeading>
+              <StyledHeading color="secondary" fontSize="h1" marginBottom={"32px"}>
+                WRAPPER
+              </StyledHeading>
+              <StyledSubHeading color="primary" fontSize="h3">
                 {uniswapV3Uri}
-              </Heading>
-              <Heading
-                margin="0px"
-                color="primary"
-                fontSize="h3"
-                textAlign="center"
-                lineHeight={displayHeadingProps.lineHeight}
-                fontFamily={displayHeadingProps.fontFamily}
-              >
+              </StyledSubHeading>
+              <StyledSubHeading color="primary" fontSize="h3">
                 https://github.com/polywrap/uniswap
-              </Heading>
+              </StyledSubHeading>
             </FlexBox>
           </Slide>
           <Slide>
-            <Heading
-              margin="0px"
-              color="secondary"
-              fontSize="h1"
-              fontWeight={800}
-              textAlign="center"
-              lineHeight={displayHeadingProps.lineHeight}
-              letterSpacing={displayHeadingProps.letterSpacing}
-              fontFamily={displayHeadingProps.fontFamily}
-              marginBottom="16px"
-            >
+            <StyledHeading color="secondary" fontSize="h1">
               Sections
-            </Heading>
+            </StyledHeading>
             <UnorderedList>
               {examples.map((e) => (
                 <ListItem>{e.name}</ListItem>
