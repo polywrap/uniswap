@@ -1,5 +1,5 @@
 - [ ] styling == website
-- [ ] more examples (reference: https://docs.uniswap.org/sdk/v3/overview)
+- [x] more examples (reference: https://docs.uniswap.org/sdk/v3/overview)
 - [ ] feature: toggle on/off codegen
 - [ ] feature: choose different languages
 - [ ] feature: link to wrapper on wrappers.io?

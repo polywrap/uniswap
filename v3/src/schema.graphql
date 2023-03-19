@@ -1178,10 +1178,25 @@ type MethodParameters {
 
 """Transaction gas configuration"""
 type GasOptions {
-    """The gas price to set for the transaction"""
-    gasPrice: BigInt
-    """The gas limit to set for the transaction"""
+    """Gas supplied for the transaction"""
     gasLimit: BigInt
+    """
+    The max total fee to pay per unit of gas.
+    The difference between maxFeePerGas and baseFeePerGas + maxPriorityFeePerGas is “refunded” to the user.
+    This property is ignored when gasPrice is not null.
+    """
+    maxFeePerGas: BigInt
+    """
+    The gas price paid is baseFeePerGas + maxPriorityFeePerGas.
+    The difference between maxFeePerGas and baseFeePerGas + maxPriorityFeePerGas is “refunded” to the user.
+    This property is ignored when gasPrice is not null.
+    """
+    maxPriorityFeePerGas: BigInt
+    """
+    The gas price for legacy transactions.
+    If this property is not null, a legacy transaction will be sent and maxFeePerGas and maxPriorityFeePerGas will be ignored.
+    """
+    gasPrice: BigInt
 }
 
 """Return value of nextInitializedTickWithinOneWord(...)"""

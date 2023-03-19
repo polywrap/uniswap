@@ -1,0 +1,53 @@
+@font-face {
+  font-family: Colton Primary;
+  font-weight: 400;
+  font-stretch: normal;
+  font-style: normal;
+  src: url("../fonts/HDColton-Regular.woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Colton Primary;
+  font-weight: 800;
+  font-stretch: normal;
+  font-style: normal;
+  src: url("../fonts/HDColton-Bold.woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Colton Primary;
+  font-weight: 400;
+  font-stretch: normal;
+  font-style: italic;
+  src: url("../fonts/HDColton-RegularItalic.woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Colton Primary;
+  font-weight: 800;
+  font-stretch: normal;
+  font-style: italic;
+  src: url("../fonts/HDColton-BoldItalic.woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Colton Display;
+  font-weight: 400;
+  font-stretch: expanded;
+  font-style: normal;
+  src: url("../fonts/HDColton-XWideRegular.woff");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Colton Display;
+  font-weight: 800;
+  font-stretch: expanded;
+  font-style: normal;
+  src: url("../fonts/HDColton-XWideBold.woff");
+  font-display: swap;
+}

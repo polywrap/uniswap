@@ -30,8 +30,8 @@ export function execCall(args: Args_execCall): Ethereum_TxResponse {
       value: BigInt.fromString(methodParameters.value, 16),
       chainId: null,
       _type: null,
-      maxFeePerGas: null,
-      maxPriorityFeePerGas: null,
+      maxFeePerGas: gasOptions === null ? null : gasOptions.maxFeePerGas,
+      maxPriorityFeePerGas: gasOptions === null ? null : gasOptions.maxPriorityFeePerGas,
       accessList: null,
     },
     connection: {
@@ -59,8 +59,8 @@ export function approve(args: Args_approve): Ethereum_TxResponse {
       value: null,
       gasLimit: gasOptions === null ? null : gasOptions.gasLimit,
       gasPrice: gasOptions === null ? null : gasOptions.gasPrice,
-      maxFeePerGas: null,
-      maxPriorityFeePerGas: null,
+      maxFeePerGas: gasOptions === null ? null : gasOptions.maxFeePerGas,
+      maxPriorityFeePerGas: gasOptions === null ? null : gasOptions.maxPriorityFeePerGas,
       nonce: null,
     },
   }).unwrap();
