@@ -1,15 +1,17 @@
 # Intro & Overview
+- [x] Uni logo
+- [x] overview: clickable sections
 - [ ] What is v3? Simple 1 liner about Uni V3.
-- [ ] Uni logo
 - [ ] point: why wrapper? what is the additional thing they're getting?
 - [ ] want: show a uniswap wrapper
 - [ ] some indication of "get started", not sure how to change slides
   - [ ] arrow keys on first slide?
   - [ ] buttons to press on the side
-- [ ] overview: clickable sections
 - [ ] overview: rows of boxes, select which one
+- [ ] version of Polywrap this was built with?
 
 # Example
+- [ ] header: same as polywrap.io (docs -> docgen docs, github -> uniswap v3)
 - [ ] "What does x method do?"
   - [ ] have some information about what the function we're calling is doing
 - [ ] code snippet
@@ -25,7 +27,6 @@
 - [ ] code font-size large
 - [ ] lazy: connect wallet
 - [ ] dynamic height
-- [ ] header: same as polywrap.io (docs -> docgen docs, github -> uniswap v3)
 - [ ] more examples (reference: https://docs.uniswap.org/sdk/v3/overview)
 - [ ] cross-link to Uniswap's docs
 
@@ -33,3 +34,10 @@
 - [ ] generated
 - [ ] top-level "how it works" section
 - [ ] show resolution path from ENS (link->app.ens) -> IPFS (link->wrappers)
+
+# Additional Feedback
+- [ ] needs some intro/context part about what a wrapper is. there should also be more explanatory info about what the wrapper is doing as the experience goes on. maybe instead of the loading icon, some text could pop up to explain what's happening?
+- [ ] might be better as one scrolling one page rather than slides
+- [ ] very long right scroll to read output of the queries
+- [ ] there is the ambiguous button for toggling between the javascript query view and the json.. no explanation around this which leaves me confused
+- [ ] why am I not prompted for a web3 connection on the write queries?

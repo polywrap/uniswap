@@ -1,11 +1,11 @@
 import { uniswapV3Uri } from "./uris";
-import WETH from "../inputs/WETH.json"
-import USDC from "../inputs/USDC.json"
-import pool from "../inputs/pool.json"
-import route from "../inputs/route.json"
-// import quoteCallParameters from "../inputs/quoteCallParameters.json"
-import trade from "../inputs/trade.json"
-// import swapCallParameters from "../inputs/swapCallParameters.json"
+import WETH from "./inputs/WETH.json"
+import USDC from "./inputs/USDC.json"
+import pool from "./inputs/pool.json"
+import route from "./inputs/route.json"
+// import quoteCallParameters from "./inputs/quoteCallParameters.json"
+import trade from "./inputs/trade.json"
+// import swapCallParameters from "./inputs/swapCallParameters.json"
 
 const deadline = (new Date().getTime() / 1000 + 1800).toFixed(0)
 

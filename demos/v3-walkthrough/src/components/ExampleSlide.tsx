@@ -8,12 +8,17 @@ import {
   CodePane,
   Grid,
 } from "spectacle";
-import { InvokeResult, PolywrapClient } from "@polywrap/client-js";
-import "./ExampleSlide.css";
-
-import { Example } from "../constants";
 import styled from "styled-components";
-import {displayHeadingProps, fontFamilies, letterSpacing} from "../styles/theme";
+import { InvokeResult, PolywrapClient } from "@polywrap/client-js";
+
+import {
+  displayHeadingProps,
+  fontFamilies,
+  letterSpacing
+} from "../styles/theme";
+import { Example } from "../constants";
+
+import "./ExampleSlide.css";
 
 const Spinner = () => <div className="loader"></div>;
 

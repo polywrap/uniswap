@@ -1,18 +1,18 @@
-import tokens from "./tokens.json"
+import { DeckProps } from "spectacle";
 
 export const colors = {
-  white: tokens.White[1000].value,
+  white: "#ffffff",
   black: "000000", // tokens.Primary.Black.value,
-  cyan: tokens.Primary.Cyan.value,
+  cyan: "#05d3fb",
   iris: {
-    500: tokens.Primary.Iris.value,
+    500: "#5361f8",
     600: "#343A80",
     800: "#1E224E",
-    900: tokens.Grays[900].value
+    900: "#161839"
   },
-  magenta: tokens.Primary.Magenta.value,
-  yellow: tokens.Primary.Yellow.value,
-  green: tokens.Primary.Green.value,
+  magenta: "#d362df",
+  yellow: "#f8ba26",
+  green: "#89eb5b",
 }
 
 export const fontFamilies =  {
@@ -39,15 +39,15 @@ export const fontSizes = {
 }
 
 export const leading = {
-  tight: tokens.Tight.value,
-  normal: tokens.Normal.value,
-  loose: tokens.Loose.value,
-  "very-loose": tokens["Very Loose"].value,
+  tight: "105%",
+  normal: "125%",
+  loose: "150%",
+  "very-loose": "175%",
 }
 
 export const letterSpacing = {
-  PrimaryHeading: tokens["Primary Heading"].value,
-  PrimaryText: tokens["Primary Text"].value,
+  PrimaryHeading: "1%",
+  PrimaryText: "0.5%",
   UppercaseDisplay: "calc(var(--vmin, 1vmin) * 1)",
 }
 
@@ -91,7 +91,7 @@ export const typography = {
   }
 }
 
-export const theme = {
+export const theme: DeckProps["theme"] = {
   colors: {
     primary: 'rgba(255, 255, 255, 0.8)',
     secondary: colors.white,
