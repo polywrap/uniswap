@@ -1,0 +1,71 @@
+{
+  "token0": {
+    "chainId": 0,
+    "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+    "currency": {
+      "decimals": 6,
+      "symbol": "USDC",
+      "name": "USDC"
+    }
+  },
+  "token1": {
+    "chainId": 0,
+    "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    "currency": {
+      "decimals": 18,
+      "symbol": "WETH",
+      "name": "Wrapped Ether"
+    }
+  },
+  "fee": 2,
+  "sqrtRatioX96": "1860242449967199057008463250222756",
+  "liquidity": "6263510793442461341",
+  "tickCurrent": 201287,
+  "tickDataProvider": [],
+  "token0Price": {
+    "baseToken": {
+      "chainId": 0,
+      "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "currency": {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USDC"
+      }
+    },
+    "quoteToken": {
+      "chainId": 0,
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "currency": {
+        "decimals": 18,
+        "symbol": "WETH",
+        "name": "Wrapped Ether"
+      }
+    },
+    "denominator": "6277101735386680763835789423207666416102355444464034512896",
+    "numerator": "3460501972659967086895302596519819378208168912886516979483620235536",
+    "price": "0.000551289770110249"
+  },
+  "token1Price": {
+    "baseToken": {
+      "chainId": 0,
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "currency": {
+        "decimals": 18,
+        "symbol": "WETH",
+        "name": "Wrapped Ether"
+      }
+    },
+    "quoteToken": {
+      "chainId": 0,
+      "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "currency": {
+        "decimals": 6,
+        "symbol": "USDC",
+        "name": "USDC"
+      }
+    },
+    "denominator": "3460501972659967086895302596519819378208168912886516979483620235536",
+    "numerator": "6277101735386680763835789423207666416102355444464034512896",
+    "price": "1813.928090485003175753"
+  }
+}

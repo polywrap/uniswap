@@ -1,0 +1,35 @@
+# Intro & Overview
+- [ ] What is v3? Simple 1 liner about Uni V3.
+- [ ] Uni logo
+- [ ] point: why wrapper? what is the additional thing they're getting?
+- [ ] want: show a uniswap wrapper
+- [ ] some indication of "get started", not sure how to change slides
+  - [ ] arrow keys on first slide?
+  - [ ] buttons to press on the side
+- [ ] overview: clickable sections
+- [ ] overview: rows of boxes, select which one
+
+# Example
+- [ ] "What does x method do?"
+  - [ ] have some information about what the function we're calling is doing
+- [ ] code snippet
+  - [ ] drop-down: language
+  - [ ] schema tab (only function)
+  - [ ] args -> in-line button
+  - [ ] button: copy code
+- [ ] toggle: codegen
+- [ ] link: generated docs (for schema)
+- [ ] move buttons to the bottom
+- [ ] first section: "?" Learn how to use the slides
+  - [ ] what is left part, what is right part
+- [ ] code font-size large
+- [ ] lazy: connect wallet
+- [ ] dynamic height
+- [ ] header: same as polywrap.io (docs -> docgen docs, github -> uniswap v3)
+- [ ] more examples (reference: https://docs.uniswap.org/sdk/v3/overview)
+- [ ] cross-link to Uniswap's docs
+
+# Docs
+- [ ] generated
+- [ ] top-level "how it works" section
+- [ ] show resolution path from ENS (link->app.ens) -> IPFS (link->wrappers)
