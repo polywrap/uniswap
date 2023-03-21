@@ -1,5 +1,4 @@
 import React from "react";
-import { Container as RawContainer } from "@mui/material";
 import styled from "styled-components";
 
 interface BodyProps {

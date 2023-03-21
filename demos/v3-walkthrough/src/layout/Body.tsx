@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { Typography } from "@mui/material";
 
 const Main = styled.main`
   padding-bottom: 50px;
@@ -14,9 +13,9 @@ const Main = styled.main`
 function Body() {
   return (
     <Main>
-      <Typography variant="h1">
+      <h1>
         Uniswap Wrapper!!!!
-      </Typography>
+      </h1>
     </Main>
   );
 }

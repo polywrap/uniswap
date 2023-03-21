@@ -1,12 +1,14 @@
 import React from 'react';
-import { Box, Container, Link } from "@mui/material";
+import { Box, Link } from "@mui/material";
+import { CopyAll } from "@mui/icons-material";
 import styled from 'styled-components';
 
 import PolywrapLogo from '../components/PolywrapLogo';
+import { uniswapV3Uri } from "../constants";
 
 export const HEIGHT = "31px";
 
-const HeaderContainer = styled(Container)`
+const HeaderContainer = styled.div`
   height: ${HEIGHT};
   padding-left: unset !important;
   padding-right: unset !important;
@@ -14,17 +16,18 @@ const HeaderContainer = styled(Container)`
   border-bottom: white;
   border-bottom-style: solid;
   border-bottom-width: 1px;
+  display: flex;
+  flex-direction: row;
 `;
 
 function HeaderButton(props: {
   width: string;
   border_left?: boolean;
   border_right?: boolean;
-  href?: string;
-  target?: string;
+  onClick?: React.MouseEventHandler;
   children: React.ReactNode;
 }) {
-  const Inner = styled(Link)`
+  const Inner = styled(Box)`
     height: 100%;
     width: ${props.width};
     ${props.border_left ? `
@@ -37,6 +40,7 @@ function HeaderButton(props: {
     border-right-style: solid;
     border-right-width: 1px;
     ` : ""}
+    ${props.onClick ? "cursor: pointer;" : ""}
   `;
   Inner.defaultProps = {
     sx: {
@@ -46,7 +50,7 @@ function HeaderButton(props: {
     }
   };
   return (
-    <Inner href={props.href} target={props.target}>
+    <Inner onClick={props.onClick}>
       {props.children}
     </Inner>
   );
@@ -54,6 +58,18 @@ function HeaderButton(props: {
 
 const HeaderButtonIcon = styled(Box)`
   height: 20px;
+`;
+
+const WrapUriContainer = styled.div`
+  margin-left: 10px;
+  margin-right: 5px;
+  display: flex;
+  flex-direction: row;
+`;
+
+const WrapUri = styled.h6`
+  text-align: center;
+  overflow-wrap: anywhere;
 `;
 
 function Header() {
@@ -73,13 +89,31 @@ function Header() {
     <HeaderContainer>
       <HeaderButton
         width={isDesktop ? "120px" : "40px"}
-        href="https://polywrap.io/"
-        target="_blank"
+        onClick={() => window.open("https://polywrap.io/", "_blank")?.focus()}
         border_right
       >
         <HeaderButtonIcon>
           <PolywrapLogo fill="#ffffff" long={isDesktop} />
         </HeaderButtonIcon>
+      </HeaderButton>
+      <HeaderButton
+        width={"auto"}
+        border_right
+      >
+        <WrapUriContainer>
+          <WrapUri>
+            {uniswapV3Uri}
+          </WrapUri>
+          <CopyAll
+            style={{
+              width: "12px",
+              marginLeft: "5px",
+              height: "unset",
+              cursor: "pointer"
+            }}
+            onClick={() => navigator.clipboard.writeText(uniswapV3Uri)}
+          />
+        </WrapUriContainer>
       </HeaderButton>
     </HeaderContainer>
   );
