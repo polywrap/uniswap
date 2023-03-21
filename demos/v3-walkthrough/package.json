@@ -1,5 +1,5 @@
 {
-  "name": "v3-walkthrough",
+  "name": "uniswap-v3-docs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,6 +7,11 @@
     "build": "react-scripts build"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.10.15",
+    "@mui/styles": "^5.10.15",
     "@polywrap/client-js": "~0.10.0-pre",
     "@types/node": "^16.18.16",
     "@types/react": "^16.9.34",

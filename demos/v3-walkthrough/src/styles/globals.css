@@ -1,3 +1,22 @@
+html {
+  background-color: #06071a;
+}
+
+body {
+  margin: unset;
+}
+
+.app {
+  max-width: 1200px;
+  margin: auto;
+  border-left: white;
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-right: white;
+  border-right-style: solid;
+  border-right-width: 1px;
+}
+
 @font-face {
   font-family: Colton Primary;
   font-weight: 400;

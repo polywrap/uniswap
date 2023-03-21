@@ -1,5 +1,9 @@
 import { DeckProps } from "spectacle";
 
+export const easings = {
+  cubic: "cubic-bezier(0.35, 1.5, 0.65, 1)",
+}
+
 export const colors = {
   white: "#ffffff",
   black: "000000", // tokens.Primary.Black.value,

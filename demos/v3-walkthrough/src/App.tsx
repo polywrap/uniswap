@@ -1,15 +1,20 @@
 import React from "react";
 
 import Header from "./layout/Header";
-import Slides from "./layout/Slides";
+import AppContainer from "./layout/AppContainer";
+import Sidebar from "./layout/Sidebar";
+import Body from "./layout/Body";
 
 import "./styles/globals.css";
 
 function App() {
   return (
-    <div className="App">
+    <div className="app">
       <Header />
-      <Slides />
+      <AppContainer>
+        <Sidebar />
+        <Body />
+      </AppContainer>
     </div>
   );
 }
