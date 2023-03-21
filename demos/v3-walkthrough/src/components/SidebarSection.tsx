@@ -5,6 +5,7 @@ interface SidebarSection {
   name: string;
   children?: React.ReactNode;
   initOpen?: boolean;
+  onClick?: React.MouseEventHandler;
 }
 
 const SectionHeading = styled.div`
@@ -30,7 +31,7 @@ function SidebarSection(props: SidebarSection) {
   if (!props.children) {
     return (
       <SectionContainer>
-        <SectionHeading>
+        <SectionHeading onClick={props.onClick}>
           {props.name}
         </SectionHeading>
       </SectionContainer>
@@ -38,7 +39,12 @@ function SidebarSection(props: SidebarSection) {
   } else {
     return (
       <SectionContainer>
-        <SectionHeading onClick={() => setOpen(!open)}>
+        <SectionHeading onClick={(e) => {
+          setOpen(!open);
+          if (props.onClick) {
+            props.onClick(e);
+          }
+        }}>
           {(open ? "- " : "+ ") + props.name}
         </SectionHeading>
         {open && props.children}

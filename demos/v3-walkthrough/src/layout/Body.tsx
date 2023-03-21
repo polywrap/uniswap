@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import styled from "styled-components";
 
 import Intro from "../pages/Intro";
+import Schema from "../pages/Schema";
 import Example from "../pages/Example";
 import NoMatch from "../pages/NoMatch";
 
@@ -20,6 +21,7 @@ function Body() {
     <Main>
       <Routes>
         <Route path="/" element={<Intro />} />
+        <Route path="/schema" element={<Schema />} />
         <Route path="/example/:id" element={<Example />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>

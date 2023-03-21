@@ -14,10 +14,10 @@
 - [ ] code snippet
   - [ ] drop-down: language
   - [ ] schema tab (only function)
-  - [ ] args -> in-line button
+  - [x] args -> in-line button
   - [ ] button: copy code
 - [ ] toggle: codegen
-- [ ] link: generated docs (for schema)
+- [x] link: generated docs (for schema)
 - [ ] move buttons to the bottom
 - [ ] first section: "?" Learn how to use the slides
   - [ ] what is left part, what is right part

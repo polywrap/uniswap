@@ -15,6 +15,7 @@
     "@mui/styles": "^5.10.15",
     "@polywrap/client-js": "~0.10.0-pre",
     "@polywrap/react": "~0.10.0-pre",
+    "@polywrap/schema-compose": "~0.10.0-pre",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "6.9.0",

@@ -36,6 +36,7 @@ const WrapName = styled.h2`
   font-weight: 600;
   font-size: 1.375rem;
   text-align: center;
+  cursor: pointer;
 `;
 
 const WrapType = styled.h5`
@@ -97,7 +98,7 @@ function Sidebar() {
       <WrapLogo>
         <img src={UniswapLogo} alt="uniswap-logo" width={100} height={100} />
       </WrapLogo>
-      <WrapName>
+      <WrapName onClick={() => navigate("/")}>
         {isLoading ?
           <Loader style={{ width: "100%" }} /> :
           wrapManifest.name
@@ -114,12 +115,11 @@ function Sidebar() {
       {!isLoading && (
         <>
           <SidebarSection name="README" />
-          <SidebarSection name="Schema" />
           <SidebarSection name="Examples" initOpen>
             {examples.map((i) => (
-              <SidebarItem onClick={() => {
-                navigate("/example/" + i.name.toLowerCase().replaceAll(" ", "-"));
-              }}>
+              <SidebarItem onClick={() =>
+                navigate("/example/" + i.name.toLowerCase().replaceAll(" ", "-"))
+              }>
                 {i.name}
               </SidebarItem>
             ))}
@@ -170,6 +170,9 @@ function Sidebar() {
             </SidebarItem>
           ))}
         </SidebarSection>
+      )}
+      {!isLoading && (
+        <SidebarSection name="Schema" onClick={() => navigate("/schema")} />
       )}
     </SidebarContainer>
   );
