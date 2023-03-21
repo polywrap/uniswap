@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { usePolywrapClient } from "@polywrap/react";
 import { WrapManifest } from "@polywrap/wrap-manifest-types-js";
@@ -7,7 +8,7 @@ import { HEIGHT as HEADER_HEIGHT } from "./Header";
 import Loader from "../components/Loader";
 import SidebarSection from "../components/SidebarSection";
 import UniswapLogo from "../images/uniswap-logo.svg";
-import { uniswapV3Uri } from "../constants";
+import { uniswapV3Uri, examples } from "../constants";
 
 const SidebarContainer = styled.nav`
   top: ${HEADER_HEIGHT};
@@ -17,7 +18,6 @@ const SidebarContainer = styled.nav`
   flex: 0 0 200px;
   overflow-x: hidden;
   overflow-y: scroll;
-
 `;
 
 const WrapLogo = styled.a`
@@ -33,7 +33,7 @@ const WrapName = styled.h2`
   margin-left: 10px;
   margin-right: 5px;
   line-height: 1.25;
-  font-weight: 500;
+  font-weight: 600;
   font-size: 1.375rem;
   text-align: center;
 `;
@@ -42,9 +42,21 @@ const WrapType = styled.h5`
   margin: unset;
   text-align: center;
   font-weight: 100;
-`
+`;
+
+const SidebarItem = styled.div`
+  overflow-wrap: anywhere;
+  cursor: pointer;
+  font-size: smaller;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  &:hover {
+    background: #323232
+  }
+`;
 
 function Sidebar() {
+  const navigate = useNavigate();
   const client = usePolywrapClient();
   const [wrapManifest, setWrapManifest] = React.useState<
     WrapManifest | undefined
@@ -70,8 +82,15 @@ function Sidebar() {
   const isLoading = !wrapManifest;
   const abi = wrapManifest?.abi;
   const functions = abi?.moduleType?.methods;
+  const env = abi?.envType;
   const objects = abi?.objectTypes;
   const enums = abi?.enumTypes;
+  const dependencies = [
+    ...(abi?.importedEnumTypes?.map((i) => i.uri) || []),
+    ...(abi?.importedEnvTypes?.map((i) => i.uri) || []),
+    ...(abi?.importedModuleTypes?.map((i) => i.uri) || []),
+    ...(abi?.importedObjectTypes?.map((i) => i.uri) || []),
+  ].filter((v, i, a) => a.indexOf(v) === i);
 
   return (
     <SidebarContainer className="sidebar">
@@ -92,30 +111,63 @@ function Sidebar() {
           </>
         }
       </WrapType>
+      {!isLoading && (
+        <>
+          <SidebarSection name="README" />
+          <SidebarSection name="Schema" />
+          <SidebarSection name="Examples" initOpen>
+            {examples.map((i) => (
+              <SidebarItem onClick={() => {
+                navigate("/example/" + i.name.toLowerCase().replaceAll(" ", "-"));
+              }}>
+                {i.name}
+              </SidebarItem>
+            ))}
+          </SidebarSection>
+        </>
+      )}
       {functions && (
         <SidebarSection name="Functions">
           {functions.map((i) => (
-            <div>
+            <SidebarItem>
               {i.name}
-            </div>
+            </SidebarItem>
+          ))}
+        </SidebarSection>
+      )}
+      {env && (
+        <SidebarSection name="Env">
+          {env.properties?.map((i) => (
+            <SidebarItem>
+              {i.name}
+            </SidebarItem>
           ))}
         </SidebarSection>
       )}
       {objects && (
         <SidebarSection name="Objects">
           {objects.map((i) => (
-            <div>
+            <SidebarItem>
               {i.type}
-            </div>
+            </SidebarItem>
           ))}
         </SidebarSection>
       )}
       {enums && (
         <SidebarSection name="Enums">
           {enums.map((i) => (
-            <div>
+            <SidebarItem>
               {i.type}
-            </div>
+            </SidebarItem>
+          ))}
+        </SidebarSection>
+      )}
+      {!isLoading && dependencies && (
+        <SidebarSection name="Dependencies">
+          {dependencies.map((i) => (
+            <SidebarItem>
+              {i}
+            </SidebarItem>
           ))}
         </SidebarSection>
       )}

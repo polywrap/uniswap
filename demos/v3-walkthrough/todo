@@ -4,10 +4,7 @@
 - [ ] What is v3? Simple 1 liner about Uni V3.
 - [ ] point: why wrapper? what is the additional thing they're getting?
 - [ ] want: show a uniswap wrapper
-- [ ] some indication of "get started", not sure how to change slides
-  - [ ] arrow keys on first slide?
-  - [ ] buttons to press on the side
-- [ ] overview: rows of boxes, select which one
+- [x] overview: rows, select which one
 - [ ] version of Polywrap this was built with?
 
 # Example

@@ -1,4 +1,5 @@
 import React from "react";
+import { HashRouter } from "react-router-dom";
 import { DefaultBundle } from "@polywrap/client-js";
 import { PolywrapProvider } from "@polywrap/react";
 
@@ -14,6 +15,7 @@ const defaultConfig = DefaultBundle.getConfig();
 function App() {
   return (
     <div className="app">
+      <HashRouter>
       <PolywrapProvider {...defaultConfig}>
         <Header />
         <AppContainer>
@@ -21,6 +23,7 @@ function App() {
           <Body />
         </AppContainer>
       </PolywrapProvider>
+      </HashRouter>
     </div>
   );
 }

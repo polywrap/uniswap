@@ -3,7 +3,8 @@ import styled from "styled-components";
 
 interface SidebarSection {
   name: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  initOpen?: boolean;
 }
 
 const SectionHeading = styled.div`
@@ -12,6 +13,11 @@ const SectionHeading = styled.div`
   border-bottom: white;
   border-bottom-style: solid;
   border-bottom-width: 1px;
+  cursor: pointer;
+  font-weight: 600;
+  &:hover {
+    border-bottom-style: dotted;
+  }
 `;
 
 const SectionContainer = styled.div`
@@ -19,16 +25,26 @@ const SectionContainer = styled.div`
 `;
 
 function SidebarSection(props: SidebarSection) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(!!props.initOpen);
 
-  return (
-    <SectionContainer>
-      <SectionHeading onClick={() => setOpen(!open)}>
-        {(open ? "- " : "+ ") + props.name}
-      </SectionHeading>
-      {open && props.children}
-    </SectionContainer>
-  );
+  if (!props.children) {
+    return (
+      <SectionContainer>
+        <SectionHeading>
+          {props.name}
+        </SectionHeading>
+      </SectionContainer>
+    );
+  } else {
+    return (
+      <SectionContainer>
+        <SectionHeading onClick={() => setOpen(!open)}>
+          {(open ? "- " : "+ ") + props.name}
+        </SectionHeading>
+        {open && props.children}
+      </SectionContainer>
+    );
+  }
 }
 
 export default SidebarSection;

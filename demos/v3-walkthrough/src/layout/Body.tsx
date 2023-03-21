@@ -1,5 +1,10 @@
 import React from "react";
+import { Routes, Route } from "react-router-dom";
 import styled from "styled-components";
+
+import Intro from "../pages/Intro";
+import Example from "../pages/Example";
+import NoMatch from "../pages/NoMatch";
 
 const Main = styled.main`
   padding-bottom: 50px;
@@ -13,9 +18,11 @@ const Main = styled.main`
 function Body() {
   return (
     <Main>
-      <h1>
-        Uniswap Wrapper!!!!
-      </h1>
+      <Routes>
+        <Route path="/" element={<Intro />} />
+        <Route path="/example/:id" element={<Example />} />
+        <Route path="*" element={<NoMatch />} />
+      </Routes>
     </Main>
   );
 }

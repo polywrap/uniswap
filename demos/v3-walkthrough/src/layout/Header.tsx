@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Link } from "@mui/material";
+import { useSearchParams } from 'react-router-dom';
+import { Box } from "@mui/material";
 import { CopyAll } from "@mui/icons-material";
 import styled from 'styled-components';
 
@@ -85,6 +86,8 @@ function Header() {
     return () => window.removeEventListener("resize", updateMedia);
   });
 
+  const uri = uniswapV3Uri;
+
   return (
     <HeaderContainer>
       <HeaderButton
@@ -102,7 +105,7 @@ function Header() {
       >
         <WrapUriContainer>
           <WrapUri>
-            {uniswapV3Uri}
+            {uri}
           </WrapUri>
           <CopyAll
             style={{
@@ -111,7 +114,7 @@ function Header() {
               height: "unset",
               cursor: "pointer"
             }}
-            onClick={() => navigator.clipboard.writeText(uniswapV3Uri)}
+            onClick={() => uri && navigator.clipboard.writeText(uri)}
           />
         </WrapUriContainer>
       </HeaderButton>
