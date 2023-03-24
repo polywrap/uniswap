@@ -9,37 +9,37 @@ const globalStyles = `
   font-weight: 700;
 `;
 
-const Keyword = styled.span`
+export const Keyword = styled.span`
   ${globalStyles}
   color: #0067d1;
 `;
 
-const SpecialChar = styled.span`
+export const SpecialChar = styled.span`
   ${globalStyles}
   font-size: 16px;
   color: #e3e3e3;
 `;
 
-const TypeName = styled.span`
+export const TypeName = styled.span`
   ${globalStyles}
   color: #00ff37;
 `;
 
-const ClickableTypeName = styled(TypeName)`
+export const ClickableTypeName = styled(TypeName)`
   cursor: pointer;
 `;
 
-const PropName = styled.span`
+export const PropName = styled.span`
   ${globalStyles}
   color: #36b5ff;
 `;
 
-const ArgName = styled.span`
+export const ArgName = styled.span`
   ${globalStyles}
   color: #cfcfcf;
 `;
 
-const ConstantName = styled.span`
+export const ConstantName = styled.span`
   ${globalStyles}
   color: #36b5ff;
 `;

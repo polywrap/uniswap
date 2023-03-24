@@ -1,20 +1,25 @@
 import React from "react";
 import styled from "styled-components";
+import { Share as RefLink } from "@mui/icons-material";
 import { useParams, useNavigate } from "react-router-dom";
 import { usePolywrapClient } from "@polywrap/react";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
 import { uniswapV3Uri } from "../constants";
-import RenderSchema from "../components/RenderSchema";
+import RenderSchema, {
+  PropName,
+  TypeName
+} from "../components/RenderSchema";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
+import { getTypeRefRoutes } from "../utils/getTypeRefRoutes";
 
 const Title = styled.h1`
   font-weight: 100;
   font-stretch: expanded;
 `;
 
-const ObjectDescription = styled.h2`
+const Description = styled.h2`
   font-weight: 100;
   font-size: large;
 `;
@@ -29,6 +34,22 @@ const PropertyName = styled.span`
   font-kerning: none;
   letter-spacing: 1px;
   font-weight: bold;
+`;
+
+const ReferenceSection = styled.h4`
+  font-weight: 100;
+`;
+
+const ReferenceList = styled.ul`
+  list-style: none;
+  padding-left: 16px;
+`
+
+const ReferenceListItem = styled.li`
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 function ObjectDocs() {
@@ -47,7 +68,6 @@ function ObjectDocs() {
     return (<div>{error.toString()}</div>);
   }
 
-  // Find the function
   const abi = manifest?.abi;
 
   if (!abi) {
@@ -56,6 +76,7 @@ function ObjectDocs() {
     return (<div>{message}</div>);
   }
 
+  // Find the object
   const objects = abi.objectTypes || [];
   const object = objects.find((object) => object.type === id);
 
@@ -65,15 +86,18 @@ function ObjectDocs() {
     return (<div>{message}</div>);
   }
 
+  // Find all references in other parts of the ABI
+  const refRoutes = getTypeRefRoutes(object.type, abi);
+
   return (
     <>
       <Title>
         Object: <b>{object.type}</b>
       </Title>
       {object?.comment && (
-        <ObjectDescription>
+        <Description>
           {object.comment}
-        </ObjectDescription>
+        </Description>
       )}
       <RenderSchema
         objects={[object]}
@@ -105,6 +129,47 @@ function ObjectDocs() {
             );
           })}
           </PropertyList>
+        </>
+      )}
+      {(refRoutes.functions.length > 0 || refRoutes.objects.length > 0) && (
+        <>
+        <SectionTitle>
+          References
+        </SectionTitle>
+        {refRoutes.functions.length > 0 && (
+          <>
+          <ReferenceSection>Functions</ReferenceSection>
+          <ReferenceList>
+            {refRoutes.functions.map((nameRoute) => (
+              <ReferenceListItem onClick={() => navigate(nameRoute.route)}>
+                <span style={{ display: "flex" }}>
+                  <RefLink style={{ paddingRight: "0.5em" }} />
+                  <PropName>
+                    {nameRoute.name}
+                  </PropName>
+                </span>
+              </ReferenceListItem>
+            ))}
+          </ReferenceList>
+          </>
+        )}
+        {refRoutes.objects.length > 0 && (
+          <>
+          <ReferenceSection>Objects</ReferenceSection>
+          <ReferenceList>
+            {refRoutes.objects.map((nameRoute) => (
+              <ReferenceListItem onClick={() => navigate(nameRoute.route)}>
+                <span style={{ display: "flex" }}>
+                  <RefLink style={{ paddingRight: "0.5em" }} />
+                  <TypeName>
+                    {nameRoute.name}
+                  </TypeName>
+                </span>
+              </ReferenceListItem>
+            ))}
+          </ReferenceList>
+          </>
+        )}
         </>
       )}
     </>
