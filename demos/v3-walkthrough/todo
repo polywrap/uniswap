@@ -38,3 +38,9 @@
 - [ ] very long right scroll to read output of the queries
 - [ ] there is the ambiguous button for toggling between the javascript query view and the json.. no explanation around this which leaves me confused
 - [ ] why am I not prompted for a web3 connection on the write queries?
+
+# Notes
+- safe
+  - create one you're the owner of
+  - interact with one you're the owner of
+- support multiple invocations within a single example

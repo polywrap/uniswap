@@ -4,33 +4,39 @@ import { renderSchema } from "@polywrap/schema-compose";
 import SyntaxHighlighter from "react-syntax-highlighter";
 
 import { uniswapV3Uri } from "../constants";
+import { useWrapManifest } from "../hooks/useWrapManifest";
+import Loader from "../components/Loader";
 
 function Schema() {
   const client = usePolywrapClient();
+  const { manifest, error, loading } = useWrapManifest({
+    client,
+    uri: uniswapV3Uri
+  });
   const [schema, setSchema] = React.useState<
     string | undefined
   >(undefined);
 
   React.useEffect(() => {
-    const fetchManifest = async () => {
-      const manifest = await client.getManifest(uniswapV3Uri);
-      if (!manifest.ok) {
-        console.error(
-          "Failed to fetch manifest from " + uniswapV3Uri +
-          "\nError: " + manifest.error
-        );
-        return;
-      }
-
-      // Remove the `@imports` directive, it's ugly
-      if (manifest.value.abi.moduleType)
-        manifest.value.abi.moduleType.imports = [];
-
-      setSchema(renderSchema(manifest.value.abi, false));
+    if (loading) {
+      setSchema(undefined);
+    } else if (manifest && !schema) {
+      setSchema(renderSchema(manifest.abi, false));
     }
+  }, [loading]);
 
-    fetchManifest();
-  }, []);
+  if (loading) {
+    return (
+      <Loader />
+    );
+  } else if (error || !manifest) {
+    console.error(error);
+    return (
+      <div>
+        Failed to fetch manifest.
+      </div>
+    );
+  }
 
   return (
     <>

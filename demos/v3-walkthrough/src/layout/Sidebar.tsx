@@ -9,6 +9,7 @@ import Loader from "../components/Loader";
 import SidebarSection from "../components/SidebarSection";
 import UniswapLogo from "../images/uniswap-logo.svg";
 import { uniswapV3Uri, examples } from "../constants";
+import { useWrapManifest } from "../hooks/useWrapManifest";
 
 const SidebarContainer = styled.nav`
   top: ${HEADER_HEIGHT};
@@ -59,29 +60,36 @@ const SidebarItem = styled.div`
 function Sidebar() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
-  const [wrapManifest, setWrapManifest] = React.useState<
-    WrapManifest | undefined
-  >(undefined);
+  const { manifest, error, loading } = useWrapManifest({
+    client,
+    uri: uniswapV3Uri
+  });
 
-  useEffect(() => {
-    const fetchManifest = async () => {
-      const manifest = await client.getManifest(uniswapV3Uri);
-      if (!manifest.ok) {
-        console.error(
-          "Failed to fetch manifest from " + uniswapV3Uri +
-          "\nError: " + manifest.error
-        );
-        return;
-      }
+  if (loading) {
+    return (
+      <SidebarContainer className="sidebar">
+        <Loader style={{ width: "100%" }} />
+      </SidebarContainer>
+    );
+  } else if (error) {
+    // TODO: send user to resolution error page
+    console.error(error);
+    return (
+      <SidebarContainer className="sidebar">
+        <div>ERROR</div>
+      </SidebarContainer>
+    );
+  } else if (!manifest) {
+    // This should never happen
+    console.error("This should never happen, manifest & error are both undefined.");
+    return (
+      <SidebarContainer className="sidebar">
+        <div>ERROR</div>
+      </SidebarContainer>
+    );
+  }
 
-      setWrapManifest(manifest.value);
-    }
-
-    fetchManifest();
-  }, []);
-
-  const isLoading = !wrapManifest;
-  const abi = wrapManifest?.abi;
+  const abi = manifest?.abi;
   const functions = abi?.moduleType?.methods;
   const env = abi?.envType;
   const objects = abi?.objectTypes;
@@ -99,37 +107,29 @@ function Sidebar() {
         <img src={UniswapLogo} alt="uniswap-logo" width={100} height={100} />
       </WrapLogo>
       <WrapName onClick={() => navigate("/")}>
-        {isLoading ?
-          <Loader style={{ width: "100%" }} /> :
-          wrapManifest.name
-        }
+        {manifest.name}
       </WrapName>
       <WrapType>
-        {isLoading ?
-          <></> :
-          <>
-          {"[type: "}<b>{wrapManifest.type}</b> {"]"}
-          </>
-        }
+        {"[type: "}<b>{manifest.type}</b>{"]"}
       </WrapType>
-      {!isLoading && (
-        <>
-          <SidebarSection name="README" />
-          <SidebarSection name="Examples" initOpen>
-            {examples.map((i) => (
-              <SidebarItem onClick={() =>
-                navigate("/example/" + i.name.toLowerCase().replaceAll(" ", "-"))
-              }>
-                {i.name}
-              </SidebarItem>
-            ))}
-          </SidebarSection>
-        </>
+      <SidebarSection name="README" />
+      {examples && (
+        <SidebarSection name="Examples" initOpen>
+          {examples.map((i) => (
+            <SidebarItem onClick={() =>
+              navigate("/example/" + i.name)
+            }>
+              {i.name}
+            </SidebarItem>
+          ))}
+        </SidebarSection>
       )}
       {functions && (
         <SidebarSection name="Functions">
           {functions.map((i) => (
-            <SidebarItem>
+            <SidebarItem onClick={() =>
+              navigate("/function/" + i.name)
+            }>
               {i.name}
             </SidebarItem>
           ))}
@@ -162,7 +162,7 @@ function Sidebar() {
           ))}
         </SidebarSection>
       )}
-      {!isLoading && dependencies && (
+      {dependencies && (
         <SidebarSection name="Dependencies">
           {dependencies.map((i) => (
             <SidebarItem>
@@ -171,9 +171,7 @@ function Sidebar() {
           ))}
         </SidebarSection>
       )}
-      {!isLoading && (
-        <SidebarSection name="Schema" onClick={() => navigate("/schema")} />
-      )}
+      <SidebarSection name="Schema" onClick={() => navigate("/schema")} />
     </SidebarContainer>
   );
 }

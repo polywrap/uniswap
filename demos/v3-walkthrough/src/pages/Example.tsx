@@ -10,7 +10,7 @@ function Example() {
   const { id } = useParams<"id">();
 
   const example = examples.find((e) => 
-    id === e.name.toLowerCase().replaceAll(" ", "-")
+    id === e.name
   );
 
   if (!example || !id) {
