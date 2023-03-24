@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useParams, useNavigate } from "react-router-dom";
-import { Launch } from "@mui/icons-material";
+import { Launch, UnfoldMore } from "@mui/icons-material";
 import { usePolywrapClient } from "@polywrap/react";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
@@ -10,9 +10,31 @@ import RenderSchema from "../components/RenderSchema";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
 
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
 const Title = styled.h1`
   font-weight: 100;
   font-stretch: expanded;
+`;
+
+const SchemaLink = styled.span`
+  color: white;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+
+const SchemaText = styled.h6`
+  color: white;
+  font-weight: 100;
 `;
 
 const FunctionDescription = styled.h2`
@@ -85,9 +107,17 @@ function FunctionDocs() {
 
   return (
     <>
-      <Title>
-        Function: <b>{method.name}</b>
-      </Title>
+      <Header>
+        <Title>
+          Function: <b>{method.name}</b>
+        </Title>
+        <SchemaLink
+          onClick={() => navigate("/schema")}
+        >
+          <SchemaText>schema</SchemaText>
+          <UnfoldMore />
+        </SchemaLink>
+      </Header>
       {method?.comment && (
         <FunctionDescription>
           {method.comment}
