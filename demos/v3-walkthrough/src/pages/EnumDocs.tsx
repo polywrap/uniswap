@@ -1,15 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import { Share as RefLink, UnfoldMore } from "@mui/icons-material";
+import { UnfoldMore } from "@mui/icons-material";
 import { useParams, useNavigate } from "react-router-dom";
 import { usePolywrapClient } from "@polywrap/react";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
 import { uniswapV3Uri } from "../constants";
-import RenderSchema, {
-  PropName,
-  TypeName
-} from "../components/RenderSchema";
+import RenderSchema from "../components/RenderSchema";
+import ReferenceSection from "../components/ReferenceSection";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
 import { getTypeRefRoutes } from "../utils/getTypeRefRoutes";
@@ -47,22 +45,6 @@ const Description = styled.h2`
 `;
 
 const SectionTitle = styled.h3``;
-
-const ReferenceSection = styled.h4`
-  font-weight: 100;
-`;
-
-const ReferenceList = styled.ul`
-  list-style: none;
-  padding-left: 16px;
-`
-
-const ReferenceListItem = styled.li`
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
 
 function EnumDocs() {
   const navigate = useNavigate();
@@ -129,47 +111,7 @@ function EnumDocs() {
           }
         }}
       />
-      {(refRoutes.functions.length > 0 || refRoutes.objects.length > 0) && (
-        <>
-        <SectionTitle>
-          References
-        </SectionTitle>
-        {refRoutes.functions.length > 0 && (
-          <>
-          <ReferenceSection>Functions</ReferenceSection>
-          <ReferenceList>
-            {refRoutes.functions.map((nameRoute) => (
-              <ReferenceListItem onClick={() => navigate(nameRoute.route)}>
-                <span style={{ display: "flex" }}>
-                  <RefLink style={{ paddingRight: "0.5em" }} />
-                  <PropName>
-                    {nameRoute.name}
-                  </PropName>
-                </span>
-              </ReferenceListItem>
-            ))}
-          </ReferenceList>
-          </>
-        )}
-        {refRoutes.objects.length > 0 && (
-          <>
-          <ReferenceSection>Objects</ReferenceSection>
-          <ReferenceList>
-            {refRoutes.objects.map((nameRoute) => (
-              <ReferenceListItem onClick={() => navigate(nameRoute.route)}>
-                <span style={{ display: "flex" }}>
-                  <RefLink style={{ paddingRight: "0.5em" }} />
-                  <TypeName>
-                    {nameRoute.name}
-                  </TypeName>
-                </span>
-              </ReferenceListItem>
-            ))}
-          </ReferenceList>
-          </>
-        )}
-        </>
-      )}
+      <ReferenceSection refRoutes={refRoutes} />
     </>
   );
 }

@@ -1,13 +1,15 @@
 import { WrapManifest } from "@polywrap/wrap-manifest-types-js";
 
+import { trimPropType } from "./trimPropType";
 
-interface NamedRoute {
+export interface NamedRoute {
   name: string;
   route: string;
 }
 
-interface TypeRefRoutes {
-  functions: NamedRoute[];
+export interface TypeRefRoutes {
+  functionArgs: NamedRoute[];
+  functionRets: NamedRoute[];
   objects: NamedRoute[];
 }
 
@@ -16,7 +18,8 @@ export function getTypeRefRoutes(
   abi: WrapManifest["abi"]
 ): TypeRefRoutes {
   const objects: Set<string> = new Set();
-  const functions: Set<string> = new Set();
+  const functionArgs: Set<string> = new Set();
+  const functionRets: Set<string> = new Set();
 
   for (const method of abi.moduleType?.methods || []) {
     if (!method.name) {
@@ -24,21 +27,23 @@ export function getTypeRefRoutes(
     }
 
     for (const arg of method.arguments || []) {
-      const argType = arg.type
-        .replaceAll("[", "")
-        .replaceAll("]", "");
-
+      const argType = trimPropType(arg.type);
       if (argType === typeName) {
-        functions.add(method.name);
+        functionArgs.add(method.name);
+      }
+    }
+
+    if (method.return) {
+      const retType = trimPropType(method.return.type);
+      if (retType === typeName) {
+        functionRets.add(method.name);
       }
     }
   }
 
   for (const object of abi.objectTypes || []) {
     for (const prop of object.properties || []) {
-      const propType = prop.type
-        .replaceAll("[", "")
-        .replaceAll("]", "");
+      const propType = trimPropType(prop.type);
 
       if (propType === typeName) {
         objects.add(object.type);
@@ -47,11 +52,17 @@ export function getTypeRefRoutes(
   }
 
   const result: TypeRefRoutes = {
-    functions: [],
+    functionArgs: [],
+    functionRets: [],
     objects: [],
   };
 
-  functions.forEach((name) => result.functions.push({
+  functionArgs.forEach((name) => result.functionArgs.push({
+    name,
+    route: "/function/" + name
+  }));
+
+  functionRets.forEach((name) => result.functionRets.push({
     name,
     route: "/function/" + name
   }));

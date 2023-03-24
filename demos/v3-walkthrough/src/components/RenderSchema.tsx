@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 import { MethodDefinition, ObjectDefinition, EnumDefinition } from "@polywrap/wrap-manifest-types-js";
 
+import { trimPropType } from "../utils/trimPropType";
+
 const globalStyles = `
   font-size: 14px;
   letter-spacing: 1px;
@@ -74,29 +76,29 @@ function RenderSchema(props: RenderSchemaProps) {
     onFuncNameClick
   } = props;
 
-  const RenderTypeName = (props: { name: string, noClick?: boolean }) => {
+  const RenderTypeName = (props: { type: string, noClick?: boolean }) => {
     const { noClick } = props;
 
-    let name = props.name;
+    let type = props.type;
     let prefix: string | undefined = undefined;
     let postfix: string | undefined = undefined;
 
-    if (name[0] === "[") {
-      const count = (name.match(/\[/) || []).length;
+    if (type[0] === "[") {
+      const count = (type.match(/\[/) || []).length;
       prefix = "[".repeat(count);
       postfix = "]".repeat(count);
-      name = name.replaceAll("[", "").replaceAll("]", "");
+      type = trimPropType(type);
     }
 
     return (
       <>
       {prefix && <SpecialChar>{prefix}</SpecialChar>}
       {onTypeNameClick && !noClick ? (
-        <ClickableTypeName onClick={() => onTypeNameClick(name)}>
-          {name}
+        <ClickableTypeName onClick={() => onTypeNameClick(type)}>
+          {type}
         </ClickableTypeName>
       ) : (
-        <TypeName>{name}</TypeName>
+        <TypeName>{type}</TypeName>
       )}
       {postfix && <SpecialChar>{postfix}</SpecialChar>}
       </>
@@ -175,7 +177,7 @@ function RenderSchema(props: RenderSchemaProps) {
           <RenderWhitespace indent={methodIndent + 1} />
           <ArgName>{argument.name}</ArgName>
           <SpecialChar>{": "}</SpecialChar>
-          <RenderTypeName name={argument.type} />
+          <RenderTypeName type={argument.type} />
           {argument.required && <SpecialChar>{"!"}</SpecialChar>}
           <br/>
           </span>
@@ -186,7 +188,7 @@ function RenderSchema(props: RenderSchemaProps) {
       )}{method.return && (
         <>
         <SpecialChar>{": "}</SpecialChar>
-        <RenderTypeName name={method.return.type} />
+        <RenderTypeName type={method.return.type} />
         {method.return.required && <SpecialChar>{"!"}</SpecialChar>}
         </>
       )}<br/>
@@ -211,7 +213,7 @@ function RenderSchema(props: RenderSchemaProps) {
           <RenderWhitespace indent={1} />
           <PropName>{property.name}</PropName>
           <SpecialChar>{": "}</SpecialChar>
-          <RenderTypeName name={property.type} />
+          <RenderTypeName type={property.type} />
           {property.required && <SpecialChar>{"!"}</SpecialChar>}
           <br/>
         </span>
@@ -225,7 +227,7 @@ function RenderSchema(props: RenderSchemaProps) {
     {enums?.length && enums.map((enumDef, index) => (
       <>
       <Keyword>{"enum "}</Keyword>
-      <RenderTypeName name={enumDef.type} noClick />
+      <RenderTypeName type={enumDef.type} noClick />
       <SpecialChar>{" {"}</SpecialChar>
       <br/>
       {enumDef.constants?.map((constant) => (
