@@ -7,6 +7,7 @@ import { irBlack as syntax } from 'react-syntax-highlighter/dist/esm/styles/hljs
 import Loader from "./Loader";
 import { Example } from "../constants";
 import "./ExampleRunner.css";
+import LanguageDropdown from './LanguageDropdown';
 
 const Heading = styled.h2`
   font-size: 1.75rem;
@@ -29,8 +30,9 @@ const Subheading = styled.p`
 
 const SnippetControls = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  width: 200px;
+  width: 350px;
 `;
 
 const RunButton = styled.button`
@@ -100,6 +102,7 @@ const SnippetContainer = styled.div`
   display: flex;
   margin: auto;
   border-radius: 0.25rem;
+  width: 100%;
 `;
 
 const SnippetText = styled.div`
@@ -116,6 +119,7 @@ const ResultTitle = styled.h3`
 const ResultContainer = styled.div`
   display: flex;
   margin: auto;
+  width: 100%;
 `;
 
 const ResultText = styled.div`
@@ -152,6 +156,39 @@ function ExampleControls(props: {
   )
 }
 
+function getInvokeSnippet(uri: string, method: string, argsString: string, language: string, inspectArgs: boolean) {
+
+  switch (language) {
+    case 'TypeScript':
+      return `await client.invoke({
+  uri: "${uri}",
+  method: "${method}",
+  args: ${inspectArgs ? argsString : "{...}"}
+});`;
+    case 'Python':
+      return `await client.invoke(
+  uri=Uri("${uri}"),
+  method="${method}",
+  args={${inspectArgs ? argsString : "{...}"}
+})`;
+    case 'Rust':
+      return `client.invoke(
+  &Uri::from("${uri}"),
+  "${method}",
+  wrap::args!(${inspectArgs ? argsString : "{...}"})
+).await.unwrap();`;
+    default:
+      return '';
+  }
+}
+
+const languages = [
+  { name: 'TypeScript', value: 'TypeScript' },
+  { name: 'Python', value: 'Python' },
+  { name: 'Rust', value: 'Rust' },
+];
+
+
 function ExampleRunner(props: {
   id: string,
   example: Example,
@@ -162,22 +199,39 @@ function ExampleRunner(props: {
   >({});
   const [waiting, setWaiting] = React.useState(false);
   const [inspectArgs, setInspectArgs] = React.useState(false);
+  const [selectedLanguage, setSelectedLanguage] = React.useState('TypeScript');
 
   const { name, description, uri, method, args } = props.example;
   const client = props.client;
   const id = props.id;
 
-  const argsString = JSON.stringify(args, null, 2)
-    // Add another 2 spaces of indentation space per line
-    .replaceAll("\n", "\n  ")
-    // Convert { "key": "value" } to { key: "value" }
-    .replace(/"([^"]+)":/g, '$1:');
+  let argsString = "";
 
-  const invokeSnippet = `await client.invoke({
-  uri: "${uri}",
-  method: "${method}",
-  args: ${inspectArgs ? argsString : "{...}"}
-});`;
+    switch (selectedLanguage) {
+      case "TypeScript":
+        argsString = JSON.stringify(args, null, 2)
+          .replaceAll("\n", "\n  ")
+          .replace(/"([^"]+)":/g, "$1:");
+        break;
+      case "Python":
+        argsString = JSON.stringify(args, null, 2)
+          .replace(/,/g, ", ")
+          .replace(/:/g, " = ");
+        break;
+      case "Rust":
+        argsString = JSON.stringify(args, null, 2)
+          // .replace(/"/g, "")
+          .replace(/,/g, ", ");
+        break;
+      default:
+        argsString = "{...}";
+    }
+
+  const invokeSnippet = getInvokeSnippet(uri, method, argsString, selectedLanguage, inspectArgs);
+
+  const handleLanguageChange = (value: string) => {
+    setSelectedLanguage(value);
+  };
 
   const run = async () => {
     delete result[id];
@@ -198,17 +252,22 @@ function ExampleRunner(props: {
       <SnippetControls>
         <ArgsButton onClick={() => setInspectArgs(!inspectArgs)}>
             <ArgsIcon>{inspectArgs ? "-" : "+"}</ArgsIcon>
-            args
+            Args
         </ArgsButton>
           <RunButton onClick={run}>
-            <RunArrow /><text>run</text>
+            <RunArrow /><text>Run</text>
           </RunButton>
+        <LanguageDropdown
+          languages={languages}
+          defaultLanguage={selectedLanguage}
+          onLanguageSelect={handleLanguageChange}
+        />
         </SnippetControls>
       <SnippetContainer>
         <SnippetText>
           <SyntaxHighlighter
             showLineNumbers={false}
-            language="typescript"
+            language={selectedLanguage.toLowerCase()}
             style={syntax}
           >
             {invokeSnippet}
