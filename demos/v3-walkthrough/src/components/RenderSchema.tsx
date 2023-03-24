@@ -61,17 +61,34 @@ function RenderSchema(props: RenderSchemaProps) {
     onTypeNameClick
   } = props;
 
-  const RenderTypeName = (props: { name: string, noClick?: boolean }) => (
-    <>
-    {onTypeNameClick && !props.noClick ? (
-      <ClickableTypeName onClick={() => onTypeNameClick(props.name)}>
-        {props.name}
-      </ClickableTypeName>
-    ) : (
-      <TypeName>{props.name}</TypeName>
-    )}
-    </>
-  );
+  const RenderTypeName = (props: { name: string, noClick?: boolean }) => {
+    const { noClick } = props;
+
+    let name = props.name;
+    let prefix: string | undefined = undefined;
+    let postfix: string | undefined = undefined;
+
+    if (name[0] === "[") {
+      const count = (name.match(/\[/) || []).length;
+      prefix = "[".repeat(count);
+      postfix = "]".repeat(count);
+      name = name.replaceAll("[", "").replaceAll("]", "");
+    }
+
+    return (
+      <>
+      {prefix && <SpecialChar>{prefix}</SpecialChar>}
+      {onTypeNameClick && !noClick ? (
+        <ClickableTypeName onClick={() => onTypeNameClick(name)}>
+          {name}
+        </ClickableTypeName>
+      ) : (
+        <TypeName>{name}</TypeName>
+      )}
+      {postfix && <SpecialChar>{postfix}</SpecialChar>}
+      </>
+    );
+  };
 
   return (
     <>

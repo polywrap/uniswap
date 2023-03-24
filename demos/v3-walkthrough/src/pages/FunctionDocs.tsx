@@ -1,10 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { useParams, useNavigate } from "react-router-dom";
+import { Launch } from "@mui/icons-material";
 import { usePolywrapClient } from "@polywrap/react";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
-import { uniswapV3Uri } from "../constants";
+import { uniswapV3Uri, examples } from "../constants";
 import RenderSchema from "../components/RenderSchema";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
@@ -29,6 +30,18 @@ const ArgumentName = styled.span`
   font-kerning: none;
   letter-spacing: 1px;
   font-weight: bold;
+`;
+
+const ExampleList = styled.ul`
+  list-style: none;
+  padding-left: 16px;
+`
+
+const ExampleListItem = styled.li`
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 function FunctionDocs() {
@@ -64,6 +77,11 @@ function FunctionDocs() {
     console.error(message);
     return (<div>{message}</div>);
   }
+
+  // Find any examples including this function
+  const exampleRefs = examples
+    .filter((x) => x.method === method.name)
+    .map((x) => x.name);
 
   return (
     <>
@@ -105,6 +123,23 @@ function FunctionDocs() {
             );
           })}
           </ArgumentList>
+        </>
+      )}
+      {exampleRefs.length > 0 && (
+        <>
+          <SectionTitle>
+            Examples
+          </SectionTitle>
+          <ExampleList>
+            {exampleRefs.map((example) => (
+              <ExampleListItem onClick={() => navigate("/example/" + example)}>
+                <span style={{ display: "flex" }}>
+                  <Launch style={{ paddingRight: "0.5em" }} />
+                  {example}
+                </span>
+              </ExampleListItem>
+            ))}
+          </ExampleList>
         </>
       )}
     </>

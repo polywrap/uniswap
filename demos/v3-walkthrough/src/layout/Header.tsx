@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
 import { Box } from "@mui/material";
 import { CopyAll } from "@mui/icons-material";
 import styled from 'styled-components';
