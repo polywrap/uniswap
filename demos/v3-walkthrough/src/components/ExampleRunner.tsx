@@ -11,8 +11,7 @@ import { Example } from "../constants";
 import "./ExampleRunner.css";
 
 const Heading = styled.h1`
-  font-weight: 800;
-  letter-spacing: calc(var(--vmin, 1vmin) * 1);
+  font-weight: 100;
   font-stretch: expanded;
   text-align: center;
 `;
@@ -140,7 +139,7 @@ function ExampleRunner(props: {
   return (
     <>
       <Heading>
-        {name}
+        Example: <b>{name}</b>
       </Heading>
       <Subheading>
         {description}

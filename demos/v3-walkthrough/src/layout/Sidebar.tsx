@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { usePolywrapClient } from "@polywrap/react";
-import { WrapManifest } from "@polywrap/wrap-manifest-types-js";
 
 import { HEIGHT as HEADER_HEIGHT } from "./Header";
 import Loader from "../components/Loader";
@@ -147,7 +146,9 @@ function Sidebar() {
       {objects && (
         <SidebarSection name="Objects">
           {objects.map((i) => (
-            <SidebarItem>
+            <SidebarItem onClick={() =>
+              navigate("/object/" + i.type)
+            }>
               {i.type}
             </SidebarItem>
           ))}
@@ -156,7 +157,9 @@ function Sidebar() {
       {enums && (
         <SidebarSection name="Enums">
           {enums.map((i) => (
-            <SidebarItem>
+            <SidebarItem onClick={() =>
+              navigate("/enum/" + i.type)
+            }>
               {i.type}
             </SidebarItem>
           ))}

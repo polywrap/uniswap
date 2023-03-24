@@ -5,7 +5,9 @@ import styled from "styled-components";
 import Intro from "../pages/Intro";
 import Schema from "../pages/Schema";
 import Example from "../pages/Example";
-import Function from "../pages/Function";
+import FunctionDocs from "../pages/FunctionDocs";
+import ObjectDocs from "../pages/ObjectDocs";
+import EnumDocs from "../pages/EnumDocs";
 import NoMatch from "../pages/NoMatch";
 
 const Main = styled.main`
@@ -24,7 +26,9 @@ function Body() {
         <Route path="/" element={<Intro />} />
         <Route path="/schema" element={<Schema />} />
         <Route path="/example/:id" element={<Example />} />
-        <Route path="/function/:id" element={<Function />} />
+        <Route path="/function/:id" element={<FunctionDocs />} />
+        <Route path="/object/:id" element={<ObjectDocs />} />
+        <Route path="/enum/:id" element={<EnumDocs />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </Main>
