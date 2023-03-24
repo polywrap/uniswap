@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { Share as RefLink } from "@mui/icons-material";
+import { Share as RefLink, UnfoldMore } from "@mui/icons-material";
 import { useParams, useNavigate } from "react-router-dom";
 import { usePolywrapClient } from "@polywrap/react";
 
@@ -14,9 +14,31 @@ import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
 import { getTypeRefRoutes } from "../utils/getTypeRefRoutes";
 
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
 const Title = styled.h1`
   font-weight: 100;
   font-stretch: expanded;
+`;
+
+const SchemaLink = styled.span`
+  color: white;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+
+const SchemaText = styled.h6`
+  color: white;
+  font-weight: 100;
 `;
 
 const Description = styled.h2`
@@ -91,9 +113,17 @@ function ObjectDocs() {
 
   return (
     <>
-      <Title>
-        Object: <b>{object.type}</b>
-      </Title>
+      <Header>
+        <Title>
+          Object: <b>{object.type}</b>
+        </Title>
+        <SchemaLink
+          onClick={() => navigate("/schema")}
+        >
+          <SchemaText>schema</SchemaText>
+          <UnfoldMore />
+        </SchemaLink>
+      </Header>
       {object?.comment && (
         <Description>
           {object.comment}

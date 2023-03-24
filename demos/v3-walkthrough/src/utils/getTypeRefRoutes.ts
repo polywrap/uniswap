@@ -40,7 +40,7 @@ export function getTypeRefRoutes(
         .replaceAll("[", "")
         .replaceAll("]", "");
 
-      if (propType == typeName) {
+      if (propType === typeName) {
         objects.add(object.type);
       }
     }
