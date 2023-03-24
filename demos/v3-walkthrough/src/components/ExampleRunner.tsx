@@ -1,58 +1,61 @@
 import React from 'react';
-import { PlayArrow, Add } from "@mui/icons-material";
+import { PlayArrow } from "@mui/icons-material";
 import styled from "styled-components";
 import { InvokeResult, PolywrapClient } from "@polywrap/client-js";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { xt256 as syntax } from "react-syntax-highlighter/dist/esm/styles/hljs";
-
+import { irBlack as syntax } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import Loader from "./Loader";
 import { Example } from "../constants";
-
 import "./ExampleRunner.css";
 
-const Heading = styled.h1`
-  font-weight: 800;
-  letter-spacing: calc(var(--vmin, 1vmin) * 1);
-  font-stretch: expanded;
-  text-align: center;
+const Heading = styled.h2`
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  text-align: left;
 `;
 
-const Subheading = styled.h2`
-  font-weight: 100;
-  text-align: center;
-`;
-
-const SnippetContainer = styled.div`
-  margin: auto;
-  width: fit-content;
-  max-width: 80%;
-`;
-
-const SnippetText = styled.div`
-  max-height: 50vh;
-  overflow: auto;
-  margin-bottom: 10px;
+const Subheading = styled.p`
+  font-size: 1.0rem;
+  font-weight: 200;
+  color: #b3bcc3;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  line-height: 1.5;
+  text-align: left;
 `;
 
 const SnippetControls = styled.div`
   display: flex;
   justify-content: space-between;
+  width: 200px;
 `;
 
 const RunButton = styled.button`
   display: flex;
-  flex-direction: row;
-  background: unset;
-  color: white;
-  border: white;
-  border-width: 1px;
-  border-style: solid;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  font-size: 1.0rem;
+  font-weight: 500;
+  color: #fff;
+  justify-content: center;
+  background-color: #198754;
+  border: none;
   border-radius: 5px;
+  width: 5.5rem;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
   &:hover {
-    border: green;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 5px;
+    background-color: #0d6efd;
+  }
+
+  &:active {
+    box-shadow: none;
   }
 `;
 
@@ -64,38 +67,90 @@ const RunArrow = styled(PlayArrow)`
 const ArgsButton = styled.button`
   display: flex;
   flex-direction: row;
-  background: unset;
-  color: white;
-  border: white;
-  border-width: 1px;
-  border-style: solid;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  margin: 1rem 0;
+  font-size: 1.0rem;
+  font-weight: 500;
+  color: #fff;
+  background-color: #212529;
+  border: none;
   border-radius: 5px;
+  width: 5.5rem;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
   &:hover {
-    border-style: dotted;
+    background-color: #0d6efd;
+    border: none;
+  }
+
+  &:active {
+    box-shadow: none;
   }
 `;
 
-const ArgsPlus = styled(Add)`
-  height: 15px !important;
-  width: 15px !important;
+const ArgsIcon = styled.span`
+  margin-right: 0.5rem;
+`;
+
+const SnippetContainer = styled.div`
+  display: flex;
+  margin: auto;
+  border-radius: 0.25rem;
+`;
+
+const SnippetText = styled.div`
+  max-height: 50vh;
+  font-size: 0.90rem;
+  overflow: auto;
 `;
 
 const ResultTitle = styled.h3`
-  font-weight: 800;
-  text-align: center;
+  font-weight: 600;
+  text-align: left;
 `;
 
 const ResultContainer = styled.div`
+  display: flex;
   margin: auto;
-  width: fit-content;
-  max-width: 80%;
 `;
 
 const ResultText = styled.div`
   max-height: 50vh;
+  font-weight: 500;
+  font-size 0.90rem;
   overflow: auto;
-  margin-bottom: 10px;
 `;
+
+const Controls = styled.div`
+  display: flex;
+  width: 100%;
+  border-bottom: #31373C;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+
+  @media (max-width: 768px) {
+  }
+`;
+
+function ExampleControls(props: {
+  name: string,
+  description: string,
+}) {
+  return (
+    <Controls>
+      <Heading>
+        {props.name}
+      <Subheading>
+        {props.description}
+      </Subheading>
+      </Heading>
+    </Controls>
+  )
+}
 
 function ExampleRunner(props: {
   id: string,
@@ -139,12 +194,16 @@ function ExampleRunner(props: {
 
   return (
     <>
-      <Heading>
-        {name}
-      </Heading>
-      <Subheading>
-        {description}
-      </Subheading>
+    <ExampleControls name={name} description={description}/>
+      <SnippetControls>
+        <ArgsButton onClick={() => setInspectArgs(!inspectArgs)}>
+            <ArgsIcon>{inspectArgs ? "-" : "+"}</ArgsIcon>
+            args
+        </ArgsButton>
+          <RunButton onClick={run}>
+            <RunArrow /><text>run</text>
+          </RunButton>
+        </SnippetControls>
       <SnippetContainer>
         <SnippetText>
           <SyntaxHighlighter
@@ -155,14 +214,6 @@ function ExampleRunner(props: {
             {invokeSnippet}
           </SyntaxHighlighter>
         </SnippetText>
-        <SnippetControls>
-          <ArgsButton onClick={() => setInspectArgs(!inspectArgs)}>
-            <ArgsPlus /><text>args</text>
-          </ArgsButton>
-          <RunButton onClick={run}>
-            <RunArrow /><text>run</text>
-          </RunButton>
-        </SnippetControls>
       </SnippetContainer>
       {(waiting || result[id] !== undefined) && (
         <>
