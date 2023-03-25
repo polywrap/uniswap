@@ -1,14 +1,34 @@
 import React from "react";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { Settings } from "@mui/icons-material";
 import { usePolywrapClient } from "@polywrap/react";
 import { renderSchema } from "@polywrap/schema-compose";
-import SyntaxHighlighter from "react-syntax-highlighter";
 
 import { uniswapV3Uri } from "../constants";
 import { useWrapManifest } from "../hooks/useWrapManifest";
 import RenderSchema from "../components/RenderSchema";
 import Loader from "../components/Loader";
+import Toggle from "../components/Toggle";
+import Dropdown from "../components/Dropdown";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
+
+const Header = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: end;
+`;
+
+const SettingsMenu = styled.div`
+  position: absolute;
+  right: 0;
+  z-index: 1;
+  background-color: #0000;
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 5px 0px;
+`;
 
 function Schema() {
   const navigate = useNavigate();
@@ -20,6 +40,7 @@ function Schema() {
   const [schema, setSchema] = React.useState<
     string | undefined
   >(undefined);
+  const [withComments, setWithComments] = React.useState(false);
 
   React.useEffect(() => {
     if (loading) {
@@ -46,9 +67,27 @@ function Schema() {
 
   return (
     <>
+    <Header>
+      <Dropdown
+        inner={(
+          <Settings />
+        )}
+      >
+        <SettingsMenu>
+          <Toggle
+            style={{ height: "32px" }}
+            initValue={withComments}
+            onToggle={(toggle) => setWithComments(toggle)}
+            position={"right"}
+          >
+            Comments
+          </Toggle>
+        </SettingsMenu>
+      </Dropdown>
+    </Header>
     <RenderSchema
       withModuleType
-      withComments
+      withComments={withComments}
       methods={abi.moduleType?.methods}
       objects={abi.objectTypes}
       enums={abi.enumTypes}
@@ -63,7 +102,7 @@ function Schema() {
         navigate("/function/" + name);
       }}
     />
-    {schema &&
+    {/*schema &&
       <SyntaxHighlighter
         language="graphql"
         customStyle={{
@@ -73,7 +112,7 @@ function Schema() {
       >
         {schema}
       </SyntaxHighlighter>
-    }
+    */}
     </>
   );
 }

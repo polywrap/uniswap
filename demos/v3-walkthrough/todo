@@ -1,46 +1,20 @@
-# Intro & Overview
-- [x] Uni logo
-- [x] overview: clickable sections
+# Intro
 - [ ] What is v3? Simple 1 liner about Uni V3.
 - [ ] point: why wrapper? what is the additional thing they're getting?
-- [ ] want: show a uniswap wrapper
-- [x] overview: rows, select which one
-- [ ] version of Polywrap this was built with?
+- [ ] link to source code
+- [ ] how to setup the polywrap client to use uniswap v3
 
-# Example
-- [ ] header: same as polywrap.io (docs -> docgen docs, github -> uniswap v3)
-- [ ] "What does x method do?"
-  - [ ] have some information about what the function we're calling is doing
-- [ ] code snippet
-  - [ ] drop-down: language
-  - [ ] schema tab (only function)
-  - [x] args -> in-line button
-  - [ ] button: copy code
-- [ ] toggle: codegen
-- [x] link: generated docs (for schema)
-- [ ] move buttons to the bottom
-- [ ] first section: "?" Learn how to use the slides
-  - [ ] what is left part, what is right part
-- [ ] code font-size large
+# Source code
+- [ ] copy-to-clipboard button
+
+# Examples
 - [ ] lazy: connect wallet
-- [ ] dynamic height
 - [ ] more examples (reference: https://docs.uniswap.org/sdk/v3/overview)
-- [ ] cross-link to Uniswap's docs
 
-# Docs
-- [ ] generated
-- [ ] top-level "how it works" section
+# Additional
 - [ ] show resolution path from ENS (link->app.ens) -> IPFS (link->wrappers)
-
-# Additional Feedback
+- [ ] show imported types
+- [ ] support examples w/ multiple invocations (i.e. workflows)
 - [ ] needs some intro/context part about what a wrapper is. there should also be more explanatory info about what the wrapper is doing as the experience goes on. maybe instead of the loading icon, some text could pop up to explain what's happening?
-- [ ] might be better as one scrolling one page rather than slides
-- [ ] very long right scroll to read output of the queries
-- [ ] there is the ambiguous button for toggling between the javascript query view and the json.. no explanation around this which leaves me confused
-- [ ] why am I not prompted for a web3 connection on the write queries?
-
-# Notes
-- safe
-  - create one you're the owner of
-  - interact with one you're the owner of
-- support multiple invocations within a single example
+- reduce code duplication
+- cleanup code, ensure styling + layout is simple and done uniformly

@@ -136,11 +136,11 @@ function RenderSchema(props: RenderSchemaProps) {
       <Comment>"""<br/></Comment>
       {commentParts.map((part) => (
         <>
-        <RenderWhitespace indent={methodIndent} />
+        <RenderWhitespace indent={props.indent} />
         <Comment>{part}<br/></Comment>
         </>
       ))}
-      <RenderWhitespace indent={methodIndent} />
+      <RenderWhitespace indent={props.indent} />
       <Comment>"""<br/></Comment>
       </>
     );
@@ -173,14 +173,19 @@ function RenderSchema(props: RenderSchemaProps) {
         <>
         <SpecialChar>{"("}</SpecialChar><br/>
         {method.arguments.map((argument) => (
+          <>
+          {withComments && argument.comment && (
+            <RenderComment comment={argument.comment} indent={methodIndent + 1} />
+          )}
           <span>
-          <RenderWhitespace indent={methodIndent + 1} />
-          <ArgName>{argument.name}</ArgName>
-          <SpecialChar>{": "}</SpecialChar>
-          <RenderTypeName type={argument.type} />
-          {argument.required && <SpecialChar>{"!"}</SpecialChar>}
-          <br/>
+            <RenderWhitespace indent={methodIndent + 1} />
+            <ArgName>{argument.name}</ArgName>
+            <SpecialChar>{": "}</SpecialChar>
+            <RenderTypeName type={argument.type} />
+            {argument.required && <SpecialChar>{"!"}</SpecialChar>}
+            <br/>
           </span>
+          </>
         ))}
         <RenderWhitespace indent={methodIndent} />
         <SpecialChar>{")"}</SpecialChar>
@@ -204,11 +209,18 @@ function RenderSchema(props: RenderSchemaProps) {
     )}
     {objects?.length && objects.map((object, index) => (
       <>
+      {withComments && object.comment && (
+        <RenderComment comment={object.comment} indent={0} />
+      )}
       <Keyword>{"type "}</Keyword>
       <TypeName>{object.type}</TypeName>
       <SpecialChar>{" {"}</SpecialChar>
       <br/>
       {object.properties?.map((property) => (
+        <>
+        {withComments && property.comment && (
+          <RenderComment comment={property.comment} indent={1} />
+        )}
         <span>
           <RenderWhitespace indent={1} />
           <PropName>{property.name}</PropName>
@@ -217,6 +229,7 @@ function RenderSchema(props: RenderSchemaProps) {
           {property.required && <SpecialChar>{"!"}</SpecialChar>}
           <br/>
         </span>
+        </>
       ))}
       <SpecialChar>{"}"}</SpecialChar>
       <br/>

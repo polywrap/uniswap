@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box } from "@mui/material";
-import { CopyAll } from "@mui/icons-material";
+import { CopyAll, AutoStories, QuestionMark } from "@mui/icons-material";
 import styled from 'styled-components';
 
 import PolywrapLogo from '../components/PolywrapLogo';
 import { uniswapV3Uri } from "../constants";
 
-export const HEIGHT = "31px";
+export const HEIGHT = "32px";
 
 const HeaderContainer = styled.div`
   height: ${HEIGHT};
@@ -16,6 +16,18 @@ const HeaderContainer = styled.div`
   border-bottom: white;
   border-bottom-style: solid;
   border-bottom-width: 1px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background: black;
+  z-index: 999;
+  left: 0;
+  right: 0;
+  top: 0;
+  position: sticky;
+`;
+
+const HeaderSubcontainer = styled.div`
   display: flex;
   flex-direction: row;
 `;
@@ -72,6 +84,11 @@ const WrapUri = styled.h6`
   overflow-wrap: anywhere;
 `;
 
+const Source = styled.h6`
+  text-align: center;
+  overflow-wrap: anywhere;
+`;
+
 function Header() {
   const desktopWidth = 700;
   const [isDesktop, setDesktop] = React.useState(window.innerWidth > desktopWidth);
@@ -89,34 +106,52 @@ function Header() {
 
   return (
     <HeaderContainer>
-      <HeaderButton
-        width={isDesktop ? "120px" : "40px"}
-        onClick={() => window.open("https://polywrap.io/", "_blank")?.focus()}
-        border_right
-      >
-        <HeaderButtonIcon>
-          <PolywrapLogo fill="#ffffff" long={isDesktop} />
-        </HeaderButtonIcon>
-      </HeaderButton>
-      <HeaderButton
-        width={"auto"}
-        border_right
-      >
-        <WrapUriContainer>
-          <WrapUri>
-            {uri}
-          </WrapUri>
-          <CopyAll
-            style={{
-              width: "12px",
-              marginLeft: "5px",
-              height: "unset",
-              cursor: "pointer"
-            }}
-            onClick={() => uri && navigator.clipboard.writeText(uri)}
-          />
-        </WrapUriContainer>
-      </HeaderButton>
+      <HeaderSubcontainer>
+        <HeaderButton
+          width={isDesktop ? "120px" : "40px"}
+          onClick={() => window.open("https://polywrap.io/", "_blank")?.focus()}
+          border_right
+        >
+          <HeaderButtonIcon>
+            <PolywrapLogo fill="#ffffff" long={isDesktop} />
+          </HeaderButtonIcon>
+        </HeaderButton>
+        <HeaderButton
+          width={"auto"}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              {uri}
+            </WrapUri>
+            <CopyAll
+              style={{
+                width: "12px",
+                marginLeft: "5px",
+                height: "unset",
+                cursor: "pointer"
+              }}
+              onClick={() => uri && navigator.clipboard.writeText(uri)}
+            />
+          </WrapUriContainer>
+        </HeaderButton>
+      </HeaderSubcontainer>
+      <HeaderSubcontainer>
+        <HeaderButton
+          width={"auto"}
+          border_left
+          onClick={() => window.open("https://docs.polywrap.io", "_blank")}
+        >
+          <AutoStories style={{ margin: "5px" }} />
+        </HeaderButton>
+        <HeaderButton
+          width={"auto"}
+          border_left
+          onClick={() => window.open("https://discord.polywrap.io", "_blank")}
+        >
+          <QuestionMark style={{ margin: "5px" }} />
+        </HeaderButton>
+      </HeaderSubcontainer>
     </HeaderContainer>
   );
 }

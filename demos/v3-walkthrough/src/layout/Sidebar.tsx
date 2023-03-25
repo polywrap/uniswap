@@ -89,10 +89,10 @@ function Sidebar() {
   }
 
   const abi = manifest?.abi;
-  const functions = abi?.moduleType?.methods;
+  const functions = abi?.moduleType?.methods || [];
   const env = abi?.envType;
-  const objects = abi?.objectTypes;
-  const enums = abi?.enumTypes;
+  const objects = abi?.objectTypes || [];
+  const enums = abi?.enumTypes || [];
   const dependencies = [
     ...(abi?.importedEnumTypes?.map((i) => i.uri) || []),
     ...(abi?.importedEnvTypes?.map((i) => i.uri) || []),
@@ -111,7 +111,7 @@ function Sidebar() {
       <WrapType>
         {"[type: "}<b>{manifest.type}</b>{"]"}
       </WrapType>
-      <SidebarSection name="README" />
+      <SidebarSection name="README" onClick={() => navigate("/")}/>
       {examples && (
         <SidebarSection name="Examples" initOpen>
           {examples.map((i) => (
@@ -123,7 +123,7 @@ function Sidebar() {
           ))}
         </SidebarSection>
       )}
-      {functions && (
+      {functions.length && (
         <SidebarSection name="Functions">
           {functions.map((i) => (
             <SidebarItem onClick={() =>
@@ -143,7 +143,7 @@ function Sidebar() {
           ))}
         </SidebarSection>
       )}
-      {objects && (
+      {objects.length && (
         <SidebarSection name="Objects">
           {objects.map((i) => (
             <SidebarItem onClick={() =>
@@ -154,7 +154,7 @@ function Sidebar() {
           ))}
         </SidebarSection>
       )}
-      {enums && (
+      {enums.length && (
         <SidebarSection name="Enums">
           {enums.map((i) => (
             <SidebarItem onClick={() =>

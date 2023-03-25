@@ -18,7 +18,6 @@ const Version = styled.div`
   padding-top: 5px;
 `;
 
-
 function Intro() {
   return (
     <div>
@@ -28,7 +27,7 @@ function Intro() {
         </TextBlock>
       </OpenCloseBlock>
         <Version>
-     Built with Polywrap ~0.10.0-pre.
+          Built with Polywrap ~0.10.0-pre.
         </Version>
     </div>
   );
