@@ -1,9 +1,42 @@
+html {
+  background-color: #000000;
+  color: white;
+}
+
+body {
+  margin: unset;
+  font-family: 'Colton Primary';
+}
+
+.app {
+  max-width: 1200px;
+  margin: auto;
+  border-left: white;
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-right: white;
+  border-right-style: solid;
+  border-right-width: 1px;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background-color: #ffffff4f;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #818181fa;
+}
+
 @font-face {
   font-family: Colton Primary;
   font-weight: 400;
   font-stretch: normal;
   font-style: normal;
-  src: url("../fonts/HDColton-Regular.woff");
+  src: url("./fonts/HDColton-Regular.woff");
   font-display: swap;
 }
 
@@ -12,7 +45,7 @@
   font-weight: 800;
   font-stretch: normal;
   font-style: normal;
-  src: url("../fonts/HDColton-Bold.woff");
+  src: url("./fonts/HDColton-Bold.woff");
   font-display: swap;
 }
 
@@ -21,7 +54,7 @@
   font-weight: 400;
   font-stretch: normal;
   font-style: italic;
-  src: url("../fonts/HDColton-RegularItalic.woff");
+  src: url("./fonts/HDColton-RegularItalic.woff");
   font-display: swap;
 }
 
@@ -30,7 +63,7 @@
   font-weight: 800;
   font-stretch: normal;
   font-style: italic;
-  src: url("../fonts/HDColton-BoldItalic.woff");
+  src: url("./fonts/HDColton-BoldItalic.woff");
   font-display: swap;
 }
 
@@ -39,7 +72,7 @@
   font-weight: 400;
   font-stretch: expanded;
   font-style: normal;
-  src: url("../fonts/HDColton-XWideRegular.woff");
+  src: url("./fonts/HDColton-XWideRegular.woff");
   font-display: swap;
 }
 
@@ -48,6 +81,23 @@
   font-weight: 800;
   font-stretch: expanded;
   font-style: normal;
-  src: url("../fonts/HDColton-XWideBold.woff");
+  src: url("./fonts/HDColton-XWideBold.woff");
   font-display: swap;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff00;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3a3a3afa;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0fa;
 }

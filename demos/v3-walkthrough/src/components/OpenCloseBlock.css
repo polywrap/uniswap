@@ -1,0 +1,21 @@
+.OpenCloseBlock {
+  margin-bottom: 1em;
+}
+
+.OpenCloseBlockHeader {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.OpenCloseBlockHeaderSymbol {
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 0.5em;
+}
+
+.OpenCloseBlockContent {
+  margin-top: 1em;
+  padding-left: 1em;
+  border-left: 1px solid #ddd;
+}

@@ -1,25 +1,44 @@
 {
-  "name": "v3-walkthrough",
+  "name": "uniswap-v3-docs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "postinstall": "ts-node ./scripts/patch-peer-deps.ts"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.10.15",
+    "@mui/styles": "^5.10.15",
     "@polywrap/client-js": "~0.10.0-pre",
+    "@polywrap/react": "~0.10.0-pre",
+    "@polywrap/schema-compose": "~0.10.0-pre",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "6.9.0",
+    "react-scripts": "^4.0.3",
+    "react-spring": "^8.0.27",
+    "react-syntax-highlighter": "15.5.0",
+    "spectacle": "9.7.0",
+    "styled-components": "^5.3.9"
+  },
+  "devDependencies": {
     "@types/node": "^16.18.16",
     "@types/react": "^16.9.34",
     "@types/react-dom": "^16.9.7",
+    "@types/react-syntax-highlighter": "15.5.6",
+    "@types/rimraf": "4.0.5",
     "@types/styled-system": "5.1.16",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "react-scripts": "^4.0.3",
-    "react-spring": "^8.0.27",
-    "spectacle": "9.7.0",
+    "@types/styled-components": "^5.1.26",
+    "ts-node": "10.9.1",
     "typescript": "^4.9.5",
-    "styled-components": "^5.3.9",
-    "@types/styled-components": "^5.1.26"
+    "rimraf": "4.4.0"
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   },
   "eslintConfig": {
     "extends": [
