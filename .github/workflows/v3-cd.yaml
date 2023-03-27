@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - "v3/**"
+      - "v3/wrap/**"
 
 jobs:
   cd:
@@ -24,7 +24,7 @@ jobs:
       - name: Read .nvmrc
         run: echo ::set-output name=NVMRC::$(cat .nvmrc)
         id: nvm
-        working-directory: ./v3
+        working-directory: ./v3/wrap
 
       - name: Setup Node.js
         uses: actions/setup-node@master
@@ -33,15 +33,15 @@ jobs:
 
       - name: Install dependencies
         run: yarn install --nonInteractive --frozen-lockfile --prefer-offline
-        working-directory: ./v3
+        working-directory: ./v3/wrap
 
       - name: Build
         run: yarn build
-        working-directory: ./v3
+        working-directory: ./v3/wrap
 
       - name: Deploy
         run: yarn deploy
-        working-directory: ./v3
+        working-directory: ./v3/wrap
 
       - name: PR New URI
         uses: peter-evans/create-pull-request@v3
