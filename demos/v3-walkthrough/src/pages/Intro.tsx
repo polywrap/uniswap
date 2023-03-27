@@ -1,5 +1,6 @@
-import OpenCloseBlock from "../components/OpenCloseBlock";
 import styled from "styled-components";
+
+const Title = styled.h1``
 
 const TextBlock = styled.div`
   overflow-wrap: anywhere;
@@ -21,14 +22,15 @@ const Version = styled.div`
 function Intro() {
   return (
     <div>
-      <OpenCloseBlock title="What's the Uniswap v3 wrapper?">
-        <TextBlock>
-          The Uniswap v3 wrapper lets developers integrate Uniswap in any environment that has the Polywrap library installed.
-        </TextBlock>
-      </OpenCloseBlock>
-        <Version>
-          Built with Polywrap ~0.10.0-pre.
-        </Version>
+      <Title>
+        What's the Uniswap v3 wrapper?
+      </Title>
+      <TextBlock>
+        The Uniswap v3 wrapper lets developers integrate Uniswap in any environment that has the Polywrap library installed.
+      </TextBlock>
+      <Version>
+        Built with Polywrap ~0.10.0-pre.
+      </Version>
     </div>
   );
 }

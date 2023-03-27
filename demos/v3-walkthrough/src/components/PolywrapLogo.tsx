@@ -1,12 +1,14 @@
 import React from "react";
 
+import { theme } from "../styles/theme";
+
 interface PolywrapLogoProps {
   fill?: string;
   long?: boolean;
 }
 
 const PolywrapLogo = (props: PolywrapLogoProps) => {
-  const fill = props.fill || "#ffffff";
+  const fill = props.fill || theme.colors[50];
   const { long } = props;
 
   if (long) {

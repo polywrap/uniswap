@@ -6,6 +6,7 @@ import { usePolywrapClient } from "@polywrap/react";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
 import { uniswapV3Uri, examples } from "../constants";
+import { theme } from "../styles/theme";
 import RenderSchema from "../components/RenderSchema";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
@@ -22,7 +23,7 @@ const Title = styled.h1`
 `;
 
 const SchemaLink = styled.span`
-  color: white;
+  color: ${theme.colors[50]};
   display: flex;
   align-items: center;
 
@@ -33,7 +34,7 @@ const SchemaLink = styled.span`
 `;
 
 const SchemaText = styled.h6`
-  color: white;
+  color: ${theme.colors[50]};
   font-weight: 100;
 `;
 

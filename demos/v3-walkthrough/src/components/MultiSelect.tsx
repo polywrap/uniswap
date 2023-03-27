@@ -5,6 +5,7 @@ import {
   KeyboardArrowUp
 } from "@mui/icons-material";
 
+import { theme } from "../styles/theme";
 import Button from "./Button";
 import Dropdown, {
   DropdownContext,
@@ -22,12 +23,12 @@ const Options = styled.div`
   z-index: 1;
   display: grid;
   flex-direction: column;
-  background-color: #0000;
+  background-color: ${theme.colors[900]};
   border-radius: 5px;
   overflow: hidden;
   padding: 5px;
   margin: 10px 0px;
-  background-color: #ffffff3b;
+  background-color: ${theme.colors[50]}3b;
 `;
 
 export interface MultiSelectProps {

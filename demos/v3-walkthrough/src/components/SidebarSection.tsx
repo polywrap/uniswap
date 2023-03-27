@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
+import { theme } from "../styles/theme";
+
 interface SidebarSection {
   name: string;
   children?: React.ReactNode;
@@ -11,7 +13,7 @@ interface SidebarSection {
 const SectionHeading = styled.div`
   margin-top: 20px;
   margin-bottom: 10px;
-  border-bottom: white;
+  border-bottom: ${theme.colors[50]};
   border-bottom-style: solid;
   border-bottom-width: 1px;
   cursor: pointer;

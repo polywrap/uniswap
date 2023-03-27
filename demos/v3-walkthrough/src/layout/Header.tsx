@@ -3,8 +3,15 @@ import { Box } from "@mui/material";
 import { CopyAll, AutoStories, QuestionMark } from "@mui/icons-material";
 import styled from 'styled-components';
 
-import PolywrapLogo from '../components/PolywrapLogo';
+import {
+  theme,
+  colorThemes,
+  ColorThemes,
+  setColorTheme
+} from "../styles/theme";
 import { uniswapV3Uri } from "../constants";
+import PolywrapLogo from '../components/PolywrapLogo';
+import MultiSelect from '../components/MultiSelect';
 
 export const HEIGHT = "32px";
 
@@ -13,13 +20,13 @@ const HeaderContainer = styled.div`
   padding-left: unset !important;
   padding-right: unset !important;
   max-width: unset !important;
-  border-bottom: white;
+  border-bottom: ${theme.colors[50]};
   border-bottom-style: solid;
   border-bottom-width: 1px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background: black;
+  background: ${theme.colors[900]};
   z-index: 999;
   left: 0;
   right: 0;
@@ -43,12 +50,12 @@ function HeaderButton(props: {
     height: 100%;
     width: ${props.width};
     ${props.border_left ? `
-    border-left: white;
+    border-left: ${theme.colors[50]};
     border-left-style: solid;
     border-left-width: 1px;
     ` : ""}
     ${props.border_right ? `
-    border-right: white;
+    border-right: ${theme.colors[50]};
     border-right-style: solid;
     border-right-width: 1px;
     ` : ""}
@@ -113,7 +120,7 @@ function Header() {
           border_right
         >
           <HeaderButtonIcon>
-            <PolywrapLogo fill="#ffffff" long={isDesktop} />
+            <PolywrapLogo fill={theme.colors[50]} long={isDesktop} />
           </HeaderButtonIcon>
         </HeaderButton>
         <HeaderButton
@@ -137,6 +144,19 @@ function Header() {
         </HeaderButton>
       </HeaderSubcontainer>
       <HeaderSubcontainer>
+       <HeaderButton
+          width={"auto"}
+          border_left
+        >
+          <MultiSelect
+            title={"theme"}
+            options={Object.keys(colorThemes)}
+            onOptionSelect={(option: string) =>
+              setColorTheme(option as ColorThemes)
+            }
+            position={"right"}
+          />
+        </HeaderButton>
         <HeaderButton
           width={"auto"}
           border_left

@@ -5,6 +5,7 @@ import { Settings } from "@mui/icons-material";
 import { usePolywrapClient } from "@polywrap/react";
 import { renderSchema } from "@polywrap/schema-compose";
 
+import { theme } from "../styles/theme";
 import { uniswapV3Uri } from "../constants";
 import { useWrapManifest } from "../hooks/useWrapManifest";
 import RenderSchema from "../components/RenderSchema";
@@ -24,7 +25,7 @@ const SettingsMenu = styled.div`
   position: absolute;
   right: 0;
   z-index: 1;
-  background-color: #0000;
+  background-color: ${theme.colors[900]};
   border-radius: 5px;
   overflow: hidden;
   padding: 5px 0px;
@@ -102,17 +103,6 @@ function Schema() {
         navigate("/function/" + name);
       }}
     />
-    {/*schema &&
-      <SyntaxHighlighter
-        language="graphql"
-        customStyle={{
-          backgroundColor: "black",
-          color: "white"
-        }}
-      >
-        {schema}
-      </SyntaxHighlighter>
-    */}
     </>
   );
 }
