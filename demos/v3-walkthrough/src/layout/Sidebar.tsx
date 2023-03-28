@@ -123,7 +123,7 @@ function Sidebar() {
           ))}
         </SidebarSection>
       )}
-      {functions.length && (
+      {functions.length > 0 && (
         <SidebarSection name="Functions">
           {functions.map((i) => (
             <SidebarItem onClick={() =>
@@ -143,7 +143,7 @@ function Sidebar() {
           ))}
         </SidebarSection>
       )}
-      {objects.length && (
+      {objects.length > 0 && (
         <SidebarSection name="Objects">
           {objects.map((i) => (
             <SidebarItem onClick={() =>
@@ -154,7 +154,7 @@ function Sidebar() {
           ))}
         </SidebarSection>
       )}
-      {enums.length && (
+      {enums.length > 0 && (
         <SidebarSection name="Enums">
           {enums.map((i) => (
             <SidebarItem onClick={() =>
