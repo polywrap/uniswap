@@ -5,7 +5,7 @@ import { Launch, UnfoldMore } from "@mui/icons-material";
 import { usePolywrapClient } from "@polywrap/react";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
-import { uniswapV3Uri, examples } from "../constants";
+import { uniswapV3Uri, examples, wrappers } from "../constants";
 import RenderSchema from "../components/RenderSchema";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
@@ -70,11 +70,13 @@ const ExampleListItem = styled.li`
 function FunctionDocs() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
+  const { id } = useParams<"id">();
+  
+  const { wrapper } = useParams<"wrapper">();
   const { manifest, error, loading } = useWrapManifest({
     client,
-    uri: uniswapV3Uri
+    uri: wrapper ? wrappers[wrapper] : uniswapV3Uri
   });
-  const { id } = useParams<"id">();
 
   if (loading) {
     return (<Loader />);

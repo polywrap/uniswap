@@ -1,10 +1,10 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { usePolywrapClient } from "@polywrap/react";
 
 import { HEIGHT as HEADER_HEIGHT } from "./Header";
-import { uniswapV3Uri, examples } from "../constants";
+import { uniswapV3Uri, examples, wrappers } from "../constants";
 import Loader from "../components/Loader";
 import SidebarSection from "../components/SidebarSection";
 import UniswapLogo from "../images/uniswap-logo.svg";
@@ -59,9 +59,10 @@ const SidebarItem = styled.div`
 function Sidebar() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
+  const { wrapper } = useParams<"wrapper">();
   const { manifest, error, loading } = useWrapManifest({
     client,
-    uri: uniswapV3Uri
+    uri: wrapper ? wrappers[wrapper] : uniswapV3Uri
   });
 
   if (loading) {

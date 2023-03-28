@@ -5,7 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { usePolywrapClient } from "@polywrap/react";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
-import { uniswapV3Uri } from "../constants";
+import { uniswapV3Uri, wrappers } from "../constants";
 import RenderSchema from "../components/RenderSchema";
 import ReferenceSection from "../components/ReferenceSection";
 import Loader from "../components/Loader";
@@ -60,9 +60,10 @@ const PropertyName = styled.span`
 function ObjectDocs() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
-  const { manifest, error, loading } = useWrapManifest({
+  const { wrapper } = useParams<"wrapper">();
+  let { manifest, error, loading } = useWrapManifest({
     client,
-    uri: uniswapV3Uri
+    uri: wrapper ? wrappers[wrapper] : uniswapV3Uri
   });
   const { id } = useParams<"id">();
 

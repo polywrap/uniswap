@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Settings } from "@mui/icons-material";
 import { usePolywrapClient } from "@polywrap/react";
 import { renderSchema } from "@polywrap/schema-compose";
 
-import { uniswapV3Uri } from "../constants";
+import { uniswapV3Uri, wrappers } from "../constants";
 import { useWrapManifest } from "../hooks/useWrapManifest";
 import RenderSchema from "../components/RenderSchema";
 import Loader from "../components/Loader";
@@ -33,15 +33,16 @@ const SettingsMenu = styled.div`
 function Schema() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
-  const { manifest, error, loading } = useWrapManifest({
+  const { wrapper } = useParams<"wrapper">();
+  let { manifest, error, loading } = useWrapManifest({
     client,
-    uri: uniswapV3Uri
+    uri: wrapper ? wrappers[wrapper] : uniswapV3Uri
   });
   const [schema, setSchema] = React.useState<
     string | undefined
   >(undefined);
   const [withComments, setWithComments] = React.useState(false);
-
+  
   React.useEffect(() => {
     if (loading) {
       setSchema(undefined);
