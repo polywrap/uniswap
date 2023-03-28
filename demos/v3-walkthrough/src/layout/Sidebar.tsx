@@ -4,10 +4,10 @@ import styled from "styled-components";
 import { usePolywrapClient } from "@polywrap/react";
 
 import { HEIGHT as HEADER_HEIGHT } from "./Header";
+import { uniswapV3Uri, examples } from "../constants";
 import Loader from "../components/Loader";
 import SidebarSection from "../components/SidebarSection";
 import UniswapLogo from "../images/uniswap-logo.svg";
-import { uniswapV3Uri, examples } from "../constants";
 import { useWrapManifest } from "../hooks/useWrapManifest";
 
 const SidebarContainer = styled.nav`
@@ -52,7 +52,7 @@ const SidebarItem = styled.div`
   padding-bottom: 5px;
   padding-top: 5px;
   &:hover {
-    background: #323232
+    background: ${props => props.theme.colors[300]}
   }
 `;
 

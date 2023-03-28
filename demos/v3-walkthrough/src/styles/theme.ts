@@ -1,118 +1,111 @@
-import { DeckProps } from "spectacle";
-
-export const easings = {
-  cubic: "cubic-bezier(0.35, 1.5, 0.65, 1)",
+interface ColorTheme {
+  "900": string,
+  "800": string,
+  "700": string,
+  "600": string,
+  "500": string,
+  "400": string,
+  "300": string,
+  "200": string,
+  "100": string,
+  "50": string
 }
 
-export const colors = {
-  white: "#ffffff",
-  black: "000000", // tokens.Primary.Black.value,
-  cyan: "#05d3fb",
-  iris: {
-    500: "#5361f8",
-    600: "#343A80",
-    800: "#1E224E",
-    900: "#161839"
-  },
-  magenta: "#d362df",
-  yellow: "#f8ba26",
-  green: "#89eb5b",
+// From: https://tailwindcss.com/docs/customizing-colors
+
+const slate: ColorTheme = {
+  "900": "#0f172a",
+  "800": "#1e293b",
+  "700": "#334155",
+  "600": "#475569",
+  "500": "#64748b",
+  "400": "#94a3b8",
+  "300": "#cbd5e1",
+  "200": "#e2e8f0",
+  "100": "#f1f5f9",
+  "50": "#f8fafc"
 }
 
-export const fontFamilies =  {
-  extended: ['"Colton Display"', 'sans-serif'].join(','),
-  sans: ['"Colton Primary"', 'sans-serif'].join(','),
-  monospace: ['"IBM Plex Mono"', 'monospace'].join(','),
+const gray: ColorTheme = {
+  "900": "#111827",
+  "800": "#1f2937",
+  "700": "#374151",
+  "600": "#4b5563",
+  "500": "#6b7280",
+  "400": "#9ca3af",
+  "300": "#d1d5db",
+  "200": "#e5e7eb",
+  "100": "#f3f4f6",
+  "50": "#f9fafb"
 }
 
-export const fontSizes = {
-  1: 8,
-  2: 10,
-  3: 12,
-  4: 14,
-  5: 16,
-  6: 18,
-  7: 20,
-  8: 22,
-  9: 24,
-  10: 28,
-  11: 32,
-  12: 40,
-  13: 48,
-  14: 64,
+const zinc: ColorTheme = {
+  "900": "#18181b",
+  "800": "#27272a",
+  "700": "#3f3f46",
+  "600": "#52525b",
+  "500": "#71717a",
+  "400": "#a1a1aa",
+  "300": "#d4d4d8",
+  "200": "#e4e4e7",
+  "100": "#f4f4f5",
+  "50": "#fafafa"
 }
 
-export const leading = {
-  tight: "105%",
-  normal: "125%",
-  loose: "150%",
-  "very-loose": "175%",
+const neutral: ColorTheme = {
+  "900": "#171717",
+  "800": "#262626",
+  "700": "#404040",
+  "600": "#525252",
+  "500": "#737373",
+  "400": "#a3a3a3",
+  "300": "#d4d4d4",
+  "200": "#e5e5e5",
+  "100": "#f5f5f5",
+  "50": "#fafafa"
 }
 
-export const letterSpacing = {
-  PrimaryHeading: "1%",
-  PrimaryText: "0.5%",
-  UppercaseDisplay: "calc(var(--vmin, 1vmin) * 1)",
+const stone: ColorTheme = {
+  "900": "#1c1917",
+  "800": "#292524",
+  "700": "#44403c",
+  "600": "#57534e",
+  "500": "#78716c",
+  "400": "#a8a29e",
+  "300": "#d6d3d1",
+  "200": "#e7e5e4",
+  "100": "#f5f5f4",
+  "50": "#fafaf9"
 }
 
-export const displayHeadingProps = {
-  fontFamily: fontFamilies.extended,
-  fontStretch: "expanded",
-  letterSpacing: letterSpacing.UppercaseDisplay,
-  lineHeight: leading.tight,
+const red: ColorTheme = {
+  "900": "#7f1d1d",
+  "800": "#991b1b",
+  "700": "#b91c1c",
+  "600": "#dc2626",
+  "500": "#ef4444",
+  "400": "#f87171",
+  "300": "#fca5a5",
+  "200": "#fecaca",
+  "100": "#fee2e2",
+  "50": "#fef2f2"
 }
 
-export const typography = {
-  fontFamilies:{...fontFamilies},
-  fontSizes: {...fontSizes},
-  leading: {...leading},
-  letterSpacing: {...letterSpacing},
-  display: {
-    h1: {
-      fontSize: `clamp(calc(var(--vmin, 1vmin) * 5), ${fontSizes[14]}px, calc(var(--vmin, 1vmin) * 8))`,
-      ...displayHeadingProps,
-    },
-    h2: {
-      fontSize: `clamp(calc(var(--vmin, 1vmin) * 4.5), ${fontSizes[13]}px, calc(var(--vmin, 1vmin) * 7))`,
-      ...displayHeadingProps,
-    },
-    h3: {
-      fontSize: `clamp(calc(var(--vmin, 1vmin) * 4), ${fontSizes[12]}px, calc(var(--vmin, 1vmin) * 6))`,
-      ...displayHeadingProps,
-    },
-    h4: {
-      fontSize: `clamp(calc(var(--vmin, 1vmin) * 4), ${fontSizes[11]}px, calc(var(--vmin, 1vmin) * 5))`,
-      ...displayHeadingProps,
-    },
-    h5: {
-      fontSize: `clamp(calc(var(--vmin, 1vmin) * 3), ${fontSizes[10]}px, calc(var(--vmin, 1vmin) * 4))`,
-      ...displayHeadingProps,
-    },
-    h6: {
-      fontSize: `clamp(calc(var(--vmin, 1vmin) * 2), ${fontSizes[9]}px, calc(var(--vmin, 1vmin) * 3))`,
-      ...displayHeadingProps,
-    },
-  }
+export const colorThemes = {
+  "slate": slate,
+  "gray": gray,
+  "zinc": zinc,
+  "neutral": neutral,
+  "stone": stone,
+  "red": red
+};
+
+export type ColorThemes = keyof (typeof colorThemes);
+
+export interface Theme {
+  colors: ColorTheme;
 }
 
-export const theme: DeckProps["theme"] = {
-  colors: {
-    primary: 'rgba(255, 255, 255, 0.8)',
-    secondary: colors.white,
-    tertiary: colors.black,
-    quaternary: colors.yellow,
-    quinary: colors.cyan,
-  },
-  fontSizes: {
-    h1: typography.display.h1.fontSize,
-    h2: typography.display.h3.fontSize,
-    h3: typography.display.h5.fontSize,
-    text: `${typography.fontSizes["10"]}px`,
-    monospace: `${typography.fontSizes["10"]}px`,
-  },
-  fonts: {
-    header: fontFamilies.extended,
-    text: fontFamilies.sans,
-    monospace: fontFamilies.monospace,
-  },
+export const defaultTheme: Theme = {
+  colors: colorThemes.neutral
 };

@@ -23,7 +23,7 @@ const Header = styled.div`
 `;
 
 const DocsLink = styled.span`
-  color: white;
+  color: ${props => props.theme.colors[50]};
   display: flex;
   align-items: center;
 
@@ -34,7 +34,7 @@ const DocsLink = styled.span`
 `;
 
 const DocsText = styled.h6`
-  color: white;
+  color: ${props => props.theme.colors[50]};
   font-weight: 100;
 `;
 
@@ -61,11 +61,11 @@ const SettingsMenu = styled.div`
   z-index: 1;
   display: grid;
   flex-direction: column;
-  background-color: #0000;
+  background-color: ${props => props.theme.colors[900]};
   border-radius: 5px;
   padding: 5px;
   margin: 5px 0px;
-  background-color: #ffffff3b;
+  background-color: ${props => props.theme.colors[50]}3b;
 `;
 
 const RunArrow = styled(PlayArrow)`

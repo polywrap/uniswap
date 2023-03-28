@@ -11,7 +11,7 @@ interface SidebarSection {
 const SectionHeading = styled.div`
   margin-top: 20px;
   margin-bottom: 10px;
-  border-bottom: white;
+  border-bottom: ${props => props.theme.colors[50]};
   border-bottom-style: solid;
   border-bottom-width: 1px;
   cursor: pointer;

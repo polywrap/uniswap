@@ -22,7 +22,7 @@ const Title = styled.h1`
 `;
 
 const SchemaLink = styled.span`
-  color: white;
+  color: ${props => props.theme.colors[50]};
   display: flex;
   align-items: center;
 
@@ -33,7 +33,7 @@ const SchemaLink = styled.span`
 `;
 
 const SchemaText = styled.h6`
-  color: white;
+  color: ${props => props.theme.colors[50]};
   font-weight: 100;
 `;
 
