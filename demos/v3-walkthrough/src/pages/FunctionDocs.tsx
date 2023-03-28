@@ -46,6 +46,7 @@ const SectionTitle = styled.h3``;
 
 const ArgumentList = styled.ul`
   list-style: circle;
+  line-height: 1.5em;
 `;
 
 const ArgumentName = styled.span`

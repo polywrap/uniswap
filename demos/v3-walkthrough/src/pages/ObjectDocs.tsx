@@ -48,6 +48,7 @@ const SectionTitle = styled.h3``;
 
 const PropertyList = styled.ul`
   list-style: circle;
+  line-height: 1.5em;
 `;
 
 const PropertyName = styled.span`
