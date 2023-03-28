@@ -20,6 +20,16 @@ const SidebarContainer = styled.nav`
   overflow-y: scroll;
 `;
 
+const LoadingContainer = styled.div`
+  width: 100%;
+  margin-top: 45px;
+  text-align: center;
+`;
+
+const LoadingText = styled.div`
+  line-height: 3.5em;
+`;
+
 const WrapLogo = styled.a`
   margin-top: 10px;
   margin-bottom: 10px;
@@ -67,7 +77,10 @@ function Sidebar() {
   if (loading) {
     return (
       <SidebarContainer className="sidebar">
-        <Loader style={{ width: "100%" }} />
+        <LoadingContainer>
+          <Loader />
+          <LoadingText>Loading Wrap...</LoadingText>
+        </LoadingContainer>
       </SidebarContainer>
     );
   } else if (error) {

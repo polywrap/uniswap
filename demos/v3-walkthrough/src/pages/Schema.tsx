@@ -52,7 +52,7 @@ function Schema() {
 
   if (loading) {
     return (
-      <Loader />
+      <Loader style={{ width: "100%", marginTop: "45px" }} />
     );
   } else if (error || !manifest) {
     console.error(error);
