@@ -1,6 +1,6 @@
 import React from "react";
 
-import { theme } from "../styles/theme";
+import { ThemeContext } from "../context/ThemeProvider";
 
 import "./Loader.css";
 
@@ -11,6 +11,7 @@ interface LoaderProps extends React.DetailedHTMLProps<
 }
 
 function Loader(props: LoaderProps) {
+  const { theme } = React.useContext(ThemeContext);
   const rectStyle = props.rectStyle || {};
   rectStyle.backgroundColor =
     rectStyle.backgroundColor ||

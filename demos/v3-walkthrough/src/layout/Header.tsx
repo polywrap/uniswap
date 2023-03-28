@@ -3,15 +3,15 @@ import { Box } from "@mui/material";
 import { CopyAll, AutoStories, QuestionMark } from "@mui/icons-material";
 import styled from 'styled-components';
 
-import {
-  theme,
-  colorThemes,
-  ColorThemes,
-  setColorTheme
-} from "../styles/theme";
+import { ThemeContext } from "../context/ThemeProvider";
 import { uniswapV3Uri } from "../constants";
 import PolywrapLogo from '../components/PolywrapLogo';
 import MultiSelect from '../components/MultiSelect';
+import {
+  Theme,
+  colorThemes,
+  ColorThemes
+} from '../styles/theme';
 
 export const HEIGHT = "32px";
 
@@ -20,23 +20,18 @@ const HeaderContainer = styled.div`
   padding-left: unset !important;
   padding-right: unset !important;
   max-width: unset !important;
-  border-bottom: ${theme.colors[50]};
+  border-bottom: ${props => props.theme.colors[50]};
   border-bottom-style: solid;
   border-bottom-width: 1px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background: ${theme.colors[900]};
+  background: ${props => props.theme.colors[900]};
   z-index: 999;
   left: 0;
   right: 0;
   top: 0;
   position: sticky;
-`;
-
-const HeaderSubcontainer = styled.div`
-  display: flex;
-  flex-direction: row;
 `;
 
 function HeaderButton(props: {
@@ -45,17 +40,18 @@ function HeaderButton(props: {
   border_right?: boolean;
   onClick?: React.MouseEventHandler;
   children: React.ReactNode;
+  theme: Theme
 }) {
   const Inner = styled(Box)`
     height: 100%;
     width: ${props.width};
     ${props.border_left ? `
-    border-left: ${theme.colors[50]};
+    border-left: ${props.theme.colors[50]};
     border-left-style: solid;
     border-left-width: 1px;
     ` : ""}
     ${props.border_right ? `
-    border-right: ${theme.colors[50]};
+    border-right: ${props.theme.colors[50]};
     border-right-style: solid;
     border-right-width: 1px;
     ` : ""}
@@ -75,6 +71,11 @@ function HeaderButton(props: {
   );
 }
 
+const HeaderSubcontainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 const HeaderButtonIcon = styled(Box)`
   height: 20px;
 `;
@@ -91,14 +92,10 @@ const WrapUri = styled.h6`
   overflow-wrap: anywhere;
 `;
 
-const Source = styled.h6`
-  text-align: center;
-  overflow-wrap: anywhere;
-`;
-
 function Header() {
   const desktopWidth = 700;
   const [isDesktop, setDesktop] = React.useState(window.innerWidth > desktopWidth);
+  const { theme, setTheme } = React.useContext(ThemeContext);
 
   const updateMedia = () => {
     setDesktop(window.innerWidth > desktopWidth);
@@ -115,6 +112,7 @@ function Header() {
     <HeaderContainer>
       <HeaderSubcontainer>
         <HeaderButton
+          theme={theme}
           width={isDesktop ? "120px" : "40px"}
           onClick={() => window.open("https://polywrap.io/", "_blank")?.focus()}
           border_right
@@ -124,6 +122,7 @@ function Header() {
           </HeaderButtonIcon>
         </HeaderButton>
         <HeaderButton
+          theme={theme}
           width={"auto"}
           border_right
         >
@@ -145,6 +144,7 @@ function Header() {
       </HeaderSubcontainer>
       <HeaderSubcontainer>
        <HeaderButton
+          theme={theme}
           width={"auto"}
           border_left
         >
@@ -152,12 +152,15 @@ function Header() {
             title={"theme"}
             options={Object.keys(colorThemes)}
             onOptionSelect={(option: string) =>
-              setColorTheme(option as ColorThemes)
+              setTheme({
+                colors: colorThemes[option as ColorThemes]
+              })
             }
             position={"right"}
           />
         </HeaderButton>
         <HeaderButton
+          theme={theme}
           width={"auto"}
           border_left
           onClick={() => window.open("https://docs.polywrap.io", "_blank")}
@@ -165,6 +168,7 @@ function Header() {
           <AutoStories style={{ margin: "5px" }} />
         </HeaderButton>
         <HeaderButton
+          theme={theme}
           width={"auto"}
           border_left
           onClick={() => window.open("https://discord.polywrap.io", "_blank")}

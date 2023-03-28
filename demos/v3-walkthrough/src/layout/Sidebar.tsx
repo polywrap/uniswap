@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { usePolywrapClient } from "@polywrap/react";
 
 import { HEIGHT as HEADER_HEIGHT } from "./Header";
-import { theme } from "../styles/theme";
 import { uniswapV3Uri, examples } from "../constants";
 import Loader from "../components/Loader";
 import SidebarSection from "../components/SidebarSection";
@@ -53,7 +52,7 @@ const SidebarItem = styled.div`
   padding-bottom: 5px;
   padding-top: 5px;
   &:hover {
-    background: ${theme.colors[300]}
+    background: ${props => props.theme.colors[300]}
   }
 `;
 

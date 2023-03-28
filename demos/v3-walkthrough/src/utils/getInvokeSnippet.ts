@@ -1,5 +1,3 @@
-import { MethodDefinition } from "@polywrap/wrap-manifest-types-js";
-
 import { InvokeLanguage } from "./InvokeLanguage";
 
 export function getInvokeSnippet(

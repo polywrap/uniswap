@@ -2,7 +2,6 @@ import React from "react";
 import styled from "styled-components";
 import { MethodDefinition, ObjectDefinition, EnumDefinition } from "@polywrap/wrap-manifest-types-js";
 
-import { theme } from "../styles/theme";
 import { trimPropType } from "../utils/trimPropType";
 
 const globalStyles = `

@@ -21,3 +21,8 @@
 - make the site generic, host at `docs.wraps.eth`
 - adding workflows to deployment artifacts -> integrate into docs.wraps
 - testing docs locally during dev time
+- reduce code duplication
+- cleanup code, ensure styling + layout is simple and done uniformly
+- having a loading message detailing what's happening
+- - same for when examples are executed
+- get the value-prop of Polywrap across on the home page

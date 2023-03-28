@@ -78,20 +78,34 @@ const stone: ColorTheme = {
   "50": "#fafaf9"
 }
 
+const red: ColorTheme = {
+  "900": "#7f1d1d",
+  "800": "#991b1b",
+  "700": "#b91c1c",
+  "600": "#dc2626",
+  "500": "#ef4444",
+  "400": "#f87171",
+  "300": "#fca5a5",
+  "200": "#fecaca",
+  "100": "#fee2e2",
+  "50": "#fef2f2"
+}
+
 export const colorThemes = {
   "slate": slate,
   "gray": gray,
   "zinc": zinc,
   "neutral": neutral,
-  "stone": stone
-}
+  "stone": stone,
+  "red": red
+};
 
 export type ColorThemes = keyof (typeof colorThemes);
 
-export let theme = {
+export interface Theme {
+  colors: ColorTheme;
+}
+
+export const defaultTheme: Theme = {
   colors: colorThemes.neutral
 };
-
-export function setColorTheme(colorTheme: ColorThemes) {
-  theme.colors = colorThemes[colorTheme];
-}
