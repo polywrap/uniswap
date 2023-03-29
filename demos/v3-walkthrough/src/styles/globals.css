@@ -1,6 +1,6 @@
 body {
   margin: unset;
-  font-family: 'Colton Primary';
+  font-family: 'Source Sans Pro';
 }
 
 .sidebar::-webkit-scrollbar {
@@ -32,7 +32,13 @@ body {
   background: #a0a0a0fa;
 }
 
-@font-face {
+pre {
+  margin: 0px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@200;300;400;500;600;700;800;900&family=Source+Sans+Pro:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700;1,900&display=swap');
+
+/* @font-face {
   font-family: Colton Primary;
   font-weight: 400;
   font-stretch: normal;
@@ -84,4 +90,4 @@ body {
   font-style: normal;
   src: url("./fonts/HDColton-XWideBold.woff");
   font-display: swap;
-}
+} */

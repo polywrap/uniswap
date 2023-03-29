@@ -18,8 +18,16 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  font-weight: 100;
-  font-stretch: expanded;
+  font-weight: 300;
+`;
+
+const TitleFunctionName = styled.span`
+  font-weight: 400;
+  font-family: 'Source Code Pro';
+  background-color: ${props => props.theme.colors[800]};
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  border-radius: 0.2em;
 `;
 
 const SchemaLink = styled.span`
@@ -34,16 +42,18 @@ const SchemaLink = styled.span`
 `;
 
 const SchemaText = styled.h6`
-  color: ${props => props.theme.colors[50]};
-  font-weight: 100;
+  color: ${props => props.theme.colors[100]};
+  font-weight: 400;
 `;
 
 const FunctionDescription = styled.h2`
-  font-weight: 100;
+  font-weight: 300;
   font-size: large;
 `;
 
-const SectionTitle = styled.h3``;
+const SectionTitle = styled.h3`
+  font-weight: 400;
+`;
 
 const ArgumentList = styled.ul`
   list-style: circle;
@@ -51,9 +61,12 @@ const ArgumentList = styled.ul`
 `;
 
 const ArgumentName = styled.span`
-  font-kerning: none;
-  letter-spacing: 1px;
-  font-weight: bold;
+  font-family: 'Source Code Pro';
+  font-weight: 400;
+  background-color: ${props => props.theme.colors[800]};
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  border-radius: 0.2em;
 `;
 
 const ExampleList = styled.ul`
@@ -114,7 +127,7 @@ function FunctionDocs() {
     <>
       <Header>
         <Title>
-          Function: <b>{method.name}</b>
+          Function: <TitleFunctionName>{method.name}</TitleFunctionName>
         </Title>
         <SchemaLink
           onClick={() => navigate(`/${wrapper}/schema`)}

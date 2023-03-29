@@ -142,7 +142,7 @@ function Header() {
             <PolywrapLogo fill={theme.colors[50]} long={isDesktop} />
           </HeaderButtonIcon>
         </HeaderButton>
-        <HeaderButton
+        {/* <HeaderButton
           theme={theme}
           width={"auto"}
           border_right
@@ -161,7 +161,7 @@ function Header() {
               onClick={() => uri && navigator.clipboard.writeText(uri)}
             />
           </WrapUriContainer>
-        </HeaderButton>
+        </HeaderButton> */}
         <HeaderButton
           theme={theme}
           width={"auto"}

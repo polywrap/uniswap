@@ -20,8 +20,16 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  font-weight: 100;
-  font-stretch: expanded;
+  font-weight: 300;
+`;
+
+const TitleObjectName = styled.span`
+  font-weight: 400;
+  font-family: 'Source Code Pro';
+  background-color: ${props => props.theme.colors[800]};
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  border-radius: 0.2em;
 `;
 
 const SchemaLink = styled.span`
@@ -37,15 +45,17 @@ const SchemaLink = styled.span`
 
 const SchemaText = styled.h6`
   color: ${props => props.theme.colors[50]};
-  font-weight: 100;
+  font-weight: 400;
 `;
 
 const Description = styled.h2`
-  font-weight: 100;
+  font-weight: 300;
   font-size: large;
 `;
 
-const SectionTitle = styled.h3``;
+const SectionTitle = styled.h3`
+  font-weight: 400;
+`;
 
 const PropertyList = styled.ul`
   list-style: circle;
@@ -53,9 +63,12 @@ const PropertyList = styled.ul`
 `;
 
 const PropertyName = styled.span`
-  font-kerning: none;
-  letter-spacing: 1px;
-  font-weight: bold;
+  font-family: 'Source Code Pro';
+  font-weight: 400;
+  background-color: ${props => props.theme.colors[800]};
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  border-radius: 0.2em;
 `;
 
 function ObjectDocs() {
@@ -100,7 +113,7 @@ function ObjectDocs() {
     <>
       <Header>
         <Title>
-          Object: <b>{object.type}</b>
+          Object: <TitleObjectName>{object.type}</TitleObjectName>
         </Title>
         <SchemaLink
           onClick={() => navigate(`/${wrapper}/schema`)}

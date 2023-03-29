@@ -20,8 +20,16 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  font-weight: 100;
-  font-stretch: expanded;
+  font-weight: 300;
+`;
+
+const TitleEnumName = styled.span`
+  font-weight: 400;
+  font-family: 'Source Code Pro';
+  background-color: ${props => props.theme.colors[800]};
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  border-radius: 0.2em;
 `;
 
 const SchemaLink = styled.span`
@@ -37,11 +45,11 @@ const SchemaLink = styled.span`
 
 const SchemaText = styled.h6`
   color: ${props => props.theme.colors[50]};
-  font-weight: 100;
+  font-weight: 400;
 `;
 
 const Description = styled.h2`
-  font-weight: 100;
+  font-weight: 300;
   font-size: large;
 `;
 
@@ -89,7 +97,7 @@ function EnumDocs() {
     <>
       <Header>
         <Title>
-          Enum: <b>{enumDef.type}</b>
+          Enum: <TitleEnumName>{enumDef.type}</TitleEnumName>
         </Title>
         <SchemaLink
           onClick={() => navigate("/schema")}

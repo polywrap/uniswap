@@ -9,6 +9,8 @@ import Loader from "../components/Loader";
 import SidebarSection from "../components/SidebarSection";
 import UniswapLogo from "../images/uniswap-logo.svg";
 import { useWrapManifest } from "../hooks/useWrapManifest";
+import { CopyAll } from "@mui/icons-material";
+import { useActiveWrapper } from "../hooks/useActiveWrapper";
 
 const SidebarContainer = styled.nav`
   top: ${HEADER_HEIGHT};
@@ -42,25 +44,38 @@ const WrapName = styled.h2`
 const WrapType = styled.h5`
   margin: unset;
   text-align: center;
-  font-weight: 100;
+  font-weight: 400;
 `;
 
 const SidebarItem = styled.div`
   overflow-wrap: anywhere;
   cursor: pointer;
-  font-size: smaller;
+  font-size: 14px;
+  font-weight: 400;
   padding-bottom: 5px;
   padding-top: 5px;
   &:hover {
-    background: ${props => props.theme.colors[300]}
+    background: ${props => props.theme.colors[800]}
   }
+`;
+
+const WrapUriContainer = styled.div`
+  margin-left: 10px;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: row;
+`;
+
+const WrapUri = styled.h6`
+  text-align: center;
+  overflow-wrap: anywhere;
+  font-weight: 400;
 `;
 
 function Sidebar() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
-  let { wrapper } = useParams<"wrapper">();
-  wrapper = wrapper ?? "uniswap-v3";
+  const wrapper = useActiveWrapper();
   const { manifest, error, loading } = useWrapManifest({
     client,
     uri: wrapper ? wrappers[wrapper] : uniswapV3Uri
@@ -111,9 +126,23 @@ function Sidebar() {
         {manifest.name}
       </WrapName>
       <WrapType>
-        {"[type: "}<b>{manifest.type}</b>{"]"}
+        {"[type: "}{manifest.type}{"]"}
       </WrapType>
-      <SidebarSection name="README" onClick={() => navigate("/")}/>
+      <WrapUriContainer>
+        <WrapUri>
+          {wrappers[wrapper]}
+        </WrapUri>
+        <CopyAll
+          style={{
+            width: "12px",
+            marginLeft: "5px",
+            height: "unset",
+            cursor: "pointer"
+          }}
+          onClick={() => wrappers[wrapper] && navigator.clipboard.writeText(wrappers[wrapper])}
+        />
+      </WrapUriContainer>
+      <SidebarSection name="README" onClick={() => navigate("/" + wrapper)}/>
       {examples && (
         <SidebarSection name="Examples" initOpen>
           {examples[wrapper].map((i) => (

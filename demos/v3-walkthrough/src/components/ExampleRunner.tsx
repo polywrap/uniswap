@@ -39,12 +39,11 @@ const DocsText = styled.h6`
 `;
 
 const Title = styled.h1`
-  font-weight: 100;
-  font-stretch: expanded;
+  font-weight: 300;
 `;
 
 const Description = styled.h2`
-  font-weight: 100;
+  font-weight: 300;
   font-size: large;
 `;
 
@@ -82,13 +81,16 @@ const SnippetContainer = styled.div`
 `;
 
 const SnippetText = styled.div`
+  margin-top: 1rem;
   max-height: 50vh;
   font-size: 0.90rem;
   overflow: auto;
+  border: 1px solid ${props => props.theme.colors[50]};
+  border-radius: 5px;
 `;
 
 const ResultTitle = styled.h3`
-  font-weight: 600;
+  font-weight: 400;
   text-align: left;
 `;
 
@@ -99,10 +101,12 @@ const ResultContainer = styled.div`
 `;
 
 const ResultText = styled.div`
+  margin-top: 1rem;
   max-height: 50vh;
-  font-weight: 500;
-  font-size 0.90rem;
+  font-size: 0.90rem;
   overflow: auto;
+  border: 1px solid ${props => props.theme.colors[50]};
+  border-radius: 5px;
 `;
 
 function ExampleRunner(props: {
@@ -159,7 +163,7 @@ function ExampleRunner(props: {
     <>
     <Header>
       <Title>
-        <b>{name}</b>
+        {name}
       </Title>
       <DocsLink
         onClick={() => navigate("/function/" + method)}
