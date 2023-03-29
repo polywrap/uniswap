@@ -198,6 +198,54 @@ function Header() {
             </WrapUri>
           </WrapUriContainer>
         </HeaderButton>
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/safe-contracts")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              safe-contracts
+            </WrapUri>
+          </WrapUriContainer>
+        </HeaderButton>
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/safe-factory")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              safe-factory
+            </WrapUri>
+          </WrapUriContainer>
+        </HeaderButton>
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/safe-manager")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              safe-manager
+            </WrapUri>
+          </WrapUriContainer>
+        </HeaderButton>
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/ethereum")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              ethereum
+            </WrapUri>
+          </WrapUriContainer>
+        </HeaderButton>
       </HeaderSubcontainer>
       <HeaderSubcontainer>
         <HeaderButton

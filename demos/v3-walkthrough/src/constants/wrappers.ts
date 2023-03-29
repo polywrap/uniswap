@@ -1,4 +1,4 @@
-import { accountAbstractionUri, gelatoRelayUri, relayUri, uniswapV3Uri } from "./uris";
+import { accountAbstractionUri, ethereumUri, gelatoRelayUri, relayUri, safeContractsUri, safeFactoryUri, safeManagerUri, uniswapV3Uri } from "./uris";
 
 
 export const wrappers: Record<string, string> = {
@@ -6,4 +6,8 @@ export const wrappers: Record<string, string> = {
   "account-abstraction": accountAbstractionUri,
   "relay": relayUri,
   "gelato-relay": gelatoRelayUri,
+  "safe-contracts": safeContractsUri,
+  "safe-factory": safeFactoryUri,
+  "safe-manager": safeManagerUri,
+  "ethereum": ethereumUri,
 };

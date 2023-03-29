@@ -141,4 +141,8 @@ export const examples: Record<string, Example[]> = {
   "account-abstraction": [],
   "relay": [],
   "gelato-relay": [],
+  "safe-contracts": [],
+  "safe-factory": [],
+  "safe-manager": [],
+  "ethereum": [],
 };
