@@ -23,12 +23,12 @@ function Body() {
   return (
     <Main>
       <Routes>
-        <Route path="/:wrapper?" element={<Intro />} />
-        <Route path="/:wrapper?/schema" element={<Schema />} />
-        <Route path="/:wrapper?/example/:id" element={<Example />} />
-        <Route path="/:wrapper?/function/:id" element={<FunctionDocs />} />
-        <Route path="/:wrapper?/object/:id" element={<ObjectDocs />} />
-        <Route path="/:wrapper?/enum/:id" element={<EnumDocs />} />
+        <Route path="/" element={<Intro />} />
+        <Route path="/schema" element={<Schema />} />
+        <Route path="/example/:id" element={<Example />} />
+        <Route path="/function/:id" element={<FunctionDocs />} />
+        <Route path="/object/:id" element={<ObjectDocs />} />
+        <Route path="/enum/:id" element={<EnumDocs />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </Main>

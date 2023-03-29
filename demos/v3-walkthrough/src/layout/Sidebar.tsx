@@ -59,7 +59,8 @@ const SidebarItem = styled.div`
 function Sidebar() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
-  const { wrapper } = useParams<"wrapper">();
+  let { wrapper } = useParams<"wrapper">();
+  wrapper = wrapper ?? "uniswap-v3";
   const { manifest, error, loading } = useWrapManifest({
     client,
     uri: wrapper ? wrappers[wrapper] : uniswapV3Uri
@@ -106,7 +107,7 @@ function Sidebar() {
       <WrapLogo>
         <img src={UniswapLogo} alt="uniswap-logo" width={100} height={100} />
       </WrapLogo>
-      <WrapName onClick={() => navigate("/")}>
+      <WrapName onClick={() => navigate("/" + wrapper)}>
         {manifest.name}
       </WrapName>
       <WrapType>
@@ -115,9 +116,9 @@ function Sidebar() {
       <SidebarSection name="README" onClick={() => navigate("/")}/>
       {examples && (
         <SidebarSection name="Examples" initOpen>
-          {examples.map((i) => (
+          {examples[wrapper].map((i) => (
             <SidebarItem onClick={() =>
-              navigate("/example/" + i.name)
+              navigate(`/${wrapper}/example/${i.name}`)
             }>
               {i.name}
             </SidebarItem>
@@ -128,7 +129,7 @@ function Sidebar() {
         <SidebarSection name="Functions">
           {functions.map((i) => (
             <SidebarItem onClick={() =>
-              navigate("/function/" + i.name)
+              navigate(`/${wrapper}/function/${i.name}`)
             }>
               {i.name}
             </SidebarItem>
@@ -148,7 +149,7 @@ function Sidebar() {
         <SidebarSection name="Objects">
           {objects.map((i) => (
             <SidebarItem onClick={() =>
-              navigate("/object/" + i.type)
+              navigate(`/${wrapper}/object/${i.type}`)
             }>
               {i.type}
             </SidebarItem>
@@ -159,7 +160,7 @@ function Sidebar() {
         <SidebarSection name="Enums">
           {enums.map((i) => (
             <SidebarItem onClick={() =>
-              navigate("/enum/" + i.type)
+              navigate(`/${wrapper}/enum/${i.type}`)
             }>
               {i.type}
             </SidebarItem>
@@ -175,7 +176,7 @@ function Sidebar() {
           ))}
         </SidebarSection>
       )}
-      <SidebarSection name="Schema" onClick={() => navigate("/schema")} />
+      <SidebarSection name="Schema" onClick={() => navigate(`/${wrapper}/schema`)} />
     </SidebarContainer>
   );
 }

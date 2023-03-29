@@ -5,12 +5,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import { usePolywrapClient } from "@polywrap/react";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
-import { uniswapV3Uri } from "../constants";
+import { uniswapV3Uri, wrappers } from "../constants";
 import RenderSchema from "../components/RenderSchema";
 import ReferenceSection from "../components/ReferenceSection";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
 import { getTypeRefRoutes } from "../utils/getTypeRefRoutes";
+import { useActiveWrapper } from "../hooks/useActiveWrapper";
 
 const Header = styled.div`
   display: flex;
@@ -49,9 +50,10 @@ const SectionTitle = styled.h3``;
 function EnumDocs() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
-  const { manifest, error, loading } = useWrapManifest({
+  const wrapper = useActiveWrapper();
+  let { manifest, error, loading } = useWrapManifest({
     client,
-    uri: uniswapV3Uri
+    uri: wrappers[wrapper]
   });
   const { id } = useParams<"id">();
 
@@ -81,7 +83,7 @@ function EnumDocs() {
   }
 
   // Find all references in other parts of the ABI
-  const refRoutes = getTypeRefRoutes(enumDef.type, abi);
+  const refRoutes = getTypeRefRoutes(enumDef.type, abi, wrapper);
 
   return (
     <>
@@ -104,7 +106,7 @@ function EnumDocs() {
       <RenderSchema
         enums={[enumDef]}
         onTypeNameClick={(name) => {
-          const route = getTypeNameRoute(name, abi);
+          const route = getTypeNameRoute(name, abi, wrapper);
 
           if (route) {
             navigate(route);

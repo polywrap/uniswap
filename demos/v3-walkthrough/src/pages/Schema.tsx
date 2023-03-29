@@ -12,6 +12,7 @@ import Loader from "../components/Loader";
 import Toggle from "../components/Toggle";
 import Dropdown from "../components/Dropdown";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
+import { useActiveWrapper } from "../hooks/useActiveWrapper";
 
 const Header = styled.div`
   display: flex;
@@ -33,7 +34,7 @@ const SettingsMenu = styled.div`
 function Schema() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
-  const { wrapper } = useParams<"wrapper">();
+  const wrapper = useActiveWrapper();
   let { manifest, error, loading } = useWrapManifest({
     client,
     uri: wrapper ? wrappers[wrapper] : uniswapV3Uri
@@ -93,14 +94,14 @@ function Schema() {
       objects={abi.objectTypes}
       enums={abi.enumTypes}
       onTypeNameClick={(name) => {
-        const route = getTypeNameRoute(name, abi);
+        const route = getTypeNameRoute(name, abi, wrapper);
 
         if (route) {
           navigate(route);
         }
       }}
       onFuncNameClick={(name) => {
-        navigate("/function/" + name);
+        navigate(`/${wrapper}/function/${name}`);
       }}
     />
     </>

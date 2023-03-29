@@ -2,7 +2,8 @@ import { WrapManifest } from "@polywrap/wrap-manifest-types-js";
 
 export function getTypeNameRoute(
   typeName: string,
-  abi: WrapManifest["abi"]
+  abi: WrapManifest["abi"],
+  wrapper: string
 ): string | undefined {
   const namedRoutes: {
     name: string;
@@ -10,11 +11,11 @@ export function getTypeNameRoute(
   }[] = [
     ...abi.objectTypes?.map((x) => ({
       name: x.type,
-      route: `/object/${x.type}`
+      route: `/${wrapper}/object/${x.type}`
     })) || [],
     ...abi.enumTypes?.map((x) => ({
       name: x.type,
-      route: `/enum/${x.type}`
+      route: `/${wrapper}/enum/${x.type}`
     })) || [],
     {
       name: "Env",

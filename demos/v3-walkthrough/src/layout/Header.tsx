@@ -18,6 +18,7 @@ import {
   colorThemes,
   ColorThemes
 } from '../styles/theme';
+import { useNavigate } from 'react-router-dom';
 
 export const HEIGHT = "32px";
 
@@ -88,7 +89,7 @@ const HeaderButtonIcon = styled(Box)`
 
 const WrapUriContainer = styled.div`
   margin-left: 10px;
-  margin-right: 5px;
+  margin-right: 10px;
   display: flex;
   flex-direction: row;
 `;
@@ -119,6 +120,7 @@ function Header() {
   const updateMedia = () => {
     setDesktop(window.innerWidth > desktopWidth);
   };
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     window.addEventListener("resize", updateMedia);
@@ -158,6 +160,42 @@ function Header() {
               }}
               onClick={() => uri && navigator.clipboard.writeText(uri)}
             />
+          </WrapUriContainer>
+        </HeaderButton>
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/account-abstraction")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              account-abstraction
+            </WrapUri>
+          </WrapUriContainer>
+        </HeaderButton>
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/relay")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              relayer
+            </WrapUri>
+          </WrapUriContainer>
+        </HeaderButton>
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/gelato-relay")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              gelato-relay
+            </WrapUri>
           </WrapUriContainer>
         </HeaderButton>
       </HeaderSubcontainer>

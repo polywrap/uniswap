@@ -9,6 +9,7 @@ import { uniswapV3Uri, examples, wrappers } from "../constants";
 import RenderSchema from "../components/RenderSchema";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
+import { useActiveWrapper } from "../hooks/useActiveWrapper";
 
 const Header = styled.div`
   display: flex;
@@ -72,10 +73,11 @@ function FunctionDocs() {
   const client = usePolywrapClient();
   const { id } = useParams<"id">();
   
-  const { wrapper } = useParams<"wrapper">();
+  const wrapper = useActiveWrapper();
+
   const { manifest, error, loading } = useWrapManifest({
     client,
-    uri: wrapper ? wrappers[wrapper] : uniswapV3Uri
+    uri: wrappers[wrapper]
   });
 
   if (loading) {
@@ -104,7 +106,7 @@ function FunctionDocs() {
   }
 
   // Find any examples including this function
-  const exampleRefs = examples
+  const exampleRefs = examples[wrapper]
     .filter((x) => x.method === method.name)
     .map((x) => x.name);
 
@@ -115,7 +117,7 @@ function FunctionDocs() {
           Function: <b>{method.name}</b>
         </Title>
         <SchemaLink
-          onClick={() => navigate("/schema")}
+          onClick={() => navigate(`/${wrapper}/schema`)}
         >
           <SchemaText>schema</SchemaText>
           <UnfoldMore />
@@ -129,7 +131,7 @@ function FunctionDocs() {
       <RenderSchema
         methods={[method]}
         onTypeNameClick={(name) => {
-          const route = getTypeNameRoute(name, abi);
+          const route = getTypeNameRoute(name, abi, wrapper);
 
           if (route) {
             navigate(route);

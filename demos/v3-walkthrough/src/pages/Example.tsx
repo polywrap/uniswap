@@ -4,12 +4,14 @@ import { usePolywrapClient } from "@polywrap/react";
 
 import ExampleRunner from "../components/ExampleRunner";
 import { examples } from "../constants/examples";
+import { useActiveWrapper } from "../hooks/useActiveWrapper";
 
 function Example() {
   const client = usePolywrapClient();
   const { id } = useParams<"id">();
+  const wrapper = useActiveWrapper();
 
-  const example = examples.find((e) => 
+  const example = examples[wrapper].find((e) => 
     id === e.name
   );
 

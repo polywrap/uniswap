@@ -11,6 +11,7 @@ import ReferenceSection from "../components/ReferenceSection";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
 import { getTypeRefRoutes } from "../utils/getTypeRefRoutes";
+import { useActiveWrapper } from "../hooks/useActiveWrapper";
 
 const Header = styled.div`
   display: flex;
@@ -60,10 +61,10 @@ const PropertyName = styled.span`
 function ObjectDocs() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
-  const { wrapper } = useParams<"wrapper">();
+  const wrapper = useActiveWrapper();
   let { manifest, error, loading } = useWrapManifest({
     client,
-    uri: wrapper ? wrappers[wrapper] : uniswapV3Uri
+    uri: wrappers[wrapper]
   });
   const { id } = useParams<"id">();
 
@@ -93,7 +94,7 @@ function ObjectDocs() {
   }
 
   // Find all references in other parts of the ABI
-  const refRoutes = getTypeRefRoutes(object.type, abi);
+  const refRoutes = getTypeRefRoutes(object.type, abi, wrapper);
 
   return (
     <>
@@ -102,7 +103,7 @@ function ObjectDocs() {
           Object: <b>{object.type}</b>
         </Title>
         <SchemaLink
-          onClick={() => navigate("/schema")}
+          onClick={() => navigate(`/${wrapper}/schema`)}
         >
           <SchemaText>schema</SchemaText>
           <UnfoldMore />
@@ -116,7 +117,7 @@ function ObjectDocs() {
       <RenderSchema
         objects={[object]}
         onTypeNameClick={(name) => {
-          const route = getTypeNameRoute(name, abi);
+          const route = getTypeNameRoute(name, abi, wrapper);
 
           if (route) {
             navigate(route);

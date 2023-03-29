@@ -41,9 +41,16 @@ function App() {
               <Header />
               <AppContainer>
                 <Routes>
-                  <Route path="/:wrapper?/*" element={<Sidebar />} />
+                  <Route
+                    path="/:wrapper?/*"
+                    element={
+                      <>
+                        <Sidebar />
+                        <Body />
+                      </>
+                    }
+                  />
                 </Routes>
-                <Body />
               </AppContainer>
             </PolywrapProvider>
           </HashRouter>
