@@ -5,22 +5,47 @@ import pool from "./inputs/pool.json";
 import route from "./inputs/route.json";
 // import quoteCallParameters from "./inputs/quoteCallParameters.json"
 import trade from "./inputs/trade.json";
+import {
+  BuilderConfig,
+  ClientConfigBuilder,
+  InvokeResult,
+  PolywrapClient,
+} from "@polywrap/client-js";
 // import swapCallParameters from "./inputs/swapCallParameters.json"
 
 const deadline = (new Date().getTime() / 1000 + 1800).toFixed(0);
 
-export interface Example {
+export type SimpleExample = {
   name: string;
+  type: "simple";
   description: string;
   uri: string;
   method: string;
   args: Record<string, unknown>;
-}
+};
+
+export type ComplexExample = {
+  name: string;
+  type: "complex";
+  method: string;
+  getBuilderConfig?: () => BuilderConfig;
+  steps: ComplexExampleStep[];
+};
+
+export type Example = SimpleExample | ComplexExample;
+
+export type ComplexExampleStep = {
+  getDescription: (results: InvokeResult[]) => string;
+  uri: string;
+  method: string;
+  getArgs: (results: InvokeResult[]) => Record<string, unknown>;
+};
 
 export const examples: Record<string, Example[]> = {
   "uniswap-v3": [
     {
       name: "Get Pool Address",
+      type: "simple",
       description:
         "Each Uniswap V3 Pool is uniquely identified by 3 characteristics: token-in, token-out, and fee.",
       uri: uniswapV3Uri,
@@ -33,6 +58,7 @@ export const examples: Record<string, Example[]> = {
     },
     {
       name: "Fetch Pool Data",
+      type: "simple",
       description:
         "A Uniswap V3 Pool's on-chain state can be fetched using the pools tokens and fee, or with its address.",
       uri: uniswapV3Uri,
@@ -46,6 +72,7 @@ export const examples: Record<string, Example[]> = {
     },
     {
       name: "Create a Route",
+      type: "simple",
       description:
         "Using one or more Pools, we can create a Route to define the path of a Trade.",
       uri: uniswapV3Uri,
@@ -58,6 +85,7 @@ export const examples: Record<string, Example[]> = {
     },
     {
       name: "Get Quote Calldata",
+      type: "simple",
       description:
         "To obtain a trade quote, we can use a Route to construct calldata for Uniswap's Quoter contract",
       uri: uniswapV3Uri,
@@ -89,6 +117,7 @@ export const examples: Record<string, Example[]> = {
     // },
     {
       name: "Create a Trade",
+      type: "simple",
       description:
         "We can create a Trade with the quote data returned by the Quoter contract",
       uri: uniswapV3Uri,
@@ -110,6 +139,7 @@ export const examples: Record<string, Example[]> = {
     },
     {
       name: "Get Swap Calldata",
+      type: "simple",
       description: "We can generate calldata to execute the Trade on chain.",
       uri: uniswapV3Uri,
       method: "swapCallParameters",
@@ -138,11 +168,48 @@ export const examples: Record<string, Example[]> = {
     //   }
     // },
   ],
-  "account-abstraction": [],
-  "relay": [],
+  "account-abstraction": [
+    {
+      name: "Test",
+      type: "complex",
+      method: "asdf",
+      getBuilderConfig: () => {
+        return new ClientConfigBuilder()
+          .addDefaults()
+          .config;
+      },
+      steps: [
+        {
+          getArgs: () => {
+            return {
+              message: "Hello Polywrap!"
+            };
+          },
+          getDescription: () => {
+            return "We can write out a description here to tell people what we're doing.";
+          },
+          method: "info",
+          uri: "ens/logger.polytest.eth",
+        },
+        {
+          getArgs: (results) => {
+            return {
+              message: results[0].ok ? `${results[0].value}` : "Fail"
+            };
+          },
+          getDescription: (results) => {
+            return `Then we can use the results from all the past invokes! Stupid JSON stringify example: ${JSON.stringify(results[0])}`;
+          },
+          method: "info",
+          uri: "ens/logger.polytest.eth",
+        },
+      ],
+    },
+  ],
+  relay: [],
   "gelato-relay": [],
   "safe-contracts": [],
   "safe-factory": [],
   "safe-manager": [],
-  "ethereum": [],
+  ethereum: [],
 };

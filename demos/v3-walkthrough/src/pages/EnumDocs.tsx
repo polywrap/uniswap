@@ -5,7 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { usePolywrapClient } from "@polywrap/react";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
-import { uniswapV3Uri, wrappers } from "../constants";
+import { wrappers } from "../constants";
 import RenderSchema from "../components/RenderSchema";
 import ReferenceSection from "../components/ReferenceSection";
 import Loader from "../components/Loader";

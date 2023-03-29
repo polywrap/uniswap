@@ -14,33 +14,7 @@ import Dropdown from "./Dropdown";
 import MultiSelect from './MultiSelect';
 import { getInvokeSnippet } from '../utils/getInvokeSnippet';
 import { InvokeLanguage, invokeLanguages } from '../utils/InvokeLanguage';
-import { Example } from "../constants";
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const DocsLink = styled.span`
-  color: ${props => props.theme.colors[50]};
-  display: flex;
-  align-items: center;
-
-  &:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
-`;
-
-const DocsText = styled.h6`
-  color: ${props => props.theme.colors[50]};
-  font-weight: 100;
-`;
-
-const Title = styled.h1`
-  font-weight: 300;
-`;
+import { Example, SimpleExample } from "../constants";
 
 const Description = styled.h2`
   font-weight: 300;
@@ -109,17 +83,18 @@ const ResultText = styled.div`
   border-radius: 5px;
 `;
 
-function ExampleRunner(props: {
+function SimpleExampleRunner(props: {
   id: string,
-  example: Example,
-  client: PolywrapClient
+  example: SimpleExample,
+  client: PolywrapClient,
+  onResult?: (result: InvokeResult) => void
 }) {
   const navigate = useNavigate();
   const [result, setResult] = React.useState<
     Record<string, InvokeResult<unknown>>
   >({});
   const [waiting, setWaiting] = React.useState(false);
-  const [inspectArgs, setInspectArgs] = React.useState(false);
+  const [inspectArgs, setInspectArgs] = React.useState(true);
   const [codegen, setCodegen] = React.useState(false);
   const [selectedLanguage, setSelectedLanguage] = React.useState<
     InvokeLanguage
@@ -128,6 +103,7 @@ function ExampleRunner(props: {
   const { name, description, uri, method, args } = props.example;
   const client = props.client;
   const id = props.id;
+  const onResult = props.onResult;
 
   const invokeSnippet = getInvokeSnippet(
     uri,
@@ -150,6 +126,7 @@ function ExampleRunner(props: {
     });
     setResult(result);
     setWaiting(false);
+    onResult && onResult(result[id]);
   }
 
   const toggleStyle: React.CSSProperties = {
@@ -161,17 +138,6 @@ function ExampleRunner(props: {
 
   return (
     <>
-    <Header>
-      <Title>
-        {name}
-      </Title>
-      <DocsLink
-        onClick={() => navigate("/function/" + method)}
-      >
-        <DocsText>docs</DocsText>
-        <ManageSearch />
-      </DocsLink>
-    </Header>
     <Description>{description}</Description>
     <SnippetContainer>
       <Controls>
@@ -258,4 +224,4 @@ function ExampleRunner(props: {
   );
 }
 
-export default ExampleRunner;
+export default SimpleExampleRunner;

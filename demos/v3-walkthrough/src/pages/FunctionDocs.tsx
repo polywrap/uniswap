@@ -120,7 +120,10 @@ function FunctionDocs() {
 
   // Find any examples including this function
   const exampleRefs = examples[wrapper]
-    .filter((x) => x.method === method.name)
+    .filter((x) => 
+      (x.type === "simple" && x.method === method.name) ||
+      (x.type === "complex" && x.steps.some(s => s.method === method.name))
+    )
     .map((x) => x.name);
 
   return (
