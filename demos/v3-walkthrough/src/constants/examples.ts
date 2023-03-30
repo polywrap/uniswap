@@ -2,6 +2,7 @@ import {
   accountAbstractionUri,
   gelatoRelayUri,
   relayUri,
+  safeManagerUri,
   uniswapV3Uri,
 } from "./uris";
 import WETH from "./inputs/WETH.json";
@@ -22,7 +23,7 @@ import {
   Connection,
   Connections,
   ethereumProviderPlugin,
-} from "@polywrap/ethereum-provider-js";
+} from "../vendor/ethereum-provider";
 import { dateTimePlugin } from "@polywrap/datetime-plugin-js";
 
 const deadline = (new Date().getTime() / 1000 + 1800).toFixed(0);
@@ -63,6 +64,9 @@ export type ComplexExampleStep = {
   method: string;
   getArgs: (results: InvokeResult[]) => Record<string, unknown>;
 };
+
+const randNumber = Math.floor(Math.random() * 101);
+const storageContractAddress = "0x56535D1162011E54aa2F6B003d02Db171c17e41e";
 
 export const examples: Record<string, Example[]> = {
   "uniswap-v3": [
@@ -202,7 +206,7 @@ export const examples: Record<string, Example[]> = {
           getArgs: () => {
             return {
               level: "INFO",
-              message: "HELLO"
+              message: "HELLO",
             };
           },
           getDescription: () => {
@@ -250,55 +254,60 @@ export const examples: Record<string, Example[]> = {
       ],
     },
     {
-      name: "Execute sponsored transaction",
+      name: "Execute Sponsored Transaction",
       type: "complex",
       requiresWallet: true,
       getBuilderConfig: () => {
-        //TODO: KEY, RPC
         const provider = (window as any).ethereum;
 
-        return new ClientConfigBuilder()
-          .addDefaults()
-          .addPackages({
-            "wrap://ens/wraps.eth:ethereum-provider@2.0.0":
-              ethereumProviderPlugin({
-                connections: new Connections({
-                  networks: {
-                    goerli: new Connection({
-                      provider,
-                    }),
-                  },
-                  defaultNetwork: "goerli",
-                }),
-              }) as IWrapPackage,
-            "wrap://ens/datetime.polywrap.eth": dateTimePlugin(
-              {}
-            ) as IWrapPackage,
-          })
-          // .addEnv("wrap://ens/safe.wraps.eth:manager@0.1.0", {
-          //   safeAddress: SAFE_ADDRESS,
-          //   connection,
-          // })
-          .addInterfaceImplementation(
-            "wrap://ens/wraps.eth:ethereum-provider@2.0.0",
-            "wrap://ens/wraps.eth:ethereum-provider@2.0.0"
-          )
-          .addEnv(accountAbstractionWrapperUri, {
-            connection,
-          })
-          .addEnv(relayerAdapterWrapperUri, {
-            relayerApiKey: "AiaCshYRyAUzTNfZZb8LftJaAl2SS3I8YwhJJXc5J7A_",
-          })
-          .addRedirect(accountAbstractionWrapperUri, accountAbstractionUri)
-          .addRedirect(
-            etherCoreWrapperUri,
-            "wrap://ipfs/QmUX4nafTqncmtucMSJGKVNB6WbEaRJLWJHMVMcZy751S9"
-          )
-          .addRedirect(relayerAdapterWrapperUri, relayUri)
-          .addRedirect(
-            "wrap://ens/gelato.wraps.eth:relayer@0.0.1",
-            gelatoRelayUri
-          ).config;
+        return (
+          new ClientConfigBuilder()
+            .addDefaults()
+            .addPackages({
+              "wrap://ens/wraps.eth:ethereum-provider@2.0.0":
+                ethereumProviderPlugin({
+                  connections: new Connections({
+                    networks: {
+                      goerli: new Connection({
+                        provider,
+                      }),
+                    },
+                    defaultNetwork: "goerli",
+                  }),
+                }) as IWrapPackage,
+              "wrap://ens/datetime.polywrap.eth": dateTimePlugin(
+                {}
+              ) as IWrapPackage,
+            })
+            // .addEnv("wrap://ens/safe.wraps.eth:manager@0.1.0", {
+            //   safeAddress: SAFE_ADDRESS,
+            //   connection,
+            // })
+            .addInterfaceImplementation(
+              "wrap://ens/wraps.eth:ethereum-provider@2.0.0",
+              "wrap://ens/wraps.eth:ethereum-provider@2.0.0"
+            )
+            .addEnv(accountAbstractionWrapperUri, {
+              connection,
+            })
+            .addEnv(relayerAdapterWrapperUri, {
+              relayerApiKey: "AiaCshYRyAUzTNfZZb8LftJaAl2SS3I8YwhJJXc5J7A_",
+            })
+            .addRedirect(accountAbstractionWrapperUri, accountAbstractionUri)
+            .addRedirect(
+              etherCoreWrapperUri,
+              "wrap://ipfs/QmUX4nafTqncmtucMSJGKVNB6WbEaRJLWJHMVMcZy751S9"
+            )
+            .addRedirect(relayerAdapterWrapperUri, relayUri)
+            .addRedirect(
+              "wrap://ens/gelato.wraps.eth:relayer@0.0.1",
+              gelatoRelayUri
+            )
+            .addRedirect(
+              "wrap://ens/safe.wraps.eth:manager@0.1.0",
+              safeManagerUri
+            ).config
+        );
       },
       steps: [
         //0 encodedFunction
@@ -308,16 +317,15 @@ export const examples: Record<string, Example[]> = {
           getArgs: () => {
             return {
               method: "function store(uint256 num) public",
-              args: ["7"],
+              args: [randNumber],
             };
           },
           getDescription: () => {
-            return "First, we need to encode our function call.";
+            return `In this example, we will invoke the "store" function of a smart contract on address ${storageContractAddress}. In order to invoke this function, we first need to encode it.`;
           },
         },
-        //2 gasLimit
+        //1 safeAddress
         {
-          //1 safeAddress
           uri: accountAbstractionWrapperUri,
           method: "getSafeAddress",
           getArgs: (results) => {
@@ -328,9 +336,10 @@ export const examples: Record<string, Example[]> = {
             };
           },
           getDescription: () => {
-            return "getSafeAddress";
+            return `We also need to know the address of our Safe contract. This address is deterministic and is based on a nonce and your wallet's address. For this example, we have hard-coded a nonce, so that you always get the same address.`;
           },
         },
+        //2 estimateTransactionGas
         {
           uri: etherCoreWrapperUri,
           method: "estimateTransactionGas",
@@ -348,64 +357,10 @@ export const examples: Record<string, Example[]> = {
             };
           },
           getDescription: () => {
-            return "Now that we have our encoded function data, we want to get an estimate the transaction gas fee.";
+            return "Now that we have our encoded function data and our Safe contract address, we want to get an estimate the transaction gas fee.";
           },
         },
-        // //2 estimation
-        // {
-        //   uri: relayerAdapterWrapperUri,
-        //   method: "getEstimateFee",
-        //   getArgs: (results) => {
-        //     if (!results[1].ok) {
-        //       alert("Invocation failure, please try again!");
-        //       return {};
-        //     }
-        //     const gaslimitWithBuffer = BigNumber.from(results[1].value)
-        //       .add(250_000)
-        //       .toString();
-        //     return {
-        //       chainId: 5,
-        //       gasLimit: gaslimitWithBuffer,
-        //     };
-        //   },
-        //   getDescription: () => {
-        //     return "Cesar explain";
-        //   },
-        // },
-        //3 safeAddress
-        // //4 safeBalance
-        // {
-        //   uri: etherCoreWrapperUri,
-        //   method: "getBalance",
-        //   getArgs: (results) => {
-        //     return {
-        //       address: results[3].ok ? results[3].value : "INVOCATION FAILURE",
-        //       connection: connection,
-        //     };
-        //   },
-        //   getDescription: (results) => {
-        //     return "getBalance";
-        //   },
-        // },
-        // //5 estimationInEth
-        // {
-        //   uri: etherCoreWrapperUri,
-        //   method: "toEth",
-        //   getArgs: (results) => {
-        //     if (!results[2].ok) {
-        //       alert("Invocation failure, please try again!");
-        //       return {};
-        //     }
-
-        //     return {
-        //       wei: results[2].value,
-        //     };
-        //   },
-        //   getDescription: () => {
-        //     return "toEth";
-        //   },
-        // },
-        // 6 result
+        // 3 relayTransaction
         {
           uri: accountAbstractionWrapperUri,
           method: "relayTransaction",
@@ -416,7 +371,7 @@ export const examples: Record<string, Example[]> = {
             }
             console.log("CESAR", results[0]);
             const metaTransactionData = {
-              to: `0x56535D1162011E54aa2F6B003d02Db171c17e41e`,
+              to: storageContractAddress,
               value: "0",
               data: results[0].value,
               operation: "0",
@@ -439,9 +394,11 @@ export const examples: Record<string, Example[]> = {
             };
           },
           getDescription: () => {
-            return "The AA Wrapper 1) checks whether there's a deployed Safe contract on your predicted address. 2) Deploys a Safe contract if there isn't one. 3) Executes the gasless (sponsored) transaction.";
+            return `
+            The AA Wrapper does a few things:\n1) It checks whether there's a deployed Safe contract on your predicted address. 2) Deploys a Safe contract if there isn't one. 3) Executes the gasless (sponsored) transaction.`;
           },
         },
+        // 4 HTTPGet
         {
           uri: "ens/wraps.eth:http@1.1.0",
           method: "get",

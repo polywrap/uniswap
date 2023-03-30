@@ -22,7 +22,7 @@ function ComplexExampleWithClientContainer(
   `;
 
   const Description = styled.div`
-    font-weight: 300;
+    font-weight: 400;
   `;
 
   const { example, id, provider } = props;

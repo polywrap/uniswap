@@ -90,23 +90,23 @@ const SnippetText = styled.div`
   border-radius: 5px;
 `;
 
-const ResultTitle = styled.h3`
+const ErrorTitle = styled.h3`
   font-weight: 400;
   text-align: left;
 `;
 
-const ResultContainer = styled.div`
+const ErrorContainer = styled.div`
   display: flex;
   margin: auto;
   width: 100%;
 `;
 
-const ResultText = styled.div`
+const ErrorText = styled.div`
   margin-top: 1rem;
   max-height: 50vh;
   font-size: 0.9rem;
   overflow: auto;
-  border: 1px solid ${(props) => props.theme.colors[50]};
+  border: 1px solid red;
   border-radius: 5px;
 `;
 
@@ -121,7 +121,9 @@ function ComplexExampleRunner(props: {
   client: PolywrapClient;
 }) {
   const { id, example, client } = props;
-
+  const [lastResult, setLastResult] = useState<InvokeResult | undefined>(
+    undefined
+  );
   const firstStep = example.steps[0];
 
   const [examplesWithResults, setExamplesWithResults] = useState<
@@ -140,34 +142,47 @@ function ComplexExampleRunner(props: {
   ]);
 
   const onExampleResult = (result: InvokeResult, index: number) => {
-    const ewr = [...examplesWithResults];
-    ewr[index].result = result;
-    
-    const results = ewr.map(x => x.result ?? { ok: false } as InvokeResult);
+    setLastResult(result);
 
-    // If this is the latest result and is not the last one expected
-    if(index === (ewr.length - 1) && index < example.steps.length - 1){
-      ewr.push({
-        example: {
-          args: example.steps[index + 1].getArgs(results),
-          description: example.steps[index + 1].getDescription(results),
-          method: example.steps[index + 1].method,
-          uri: example.steps[index + 1].uri,
-          name: example.name,
-          type: "simple"
-        }
-      })
-    } else {
-      console.log("Nope");
+    if (result.ok) {
+      const ewr = [...examplesWithResults];
+      ewr[index].result = result;
+
+      const results = ewr.map(
+        (x) => x.result ?? ({ ok: false } as InvokeResult)
+      );
+
+      // If this is the latest result and is not the last one expected
+      if (index === ewr.length - 1 && index < example.steps.length - 1) {
+        ewr.push({
+          example: {
+            args: example.steps[index + 1].getArgs(results),
+            description: example.steps[index + 1].getDescription(results),
+            method: example.steps[index + 1].method,
+            uri: example.steps[index + 1].uri,
+            name: example.name,
+            type: "simple",
+          },
+        });
+      } else {
+        console.log("Nope");
+      }
+
+      setExamplesWithResults(ewr);
     }
-
-    setExamplesWithResults(ewr);
   };
 
   return (
     <>
       {examplesWithResults.map((ewr, ewrIndex) => (
-        <SimpleExampleRunner client={client} id={id} example={ewr.example} onResult={(result) => {onExampleResult(result, ewrIndex)}} />
+        <SimpleExampleRunner
+          client={client}
+          id={id}
+          example={ewr.example}
+          onResult={(result) => {
+            onExampleResult(result, ewrIndex);
+          }}
+        />
       ))}
     </>
   );
