@@ -197,6 +197,19 @@ export const examples: Record<string, Example[]> = {
       type: "complex",
       steps: [
         {
+          uri: "ens/wraps.eth:logger@1.0.0",
+          method: "log",
+          getArgs: () => {
+            return {
+              level: "INFO",
+              message: "HELLO"
+            };
+          },
+          getDescription: () => {
+            return "test http";
+          },
+        },
+        {
           uri: "ens/wraps.eth:http@1.1.0",
           method: "get",
           getArgs: () => {
@@ -242,13 +255,6 @@ export const examples: Record<string, Example[]> = {
       requiresWallet: true,
       getBuilderConfig: () => {
         //TODO: KEY, RPC
-        const OWNER_ONE_PRIVATE_KEY =
-          "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d";
-        // const provider =
-        //   "https://eth-goerli.g.alchemy.com/v2/xs7E_AOsOwBTRspEDnkoldxihsKveaOn";
-        const SAFE_ADDRESS = "0x5655294c49e7196c21f20551330c2204db2bd670";
-        const signer = new Wallet(OWNER_ONE_PRIVATE_KEY);
-
         const provider = (window as any).ethereum;
 
         return new ClientConfigBuilder()
