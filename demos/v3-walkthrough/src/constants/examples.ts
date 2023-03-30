@@ -22,7 +22,7 @@ import {
   Connection,
   Connections,
   ethereumProviderPlugin,
-} from "@polywrap/ethereum-provider-js";
+} from "@polywrap/ethereum-provider-js-v2";
 import { dateTimePlugin } from "@polywrap/datetime-plugin-js";
 
 const deadline = (new Date().getTime() / 1000 + 1800).toFixed(0);
