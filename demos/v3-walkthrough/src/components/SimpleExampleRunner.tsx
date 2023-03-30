@@ -21,6 +21,11 @@ const Description = styled.div`
   margin-bottom: 1rem;
   font-size: 1rem;
   font-weight: 400;
+  white-space: pre-wrap;
+`;
+
+const Spacer = styled.div`
+  margin: 1rem;
 `;
 
 const Controls = styled.div`
@@ -169,6 +174,7 @@ function SimpleExampleRunner(props: {
               height: "28px",
               marginLeft: "10px",
             }}
+            disabled={waiting}
             onClick={run}
           >
             <text
@@ -230,39 +236,47 @@ function SimpleExampleRunner(props: {
       </SnippetContainer>
       {(waiting || result[id] !== undefined) && (
         <>
-          <ResultTitle>{result[id].ok ? "Result" : "Error"}</ResultTitle>
           {waiting ? (
+            <>
+            <Spacer />
             <Loader />
-          ) : result[id].ok ? (
-            <ResultContainer>
-              <ResultText>
-                <SyntaxHighlighter
-                  showLineNumbers={false}
-                  language="json"
-                  style={syntax}
-                >
-                  {JSON.stringify(result[id], null, 2).replace(
-                    /"([^"]+)":/g,
-                    "$1:"
-                  )}
-                </SyntaxHighlighter>
-              </ResultText>
-            </ResultContainer>
+            </>
+          ) : result[id]?.ok ? (
+            <>
+              <ResultTitle>Result</ResultTitle>
+              <ResultContainer>
+                <ResultText>
+                  <SyntaxHighlighter
+                    showLineNumbers={false}
+                    language="json"
+                    style={syntax}
+                  >
+                    {JSON.stringify(result[id], null, 2).replace(
+                      /"([^"]+)":/g,
+                      "$1:"
+                    )}
+                  </SyntaxHighlighter>
+                </ResultText>
+              </ResultContainer>
+            </>
           ) : (
-            <ErrorContainer>
-              <ErrorText>
-                <SyntaxHighlighter
-                  showLineNumbers={false}
-                  language="json"
-                  style={syntax}
-                >
-                  {JSON.stringify(result[id], null, 2).replace(
-                    /"([^"]+)":/g,
-                    "$1:"
-                  )}
-                </SyntaxHighlighter>
-              </ErrorText>
-            </ErrorContainer>
+            <>
+              <ResultTitle>Error</ResultTitle>
+              <ErrorContainer>
+                <ErrorText>
+                  <SyntaxHighlighter
+                    showLineNumbers={false}
+                    language="json"
+                    style={syntax}
+                  >
+                    {JSON.stringify(result[id], null, 2).replace(
+                      /"([^"]+)":/g,
+                      "$1:"
+                    )}
+                  </SyntaxHighlighter>
+                </ErrorText>
+              </ErrorContainer>
+            </>
           )}
         </>
       )}

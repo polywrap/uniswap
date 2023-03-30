@@ -34,7 +34,7 @@ const accountAbstractionWrapperUri = "wrap://wrapper/account-abstraction";
 const relayerAdapterWrapperUri =
   "wrap://ens/account-abstraction.wraps.eth:relayer-adapter@0.0.1";
 
-const saltNonce = "0x258802387238728372837283782";
+const saltNonce = "0x258802387238728372837283771";
 const connection = {
   networkNameOrChainId: "goerli",
 };
@@ -197,63 +197,6 @@ export const examples: Record<string, Example[]> = {
   ],
   "account-abstraction": [
     {
-      name: "Test",
-      type: "complex",
-      steps: [
-        {
-          uri: "ens/wraps.eth:logger@1.0.0",
-          method: "log",
-          getArgs: () => {
-            return {
-              level: "INFO",
-              message: "HELLO",
-            };
-          },
-          getDescription: () => {
-            return "test http";
-          },
-        },
-        {
-          uri: "ens/wraps.eth:http@1.1.0",
-          method: "get",
-          getArgs: () => {
-            return {
-              url: "https://raw.githubusercontent.com/cbrzn/safe-playground/pileks/feat/execute-sponsored/wrap-build-artifacts/safe/factory/wrap.info",
-            };
-          },
-          getDescription: () => {
-            return "test http";
-          },
-        },
-        {
-          getArgs: () => {
-            return {
-              message: "Hello Polywrap!",
-            };
-          },
-          getDescription: () => {
-            return "We can write out a description here to tell people what we're doing.";
-          },
-          method: "info",
-          uri: "ens/logger.polytest.eth",
-        },
-        {
-          getArgs: (results) => {
-            return {
-              message: results[0].ok ? `${results[0].value}` : "Fail",
-            };
-          },
-          getDescription: (results) => {
-            return `Then we can use the results from all the past invokes! Stupid JSON stringify example: ${JSON.stringify(
-              results[0]
-            )}`;
-          },
-          method: "info",
-          uri: "ens/logger.polytest.eth",
-        },
-      ],
-    },
-    {
       name: "Execute Sponsored Transaction",
       type: "complex",
       requiresWallet: true,
@@ -317,11 +260,13 @@ export const examples: Record<string, Example[]> = {
           getArgs: () => {
             return {
               method: "function store(uint256 num) public",
-              args: [randNumber],
+              args: [`${randNumber}`],
             };
           },
           getDescription: () => {
-            return `In this example, we will invoke the "store" function of a smart contract on address ${storageContractAddress}. In order to invoke this function, we first need to encode it.`;
+            return `In this example, we will invoke the "store" function of a smart contract on address ${storageContractAddress}.
+We will store a random number, in this case ${randNumber}. Refresh this page to get a new one!
+In order to invoke this function, we first need to encode it.`;
           },
         },
         //1 safeAddress
@@ -336,37 +281,16 @@ export const examples: Record<string, Example[]> = {
             };
           },
           getDescription: () => {
-            return `We also need to know the address of our Safe contract. This address is deterministic and is based on a nonce and your wallet's address. For this example, we have hard-coded a nonce, so that you always get the same address.`;
+            return `We also need to know the address of our Safe contract.
+This address is deterministic and is based on a nonce and your wallet's address. For this example, we have hard-coded a nonce, so that you always get the same address.`;
           },
         },
-        //2 estimateTransactionGas
-        {
-          uri: etherCoreWrapperUri,
-          method: "estimateTransactionGas",
-          getArgs: (results) => {
-            if (!results[0].ok || !results[1].ok) {
-              alert("Invocation failure, please try again!");
-              return {};
-            }
-            return {
-              tx: {
-                to: results[1].value,
-                value: "0",
-                data: results[0].value,
-              },
-            };
-          },
-          getDescription: () => {
-            return "Now that we have our encoded function data and our Safe contract address, we want to get an estimate the transaction gas fee.";
-          },
-        },
-        // 3 relayTransaction
+        // 2 relayTransaction
         {
           uri: accountAbstractionWrapperUri,
           method: "relayTransaction",
           getArgs: (results) => {
-            if (!results[0].ok || !results[1].ok || !results[2].ok) {
-              alert("Invocation failure, please try again!");
+            if (!results[0].ok || !results[1].ok) {
               return {};
             }
             console.log("CESAR", results[0]);
@@ -376,8 +300,7 @@ export const examples: Record<string, Example[]> = {
               data: results[0].value,
               operation: "0",
             };
-            const gaslimitWithBuffer = BigNumber.from(results[2].value)
-              .add(250_000)
+            const gaslimitWithBuffer = BigNumber.from(300_000)
               .toString();
 
             const metaTransactionOptions = {
@@ -394,25 +317,41 @@ export const examples: Record<string, Example[]> = {
             };
           },
           getDescription: () => {
-            return `
-            The AA Wrapper does a few things:\n1) It checks whether there's a deployed Safe contract on your predicted address. 2) Deploys a Safe contract if there isn't one. 3) Executes the gasless (sponsored) transaction.`;
+            return `The AA Wrapper's relayTransaction method does a few things:
+1) It checks whether there's a deployed Safe contract on your predicted address.
+2) Deploys a Safe contract if there isn't one.
+3) Executes the gasless (sponsored) transaction using the Gelato Relay.`;
           },
         },
-        // 4 HTTPGet
+        // 3 HTTPGet
         {
           uri: "ens/wraps.eth:http@1.1.0",
           method: "get",
           getArgs: (results) => {
-            if (!results[3].ok) {
-              alert("Invocation failure, please try again!");
+            if (!results[2].ok) {
               return {};
             }
             return {
-              url: `https://relay.gelato.digital/tasks/status/${results[3].value}`,
+              url: `https://relay.gelato.digital/tasks/status/${results[2].value}`,
             };
           },
-          getDescription: () => {
-            return "test http";
+          getDescription: (results) => {
+            if (!results[2].ok) {
+              return "";
+            }
+
+            return `...And that's it!
+The result of the relayTransaction call is the ID of a gassless transaction task on Gelato.
+You can fetch either by running this last example, or by simply visiting:
+
+https://relay.gelato.digital/tasks/status/${results[2].value}
+
+Once your task is completed (taskState = "ExecSuccess") you can check the value stored in our storage contract:
+
+https://goerli.etherscan.io/address/${storageContractAddress}#readContract
+
+It should be your random value, unless somebody already rewrote it!
+`;
           },
         },
       ],

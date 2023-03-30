@@ -6,6 +6,7 @@ import SimpleExampleRunner from "./SimpleExampleRunner";
 import { SimpleExample } from "../constants/examples";
 import { InvokeResult } from "@polywrap/client-js";
 import { PlayArrow, Settings, ManageSearch } from "@mui/icons-material";
+import { useActiveWrapper } from "../hooks/useActiveWrapper";
 
 function SimpleExampleContainer(props: {
   example: SimpleExample;
@@ -13,6 +14,7 @@ function SimpleExampleContainer(props: {
   onResult?: (result: InvokeResult) => void;
 }) {
   const client = usePolywrapClient();
+  const wrapper = useActiveWrapper();
 
   const Header = styled.div`
     display: flex;
@@ -46,7 +48,7 @@ function SimpleExampleContainer(props: {
     <>
       <Header>
         <Title>{name}</Title>
-        <DocsLink onClick={() => navigate("/function/" + method)}>
+        <DocsLink onClick={() => navigate(`${wrapper}/function/${method}`)}>
           <DocsText>docs</DocsText>
           <ManageSearch />
         </DocsLink>

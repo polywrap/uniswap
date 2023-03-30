@@ -100,7 +100,7 @@ function EnumDocs() {
           Enum: <TitleEnumName>{enumDef.type}</TitleEnumName>
         </Title>
         <SchemaLink
-          onClick={() => navigate("/schema")}
+          onClick={() => navigate(`/${wrapper}/schema`)}
         >
           <SchemaText>schema</SchemaText>
           <UnfoldMore />

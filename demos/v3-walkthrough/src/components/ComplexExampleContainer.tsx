@@ -4,6 +4,9 @@ import styled from "styled-components";
 import { ComplexExample } from "../constants/examples";
 import ComplexExampleRunner from "./ComplexExampleRunner";
 import { Goerli, useEthers } from "@usedapp/core";
+import Button from "./Button";
+
+const buttonStyle = { padding: "0.5rem 1rem" };
 
 type ComplexExampleContainerProps = { example: ComplexExample; id: string };
 const CustomProvider = createPolywrapProvider("custom");
@@ -46,13 +49,22 @@ function ComplexExampleWithClientContainer(
 
 function ComplexExampleContainer(props: ComplexExampleContainerProps) {
   const { example } = props;
-  const { account, deactivate, activateBrowserWallet, chainId, switchNetwork, error } = useEthers();
+  const {
+    account,
+    deactivate,
+    activateBrowserWallet,
+    chainId,
+    switchNetwork,
+    error,
+  } = useEthers();
   console.log("ERR", error);
   if (example.requiresWallet && !account) {
     return (
       <>
         This example requires a connected wallet.
-        <button onClick={() => activateBrowserWallet()}>Connect wallet</button>
+        <Button style={buttonStyle} onClick={() => activateBrowserWallet()}>
+          Connect wallet
+        </Button>
       </>
     );
   }
@@ -61,7 +73,9 @@ function ComplexExampleContainer(props: ComplexExampleContainerProps) {
     return (
       <>
         You must be connected to the Goerli testnet for this example
-        <button onClick={async () => await switchNetwork(Goerli.chainId)}>Switch to Goerli</button>
+        <Button style={buttonStyle} onClick={async () => await switchNetwork(Goerli.chainId)}>
+          Switch to Goerli
+        </Button>
       </>
     );
   }
@@ -78,7 +92,9 @@ function ComplexExampleContainer(props: ComplexExampleContainerProps) {
         resolvers={builderConfig.resolvers}
         wrappers={builderConfig.wrappers}
       >
-        {example.requiresWallet && <button onClick={() => deactivate()}>Disconnect</button>}
+        {example.requiresWallet && (
+          <Button style={buttonStyle} onClick={() => deactivate()}>Disconnect wallet</Button>
+        )}
         <ComplexExampleWithClientContainer {...props} provider={"custom"} />
       </CustomProvider>
     );

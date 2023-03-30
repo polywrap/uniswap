@@ -63,6 +63,9 @@ function HeaderButton(props: {
     border-right-width: 1px;
     ` : ""}
     ${props.onClick ? "cursor: pointer;" : ""}
+    &:hover {
+      background-color: ${props.theme.colors[700]};
+    }
   `;
   Inner.defaultProps = {
     sx: {
