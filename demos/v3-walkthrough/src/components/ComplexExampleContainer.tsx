@@ -1,8 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  createPolywrapProvider,
-  usePolywrapClient,
-} from "@polywrap/react";
+import { createPolywrapProvider, usePolywrapClient } from "@polywrap/react";
 import styled from "styled-components";
 import { ComplexExample } from "../constants/examples";
 import ComplexExampleRunner from "./ComplexExampleRunner";
@@ -28,16 +25,19 @@ function ComplexExampleWithClientContainer(
   `;
 
   const { example, id, provider } = props;
-  const { name, method } = example;
+  const { name } = example;
   const navigate = useNavigate();
   const client = usePolywrapClient({ provider });
-  console.log(client.getConfig());
+
   return (
     <>
       <Header>
         <Title>{name}</Title>
       </Header>
-      <Description>This is a multi-step example. New examples will appear below the existing ones once the existing ones finish running.</Description>
+      <Description>
+        This is a multi-step example. New examples will appear below the
+        existing ones once the existing ones finish running.
+      </Description>
       <ComplexExampleRunner client={client} example={example} id={id} />
     </>
   );

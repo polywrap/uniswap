@@ -11,6 +11,8 @@ import Sidebar from "./layout/Sidebar";
 import Body from "./layout/Body";
 
 import "./styles/globals.css";
+import { Config, DAppProvider, Goerli } from "@usedapp/core";
+import { getDefaultProvider } from "ethers";
 
 const Html = styled.html`
   background-color: ${(props) => props.theme.colors[900]};
@@ -31,28 +33,36 @@ const AppDiv = styled.div`
 function App() {
   // Get the default client config
   const clientConfig = DefaultBundle.getConfig();
+  const usedappConfig: Config = {
+    networks: [Goerli],
+    readOnlyUrls: {
+      [Goerli.chainId]: getDefaultProvider('goerli')
+    }
+  };
 
   return (
     <ThemeProvider>
       <Html>
         <AppDiv className="app">
           <HashRouter>
-            <PolywrapProvider {...clientConfig}>
-              <Header />
-              <AppContainer>
-                <Routes>
-                  <Route
-                    path="/:wrapper?/*"
-                    element={
-                      <>
-                        <Sidebar />
-                        <Body />
-                      </>
-                    }
-                  />
-                </Routes>
-              </AppContainer>
-            </PolywrapProvider>
+            <DAppProvider config={usedappConfig}>
+              <PolywrapProvider {...clientConfig}>
+                <Header />
+                <AppContainer>
+                  <Routes>
+                    <Route
+                      path="/:wrapper?/*"
+                      element={
+                        <>
+                          <Sidebar />
+                          <Body />
+                        </>
+                      }
+                    />
+                  </Routes>
+                </AppContainer>
+              </PolywrapProvider>
+            </DAppProvider>
           </HashRouter>
         </AppDiv>
       </Html>

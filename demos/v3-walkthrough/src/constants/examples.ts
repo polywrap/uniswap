@@ -1,4 +1,9 @@
-import { uniswapV3Uri } from "./uris";
+import {
+  accountAbstractionUri,
+  gelatoRelayUri,
+  relayUri,
+  uniswapV3Uri,
+} from "./uris";
 import WETH from "./inputs/WETH.json";
 import USDC from "./inputs/USDC.json";
 import pool from "./inputs/pool.json";
@@ -9,11 +14,29 @@ import {
   BuilderConfig,
   ClientConfigBuilder,
   InvokeResult,
+  IWrapPackage,
   PolywrapClient,
 } from "@polywrap/client-js";
-// import swapCallParameters from "./inputs/swapCallParameters.json"
+import { BigNumber, Wallet } from "ethers";
+import {
+  Connection,
+  Connections,
+  ethereumProviderPlugin,
+} from "@polywrap/ethereum-provider-js";
+import { dateTimePlugin } from "@polywrap/datetime-plugin-js";
 
 const deadline = (new Date().getTime() / 1000 + 1800).toFixed(0);
+
+const etherUtilsWrapperUri = "wrap://ens/ethers.wraps.eth:utils@0.1.0";
+const etherCoreWrapperUri = "wrap://ens/wraps.eth:ethereum@2.0.0";
+const accountAbstractionWrapperUri = "wrap://wrapper/account-abstraction";
+const relayerAdapterWrapperUri =
+  "wrap://ens/account-abstraction.wraps.eth:relayer-adapter@0.0.1";
+
+const saltNonce = "0x258802387238728372837283782";
+const connection = {
+  networkNameOrChainId: "goerli",
+};
 
 export type SimpleExample = {
   name: string;
@@ -27,7 +50,6 @@ export type SimpleExample = {
 export type ComplexExample = {
   name: string;
   type: "complex";
-  method: string;
   getBuilderConfig?: () => BuilderConfig;
   steps: ComplexExampleStep[];
 };
@@ -172,17 +194,11 @@ export const examples: Record<string, Example[]> = {
     {
       name: "Test",
       type: "complex",
-      method: "asdf",
-      getBuilderConfig: () => {
-        return new ClientConfigBuilder()
-          .addDefaults()
-          .config;
-      },
       steps: [
         {
           getArgs: () => {
             return {
-              message: "Hello Polywrap!"
+              message: "Hello Polywrap!",
             };
           },
           getDescription: () => {
@@ -194,14 +210,215 @@ export const examples: Record<string, Example[]> = {
         {
           getArgs: (results) => {
             return {
-              message: results[0].ok ? `${results[0].value}` : "Fail"
+              message: results[0].ok ? `${results[0].value}` : "Fail",
             };
           },
           getDescription: (results) => {
-            return `Then we can use the results from all the past invokes! Stupid JSON stringify example: ${JSON.stringify(results[0])}`;
+            return `Then we can use the results from all the past invokes! Stupid JSON stringify example: ${JSON.stringify(
+              results[0]
+            )}`;
           },
           method: "info",
           uri: "ens/logger.polytest.eth",
+        },
+      ],
+    },
+    {
+      name: "Execute sponsored transaction",
+      type: "complex",
+      getBuilderConfig: () => {
+        //TODO: KEY, RPC
+        const OWNER_ONE_PRIVATE_KEY =
+          "";
+        const provider =
+          "";
+        const SAFE_ADDRESS = "0x5655294c49e7196c21f20551330c2204db2bd670";
+        const signer = new Wallet(OWNER_ONE_PRIVATE_KEY);
+
+        return new ClientConfigBuilder()
+          .addDefaults()
+          .addPackages({
+            "wrap://ens/wraps.eth:ethereum-provider@2.0.0":
+              ethereumProviderPlugin({
+                connections: new Connections({
+                  networks: {
+                    goerli: new Connection({
+                      provider,
+                      signer,
+                    }),
+                  },
+                  defaultNetwork: "goerli",
+                }),
+              }) as IWrapPackage,
+            "wrap://ens/datetime.polywrap.eth": dateTimePlugin(
+              {}
+            ) as IWrapPackage,
+          })
+          .addEnv("wrap://ens/safe.wraps.eth:manager@0.1.0", {
+            safeAddress: SAFE_ADDRESS,
+            connection,
+          })
+          .addInterfaceImplementation(
+            "wrap://ens/wraps.eth:ethereum-provider@2.0.0",
+            "wrap://ens/wraps.eth:ethereum-provider@2.0.0"
+          )
+          .addEnv(accountAbstractionWrapperUri, {
+            connection,
+          })
+          .addEnv(relayerAdapterWrapperUri, {
+            relayerApiKey: "AiaCshYRyAUzTNfZZb8LftJaAl2SS3I8YwhJJXc5J7A_",
+          })
+          .addRedirect(accountAbstractionWrapperUri, accountAbstractionUri)
+          .addRedirect(
+            etherCoreWrapperUri,
+            "wrap://ipfs/QmUX4nafTqncmtucMSJGKVNB6WbEaRJLWJHMVMcZy751S9"
+          )
+          .addRedirect(relayerAdapterWrapperUri, relayUri)
+          .addRedirect(
+            "wrap://ens/gelato.wraps.eth:relayer@0.0.1",
+            gelatoRelayUri
+          ).config;
+      },
+      steps: [
+        //0 encodedFunction
+        {
+          uri: etherUtilsWrapperUri,
+          method: "encodeFunction",
+          getArgs: () => {
+            return {
+              method: "function store(uint256 num) public",
+              args: ["7"],
+            };
+          },
+          getDescription: () => {
+            return "First, we need to encode our function call.";
+          },
+        },
+        //1 gasLimit
+        {
+          uri: etherCoreWrapperUri,
+          method: "estimateTransactionGas",
+          getArgs: (results) => {
+            if (!results[0].ok) {
+              alert("Invocation failure, please try again!");
+              return {};
+            }
+            return {
+              tx: {
+                to: "0x56535D1162011E54aa2F6B003d02Db171c17e41e",
+                value: "0",
+                data: results[0].value,
+              },
+            };
+          },
+          getDescription: () => {
+            return "Now that we have our encoded function data, we want to estimate the transaction gas fee.";
+          },
+        },
+        //2 estimation
+        {
+          uri: relayerAdapterWrapperUri,
+          method: "getEstimateFee",
+          getArgs: (results) => {
+            if (!results[1].ok) {
+              alert("Invocation failure, please try again!");
+              return {};
+            }
+            const gaslimitWithBuffer = BigNumber.from(results[1].value)
+              .add(250_000)
+              .toString();
+            return {
+              chainId: 5,
+              gasLimit: gaslimitWithBuffer,
+            };
+          },
+          getDescription: () => {
+            return "Cesar explain";
+          },
+        },
+        //3 safeAddress
+        {
+          uri: accountAbstractionWrapperUri,
+          method: "getSafeAddress",
+          getArgs: (results) => {
+            return {
+              config: {
+                saltNonce,
+              },
+            };
+          },
+          getDescription: () => {
+            return "getSafeAddress";
+          },
+        },
+        //4 safeBalance
+        {
+          uri: etherCoreWrapperUri,
+          method: "getBalance",
+          getArgs: (results) => {
+            return {
+              address: results[3].ok ? results[3].value : "INVOCATION FAILURE",
+              connection: connection,
+            };
+          },
+          getDescription: (results) => {
+            return "getBalance";
+          },
+        },
+        //5 estimationInEth
+        {
+          uri: etherCoreWrapperUri,
+          method: "toEth",
+          getArgs: (results) => {
+            if (!results[2].ok) {
+              alert("Invocation failure, please try again!");
+              return {};
+            }
+
+            return {
+              wei: results[2].value,
+            };
+          },
+          getDescription: () => {
+            return "toEth";
+          },
+        },
+        // 6 result
+        {
+          uri: accountAbstractionWrapperUri,
+          method: "relayTransaction",
+          getArgs: (results) => {
+            if (!results[0].ok || !results[1].ok) {
+              alert("Invocation failure, please try again!");
+              return {};
+            }
+
+            const metaTransactionData = {
+              to: "0x56535D1162011E54aa2F6B003d02Db171c17e41e",
+              value: "0",
+              data: results[0].value,
+              operation: "0",
+            };
+            const gaslimitWithBuffer = BigNumber.from(results[1].value)
+              .add(250_000)
+              .toString();
+
+            const metaTransactionOptions = {
+              gasLimit: gaslimitWithBuffer,
+              isSponsored: true,
+            };
+
+            return {
+              transaction: metaTransactionData,
+              options: metaTransactionOptions,
+              config: {
+                saltNonce,
+              },
+            };
+          },
+          getDescription: () => {
+            return "ASDF";
+          },
         },
       ],
     },
