@@ -66,6 +66,7 @@ const SnippetText = styled.div`
 const ResultTitle = styled.h3`
   font-weight: 400;
   text-align: left;
+  margin-bottom: 0rem;
 `;
 
 const ResultContainer = styled.div`
@@ -76,6 +77,7 @@ const ResultContainer = styled.div`
 
 const ResultText = styled.div`
   margin-top: 1rem;
+  margin-bottom: 1rem;
   max-height: 50vh;
   font-size: 0.90rem;
   overflow: auto;

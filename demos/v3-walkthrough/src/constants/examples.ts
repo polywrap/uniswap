@@ -50,6 +50,7 @@ export type SimpleExample = {
 export type ComplexExample = {
   name: string;
   type: "complex";
+  requiresWallet?: boolean;
   getBuilderConfig?: () => BuilderConfig;
   steps: ComplexExampleStep[];
 };
@@ -196,6 +197,18 @@ export const examples: Record<string, Example[]> = {
       type: "complex",
       steps: [
         {
+          uri: "ens/wraps.eth:http@1.1.0",
+          method: "get",
+          getArgs: () => {
+            return {
+              url: "https://raw.githubusercontent.com/cbrzn/safe-playground/pileks/feat/execute-sponsored/wrap-build-artifacts/safe/factory/wrap.info",
+            };
+          },
+          getDescription: () => {
+            return "test http";
+          },
+        },
+        {
           getArgs: () => {
             return {
               message: "Hello Polywrap!",
@@ -226,14 +239,17 @@ export const examples: Record<string, Example[]> = {
     {
       name: "Execute sponsored transaction",
       type: "complex",
+      requiresWallet: true,
       getBuilderConfig: () => {
         //TODO: KEY, RPC
         const OWNER_ONE_PRIVATE_KEY =
-          "";
-        const provider =
-          "";
+          "0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d";
+        // const provider =
+        //   "https://eth-goerli.g.alchemy.com/v2/xs7E_AOsOwBTRspEDnkoldxihsKveaOn";
         const SAFE_ADDRESS = "0x5655294c49e7196c21f20551330c2204db2bd670";
         const signer = new Wallet(OWNER_ONE_PRIVATE_KEY);
+
+        const provider = (window as any).ethereum;
 
         return new ClientConfigBuilder()
           .addDefaults()
@@ -244,7 +260,6 @@ export const examples: Record<string, Example[]> = {
                   networks: {
                     goerli: new Connection({
                       provider,
-                      signer,
                     }),
                   },
                   defaultNetwork: "goerli",
@@ -254,10 +269,10 @@ export const examples: Record<string, Example[]> = {
               {}
             ) as IWrapPackage,
           })
-          .addEnv("wrap://ens/safe.wraps.eth:manager@0.1.0", {
-            safeAddress: SAFE_ADDRESS,
-            connection,
-          })
+          // .addEnv("wrap://ens/safe.wraps.eth:manager@0.1.0", {
+          //   safeAddress: SAFE_ADDRESS,
+          //   connection,
+          // })
           .addInterfaceImplementation(
             "wrap://ens/wraps.eth:ethereum-provider@2.0.0",
             "wrap://ens/wraps.eth:ethereum-provider@2.0.0"
@@ -294,50 +309,9 @@ export const examples: Record<string, Example[]> = {
             return "First, we need to encode our function call.";
           },
         },
-        //1 gasLimit
+        //2 gasLimit
         {
-          uri: etherCoreWrapperUri,
-          method: "estimateTransactionGas",
-          getArgs: (results) => {
-            if (!results[0].ok) {
-              alert("Invocation failure, please try again!");
-              return {};
-            }
-            return {
-              tx: {
-                to: "0x56535D1162011E54aa2F6B003d02Db171c17e41e",
-                value: "0",
-                data: results[0].value,
-              },
-            };
-          },
-          getDescription: () => {
-            return "Now that we have our encoded function data, we want to estimate the transaction gas fee.";
-          },
-        },
-        //2 estimation
-        {
-          uri: relayerAdapterWrapperUri,
-          method: "getEstimateFee",
-          getArgs: (results) => {
-            if (!results[1].ok) {
-              alert("Invocation failure, please try again!");
-              return {};
-            }
-            const gaslimitWithBuffer = BigNumber.from(results[1].value)
-              .add(250_000)
-              .toString();
-            return {
-              chainId: 5,
-              gasLimit: gaslimitWithBuffer,
-            };
-          },
-          getDescription: () => {
-            return "Cesar explain";
-          },
-        },
-        //3 safeAddress
-        {
+          //1 safeAddress
           uri: accountAbstractionWrapperUri,
           method: "getSafeAddress",
           getArgs: (results) => {
@@ -351,55 +325,97 @@ export const examples: Record<string, Example[]> = {
             return "getSafeAddress";
           },
         },
-        //4 safeBalance
         {
           uri: etherCoreWrapperUri,
-          method: "getBalance",
-          getArgs: (results) => {
-            return {
-              address: results[3].ok ? results[3].value : "INVOCATION FAILURE",
-              connection: connection,
-            };
-          },
-          getDescription: (results) => {
-            return "getBalance";
-          },
-        },
-        //5 estimationInEth
-        {
-          uri: etherCoreWrapperUri,
-          method: "toEth",
-          getArgs: (results) => {
-            if (!results[2].ok) {
-              alert("Invocation failure, please try again!");
-              return {};
-            }
-
-            return {
-              wei: results[2].value,
-            };
-          },
-          getDescription: () => {
-            return "toEth";
-          },
-        },
-        // 6 result
-        {
-          uri: accountAbstractionWrapperUri,
-          method: "relayTransaction",
+          method: "estimateTransactionGas",
           getArgs: (results) => {
             if (!results[0].ok || !results[1].ok) {
               alert("Invocation failure, please try again!");
               return {};
             }
+            return {
+              tx: {
+                to: results[1].value,
+                value: "0",
+                data: results[0].value,
+              },
+            };
+          },
+          getDescription: () => {
+            return "Now that we have our encoded function data, we want to get an estimate the transaction gas fee.";
+          },
+        },
+        // //2 estimation
+        // {
+        //   uri: relayerAdapterWrapperUri,
+        //   method: "getEstimateFee",
+        //   getArgs: (results) => {
+        //     if (!results[1].ok) {
+        //       alert("Invocation failure, please try again!");
+        //       return {};
+        //     }
+        //     const gaslimitWithBuffer = BigNumber.from(results[1].value)
+        //       .add(250_000)
+        //       .toString();
+        //     return {
+        //       chainId: 5,
+        //       gasLimit: gaslimitWithBuffer,
+        //     };
+        //   },
+        //   getDescription: () => {
+        //     return "Cesar explain";
+        //   },
+        // },
+        //3 safeAddress
+        // //4 safeBalance
+        // {
+        //   uri: etherCoreWrapperUri,
+        //   method: "getBalance",
+        //   getArgs: (results) => {
+        //     return {
+        //       address: results[3].ok ? results[3].value : "INVOCATION FAILURE",
+        //       connection: connection,
+        //     };
+        //   },
+        //   getDescription: (results) => {
+        //     return "getBalance";
+        //   },
+        // },
+        // //5 estimationInEth
+        // {
+        //   uri: etherCoreWrapperUri,
+        //   method: "toEth",
+        //   getArgs: (results) => {
+        //     if (!results[2].ok) {
+        //       alert("Invocation failure, please try again!");
+        //       return {};
+        //     }
 
+        //     return {
+        //       wei: results[2].value,
+        //     };
+        //   },
+        //   getDescription: () => {
+        //     return "toEth";
+        //   },
+        // },
+        // 6 result
+        {
+          uri: accountAbstractionWrapperUri,
+          method: "relayTransaction",
+          getArgs: (results) => {
+            if (!results[0].ok || !results[1].ok || !results[2].ok) {
+              alert("Invocation failure, please try again!");
+              return {};
+            }
+            console.log("CESAR", results[0]);
             const metaTransactionData = {
-              to: "0x56535D1162011E54aa2F6B003d02Db171c17e41e",
+              to: `0x56535D1162011E54aa2F6B003d02Db171c17e41e`,
               value: "0",
               data: results[0].value,
               operation: "0",
             };
-            const gaslimitWithBuffer = BigNumber.from(results[1].value)
+            const gaslimitWithBuffer = BigNumber.from(results[2].value)
               .add(250_000)
               .toString();
 
@@ -417,7 +433,23 @@ export const examples: Record<string, Example[]> = {
             };
           },
           getDescription: () => {
-            return "ASDF";
+            return "The AA Wrapper 1) checks whether there's a deployed Safe contract on your predicted address. 2) Deploys a Safe contract if there isn't one. 3) Executes the gasless (sponsored) transaction.";
+          },
+        },
+        {
+          uri: "ens/wraps.eth:http@1.1.0",
+          method: "get",
+          getArgs: (results) => {
+            if (!results[3].ok) {
+              alert("Invocation failure, please try again!");
+              return {};
+            }
+            return {
+              url: `https://relay.gelato.digital/tasks/status/${results[3].value}`,
+            };
+          },
+          getDescription: () => {
+            return "test http";
           },
         },
       ],
