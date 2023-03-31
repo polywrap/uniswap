@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { UnfoldMore } from "@mui/icons-material";
 import { useParams, useNavigate } from "react-router-dom";
 import { usePolywrapClient } from "@polywrap/react";
+import { ImportedObjectDefinition } from "@polywrap/wrap-manifest-types-js";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
 import { uniswapV3Uri } from "../constants";
@@ -57,7 +58,11 @@ const PropertyName = styled.span`
   font-weight: bold;
 `;
 
-function ObjectDocs() {
+interface ObjectDocsProps {
+  import?: boolean;
+}
+
+function ObjectDocs(props: ObjectDocsProps) {
   const navigate = useNavigate();
   const client = usePolywrapClient();
   const { manifest, error, loading } = useWrapManifest({
@@ -82,7 +87,11 @@ function ObjectDocs() {
   }
 
   // Find the object
-  const objects = abi.objectTypes || [];
+  const objects = (
+    props.import ?
+    abi.importedObjectTypes :
+    abi.objectTypes
+  ) || [];
   const object = objects.find((object) => object.type === id);
 
   if (!object) {
@@ -122,6 +131,14 @@ function ObjectDocs() {
           }
         }}
       />
+      {props.import && (
+        <>
+          <SectionTitle>
+          URI
+          </SectionTitle>
+          {(object as ImportedObjectDefinition).uri}
+        </>
+      )}
       {object?.properties?.length && (
         <>
           <SectionTitle>

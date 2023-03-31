@@ -91,6 +91,8 @@ function Schema() {
       methods={abi.moduleType?.methods}
       objects={abi.objectTypes}
       enums={abi.enumTypes}
+      importedObjects={abi.importedObjectTypes}
+      importedEnums={abi.importedEnumTypes}
       onTypeNameClick={(name) => {
         const route = getTypeNameRoute(name, abi);
 
