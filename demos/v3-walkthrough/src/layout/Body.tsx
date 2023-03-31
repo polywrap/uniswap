@@ -2,7 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import styled from "styled-components";
 
-import Intro from "../pages/Intro";
+import Readme from "../pages/Readme";
 import Schema from "../pages/Schema";
 import Example from "../pages/Example";
 import FunctionDocs from "../pages/FunctionDocs";
@@ -23,7 +23,7 @@ function Body() {
   return (
     <Main>
       <Routes>
-        <Route path="/" element={<Intro />} />
+        <Route path="/" element={<Readme />} />
         <Route path="/schema" element={<Schema />} />
         <Route path="/example/:id" element={<Example />} />
         <Route path="/function/:id" element={<FunctionDocs />} />

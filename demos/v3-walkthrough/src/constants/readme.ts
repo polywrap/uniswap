@@ -42,7 +42,7 @@ With your client successfully configured, you can now run any function on the Un
 
 You can execute functions in TypeScript with the \`client.invoke(...)\` syntax like so:
 \`\`\`typescript
-await client.invoke<TxReceipt>({
+await client.invoke({
   uri: "wrap://ens/uniswap.wraps.eth:v3",
   method: "fetchPoolFromTokens",
   args: {...}
