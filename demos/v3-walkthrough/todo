@@ -1,12 +1,4 @@
-# README
-- [ ] What is v3? Simple 1 liner about Uni V3.
-- [ ] point: why wrapper? what is the additional thing they're getting?
-- [ ] link to source code
-- [ ] how to setup the polywrap client to use uniswap v3
-- [ ] needs some intro/context part about what a wrapper is. there should also be more explanatory info about what the wrapper is doing as the experience goes on. maybe instead of the loading icon, some text could pop up to explain what's happening?
-- [ ] get the value-prop of Polywrap across on the home page
-
-# Misc
+- [ ] maybe instead of the loading icon, some text could pop up to explain what's happening?
 - [ ] copy-to-clipboard button
 - [ ] lazy: connect wallet
 - [ ] more examples (reference: https://docs.uniswap.org/sdk/v3/overview)

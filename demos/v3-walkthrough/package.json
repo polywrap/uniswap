@@ -18,10 +18,12 @@
     "@polywrap/schema-compose": "~0.10.0-pre",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-markdown": "8.0.6",
     "react-router-dom": "6.9.0",
     "react-scripts": "^4.0.3",
     "react-spring": "^8.0.27",
     "react-syntax-highlighter": "15.5.0",
+    "remark-external-links": "9.0.1",
     "spectacle": "9.7.0",
     "styled-components": "^5.3.9"
   },
