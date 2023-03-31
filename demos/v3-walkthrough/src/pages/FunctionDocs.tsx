@@ -183,7 +183,7 @@ function FunctionDocs() {
           </SectionTitle>
           <ExampleList>
             {exampleRefs.map((example) => (
-              <ExampleListItem onClick={() => navigate("/example/" + example)}>
+              <ExampleListItem onClick={() => navigate(`${wrapper}/example/${example}`)}>
                 <span style={{ display: "flex" }}>
                   <Launch style={{ paddingRight: "0.5em" }} />
                   {example}
