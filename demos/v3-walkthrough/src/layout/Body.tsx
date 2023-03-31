@@ -9,6 +9,7 @@ import FunctionDocs from "../pages/FunctionDocs";
 import ObjectDocs from "../pages/ObjectDocs";
 import EnumDocs from "../pages/EnumDocs";
 import NoMatch from "../pages/NoMatch";
+import Readme from "../pages/Readme";
 
 const Main = styled.main`
   padding-bottom: 50px;
@@ -23,7 +24,7 @@ function Body() {
   return (
     <Main>
       <Routes>
-        <Route path="/" element={<Intro />} />
+        <Route path="/" element={<Readme />} />
         <Route path="/schema" element={<Schema />} />
         <Route path="/example/:id" element={<Example />} />
         <Route path="/function/:id" element={<FunctionDocs />} />

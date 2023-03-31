@@ -30,7 +30,7 @@ const deadline = (new Date().getTime() / 1000 + 1800).toFixed(0);
 
 const etherUtilsWrapperUri = "wrap://ens/ethers.wraps.eth:utils@0.1.0";
 const etherCoreWrapperUri = "wrap://ens/wraps.eth:ethereum@2.0.0";
-const accountAbstractionWrapperUri = "wrap://wrapper/account-abstraction";
+const accountAbstractionWrapperUri = "wrap://ens/aa.safe.wraps.eth:core@0.1.0";
 const relayerAdapterWrapperUri =
   "wrap://ens/account-abstraction.wraps.eth:relayer-adapter@0.0.1";
 
