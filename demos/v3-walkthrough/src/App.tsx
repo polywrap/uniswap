@@ -12,7 +12,7 @@ import Body from "./layout/Body";
 
 import "./styles/globals.css";
 
-const Html = styled.html`
+const Root = styled.div`
   background-color: ${props => props.theme.colors[900]};
   color: ${props => props.theme.colors[50]};
 `;
@@ -34,7 +34,7 @@ function App() {
 
   return (
     <ThemeProvider>
-      <Html>
+      <Root>
         <AppDiv className="app">
           <HashRouter>
           <PolywrapProvider {...defaultConfig}>
@@ -46,7 +46,7 @@ function App() {
           </PolywrapProvider>
           </HashRouter>
         </AppDiv>
-      </Html>
+      </Root>
     </ThemeProvider>
   );
 }

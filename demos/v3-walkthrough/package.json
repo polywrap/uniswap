@@ -18,6 +18,7 @@
     "@polywrap/schema-compose": "~0.10.0-pre",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-markdown": "8.0.6",
     "react-router-dom": "6.9.0",
     "react-scripts": "^4.0.3",
     "react-spring": "^8.0.27",
