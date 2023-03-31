@@ -317,10 +317,11 @@ This address is deterministic and is based on a nonce and your wallet's address.
             };
           },
           getDescription: () => {
-            return `The AA Wrapper's relayTransaction method does a few things:
+            return `Now it's time to execute the gasless transaction!
+The Account Abstraction Wrapper's relayTransaction method allows us to perform a gasless transaction by performing the following steps:
 1) It checks whether there's a deployed Safe contract on your predicted address.
-2) Deploys a Safe contract if there isn't one.
-3) Executes the gasless (sponsored) transaction using the Gelato Relay.`;
+2) It deploys a Safe contract to the predicted address if there isn't one.
+3) It executes the gasless (sponsored) transaction using the Gelato Relay.`;
           },
         },
         // 3 HTTPGet
@@ -341,7 +342,7 @@ This address is deterministic and is based on a nonce and your wallet's address.
             }
 
             return `...And that's it!
-The result of the relayTransaction call is the ID of a gassless transaction task on Gelato.
+The result of the relayTransaction call is the ID of a gasless transaction task on Gelato.
 You can fetch either by running this last example, or by simply visiting:
 
 https://relay.gelato.digital/tasks/status/${results[2].value}
