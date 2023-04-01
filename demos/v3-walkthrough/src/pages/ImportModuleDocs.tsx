@@ -5,7 +5,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { usePolywrapClient } from "@polywrap/react";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
-import { uniswapV3Uri } from "../constants";
+import { useActiveWrapper } from "../hooks/useActiveWrapper";
+import { uniswapV3Uri, wrappers } from "../constants";
 import RenderSchema from "../components/RenderSchema";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
@@ -47,9 +48,10 @@ const SectionTitle = styled.h3``;
 function ImportModuleDocs() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
+  const wrapper = useActiveWrapper();
   const { manifest, error, loading } = useWrapManifest({
     client,
-    uri: uniswapV3Uri
+    uri: wrappers[wrapper]
   });
   const { id } = useParams<"id">();
 
@@ -73,6 +75,8 @@ function ImportModuleDocs() {
   const module = importedModules.find((module) => module.type === id);
 
   if (!module) {
+    console.log(id);
+    console.log(abi.importedModuleTypes);
     const message = `Unable to find module "${id}".`;
     console.error(message);
     return (<div>{message}</div>);
@@ -99,7 +103,7 @@ function ImportModuleDocs() {
       <RenderSchema
         importedModules={[module]}
         onTypeNameClick={(name) => {
-          const route = getTypeNameRoute(name, abi);
+          const route = getTypeNameRoute(name, abi, wrapper);
 
           if (route) {
             navigate(route);

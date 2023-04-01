@@ -126,12 +126,6 @@ function Sidebar() {
   const enums = abi?.enumTypes || [];
   const importedEnums = abi?.importedEnumTypes || [];
   const importedModules = abi?.importedModuleTypes || [];
-  const dependencies = [
-    ...(abi?.importedEnumTypes?.map((i) => i.uri) || []),
-    ...(abi?.importedEnvTypes?.map((i) => i.uri) || []),
-    ...(abi?.importedModuleTypes?.map((i) => i.uri) || []),
-    ...(abi?.importedObjectTypes?.map((i) => i.uri) || []),
-  ].filter((v, i, a) => a.indexOf(v) === i);
 
   return (
     <SidebarContainer className="sidebar">
@@ -216,7 +210,7 @@ function Sidebar() {
         <SidebarSection name="Import Objects">
           {importedObjects.map((i) => (
             <SidebarItem onClick={() =>
-              navigate("/import/object/" + i.type)
+              navigate(`/${wrapper}/import/object/${i.type}`)
             }>
               {i.type}
             </SidebarItem>
@@ -227,7 +221,7 @@ function Sidebar() {
         <SidebarSection name="Import Enums">
           {importedEnums.map((i) => (
             <SidebarItem onClick={() =>
-              navigate("/import/enum/" + i.type)
+              navigate(`/${wrapper}/import/enum/${i.type}`)
             }>
               {i.type}
             </SidebarItem>
@@ -238,18 +232,9 @@ function Sidebar() {
         <SidebarSection name="Import Modules">
           {importedModules.map((i) => (
             <SidebarItem onClick={() =>
-              navigate("/import/module/" + i.type)
+              navigate(`/${wrapper}/import/module/${i.type}`)
             }>
               {i.type}
-            </SidebarItem>
-          ))}
-        </SidebarSection>
-      )}
-      {dependencies && (
-        <SidebarSection name="Dependencies">
-          {dependencies.map((i) => (
-            <SidebarItem>
-              {i}
             </SidebarItem>
           ))}
         </SidebarSection>
