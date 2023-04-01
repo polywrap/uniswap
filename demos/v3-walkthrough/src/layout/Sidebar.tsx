@@ -109,12 +109,6 @@ function Sidebar() {
   const enums = abi?.enumTypes || [];
   const importedEnums = abi?.importedEnumTypes || [];
   const importedModules = abi?.importedModuleTypes || [];
-  const dependencies = [
-    ...(abi?.importedEnumTypes?.map((i) => i.uri) || []),
-    ...(abi?.importedEnvTypes?.map((i) => i.uri) || []),
-    ...(abi?.importedModuleTypes?.map((i) => i.uri) || []),
-    ...(abi?.importedObjectTypes?.map((i) => i.uri) || []),
-  ].filter((v, i, a) => a.indexOf(v) === i);
 
   return (
     <SidebarContainer className="sidebar">
@@ -210,15 +204,6 @@ function Sidebar() {
               navigate("/import/module/" + i.type)
             }>
               {i.type}
-            </SidebarItem>
-          ))}
-        </SidebarSection>
-      )}
-      {dependencies && (
-        <SidebarSection name="Dependencies">
-          {dependencies.map((i) => (
-            <SidebarItem>
-              {i}
             </SidebarItem>
           ))}
         </SidebarSection>
