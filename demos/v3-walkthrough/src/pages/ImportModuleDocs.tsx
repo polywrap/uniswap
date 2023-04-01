@@ -3,16 +3,13 @@ import styled from "styled-components";
 import { UnfoldMore } from "@mui/icons-material";
 import { useParams, useNavigate } from "react-router-dom";
 import { usePolywrapClient } from "@polywrap/react";
-import { ImportedEnumDefinition } from "@polywrap/wrap-manifest-types-js";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
-import { wrappers } from "../constants";
+import { useActiveWrapper } from "../hooks/useActiveWrapper";
+import { uniswapV3Uri, wrappers } from "../constants";
 import RenderSchema from "../components/RenderSchema";
-import ReferenceSection from "../components/ReferenceSection";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
-import { getTypeRefRoutes } from "../utils/getTypeRefRoutes";
-import { useActiveWrapper } from "../hooks/useActiveWrapper";
 
 const Header = styled.div`
   display: flex;
@@ -21,19 +18,9 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  font-weight: 300;
+  font-weight: 100;
+  font-stretch: expanded;
 `;
-
-const TitleEnumName = styled.span`
-  font-weight: 400;
-  font-family: 'Source Code Pro';
-  background-color: ${props => props.theme.colors[800]};
-  padding-left: 0.2em;
-  padding-right: 0.2em;
-  border-radius: 0.2em;
-`;
-
-const SectionTitle = styled.h3``;
 
 const SchemaLink = styled.span`
   color: ${props => props.theme.colors[50]};
@@ -48,23 +35,21 @@ const SchemaLink = styled.span`
 
 const SchemaText = styled.h6`
   color: ${props => props.theme.colors[50]};
-  font-weight: 400;
+  font-weight: 100;
 `;
 
 const Description = styled.h2`
-  font-weight: 300;
+  font-weight: 100;
   font-size: large;
 `;
 
-interface EnumDocsProps {
-  import?: boolean;
-}
+const SectionTitle = styled.h3``;
 
-function EnumDocs(props: EnumDocsProps) {
+function ImportModuleDocs() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
   const wrapper = useActiveWrapper();
-  let { manifest, error, loading } = useWrapManifest({
+  const { manifest, error, loading } = useWrapManifest({
     client,
     uri: wrappers[wrapper]
   });
@@ -77,7 +62,6 @@ function EnumDocs(props: EnumDocsProps) {
     return (<div>{error.toString()}</div>);
   }
 
-  // Find the function
   const abi = manifest?.abi;
 
   if (!abi) {
@@ -86,42 +70,38 @@ function EnumDocs(props: EnumDocsProps) {
     return (<div>{message}</div>);
   }
 
-  const enums = (
-    props.import ?
-    abi.importedEnumTypes :
-    abi.enumTypes
-  ) || [];
-  const enumDef = enums.find((enumDef) => enumDef.type === id);
+  // Find the module
+  const importedModules = abi.importedModuleTypes || [];
+  const module = importedModules.find((module) => module.type === id);
 
-  if (!enumDef) {
-    const message = `Unable to find enum "${id}".`;
+  if (!module) {
+    console.log(id);
+    console.log(abi.importedModuleTypes);
+    const message = `Unable to find module "${id}".`;
     console.error(message);
     return (<div>{message}</div>);
   }
-
-  // Find all references in other parts of the ABI
-  const refRoutes = getTypeRefRoutes(enumDef.type, abi, wrapper);
 
   return (
     <>
       <Header>
         <Title>
-          Enum: <TitleEnumName>{enumDef.type}</TitleEnumName>
+          Module: <b>{module.type}</b>
         </Title>
         <SchemaLink
-          onClick={() => navigate(`/${wrapper}/schema`)}
+          onClick={() => navigate("/schema")}
         >
           <SchemaText>schema</SchemaText>
           <UnfoldMore />
         </SchemaLink>
       </Header>
-      {enumDef?.comment && (
+      {module?.comment && (
         <Description>
-          {enumDef.comment}
+          {module.comment}
         </Description>
       )}
       <RenderSchema
-        enums={[enumDef]}
+        importedModules={[module]}
         onTypeNameClick={(name) => {
           const route = getTypeNameRoute(name, abi, wrapper);
 
@@ -130,17 +110,12 @@ function EnumDocs(props: EnumDocsProps) {
           }
         }}
       />
-      {props.import && (
-        <>
-          <SectionTitle>
-          URI
-          </SectionTitle>
-          {(enumDef as ImportedEnumDefinition).uri}
-        </>
-      )}
-      <ReferenceSection refRoutes={refRoutes} />
+      <SectionTitle>
+      URI
+      </SectionTitle>
+      {module.uri}
     </>
   );
 }
 
-export default EnumDocs;
+export default ImportModuleDocs;

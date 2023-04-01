@@ -14,9 +14,9 @@ import "./styles/globals.css";
 import { Config, DAppProvider, Goerli } from "@usedapp/core";
 import { getDefaultProvider } from "ethers";
 
-const Html = styled.html`
-  background-color: ${(props) => props.theme.colors[900]};
-  color: ${(props) => props.theme.colors[50]};
+const Root = styled.div`
+  background-color: ${props => props.theme.colors[900]};
+  color: ${props => props.theme.colors[50]};
 `;
 
 const AppDiv = styled.div`
@@ -42,7 +42,7 @@ function App() {
 
   return (
     <ThemeProvider>
-      <Html>
+      <Root>
         <AppDiv className="app">
           <HashRouter>
             <DAppProvider config={usedappConfig}>
@@ -65,7 +65,7 @@ function App() {
             </DAppProvider>
           </HashRouter>
         </AppDiv>
-      </Html>
+      </Root>
     </ThemeProvider>
   );
 }

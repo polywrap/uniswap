@@ -17,6 +17,18 @@ export function getTypeNameRoute(
       name: x.type,
       route: `/${wrapper}/enum/${x.type}`
     })) || [],
+    ...abi.importedObjectTypes?.map((x) => ({
+      name: x.type,
+      route: `/${wrapper}/import/object/${x.type}`
+    })) || [],
+    ...abi.importedEnumTypes?.map((x) => ({
+      name: x.type,
+      route: `/${wrapper}/import/enum/${x.type}`
+    })) || [],
+    ...abi.importedModuleTypes?.map((x) => ({
+      name: x.type,
+      route: `/${wrapper}/import/module/${x.type}`
+    })) || [],
     {
       name: "Env",
       route: "/env"

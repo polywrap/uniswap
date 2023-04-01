@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { UnfoldMore } from "@mui/icons-material";
 import { useParams, useNavigate } from "react-router-dom";
 import { usePolywrapClient } from "@polywrap/react";
+import { ImportedObjectDefinition } from "@polywrap/wrap-manifest-types-js";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
 import { uniswapV3Uri, wrappers } from "../constants";
@@ -71,7 +72,11 @@ const PropertyName = styled.span`
   border-radius: 0.2em;
 `;
 
-function ObjectDocs() {
+interface ObjectDocsProps {
+  import?: boolean;
+}
+
+function ObjectDocs(props: ObjectDocsProps) {
   const navigate = useNavigate();
   const client = usePolywrapClient();
   const wrapper = useActiveWrapper();
@@ -82,7 +87,7 @@ function ObjectDocs() {
   const { id } = useParams<"id">();
 
   if (loading) {
-    return (<Loader />);
+    return (<Loader style={{ width: "100%", marginTop: "45px" }} />);
   } else if (error) {
     console.error(error);
     return (<div>{error.toString()}</div>);
@@ -97,7 +102,11 @@ function ObjectDocs() {
   }
 
   // Find the object
-  const objects = abi.objectTypes || [];
+  const objects = (
+    props.import ?
+    abi.importedObjectTypes :
+    abi.objectTypes
+  ) || [];
   const object = objects.find((object) => object.type === id);
 
   if (!object) {
@@ -137,6 +146,14 @@ function ObjectDocs() {
           }
         }}
       />
+      {props.import && (
+        <>
+          <SectionTitle>
+          URI
+          </SectionTitle>
+          {(object as ImportedObjectDefinition).uri}
+        </>
+      )}
       {object?.properties?.length && (
         <>
           <SectionTitle>

@@ -94,7 +94,7 @@ function FunctionDocs() {
   });
 
   if (loading) {
-    return (<Loader />);
+    return (<Loader style={{ width: "100%", marginTop: "45px" }} />);
   } else if (error) {
     console.error(error);
     return (<div>{error.toString()}</div>);

@@ -54,7 +54,7 @@ function Schema() {
 
   if (loading) {
     return (
-      <Loader />
+      <Loader style={{ width: "100%", marginTop: "45px" }} />
     );
   } else if (error || !manifest) {
     console.error(error);
@@ -93,6 +93,9 @@ function Schema() {
       methods={abi.moduleType?.methods}
       objects={abi.objectTypes}
       enums={abi.enumTypes}
+      importedObjects={abi.importedObjectTypes}
+      importedEnums={abi.importedEnumTypes}
+      importedModules={abi.importedModuleTypes}
       onTypeNameClick={(name) => {
         const route = getTypeNameRoute(name, abi, wrapper);
 
