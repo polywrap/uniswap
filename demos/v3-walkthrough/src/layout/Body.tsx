@@ -8,6 +8,7 @@ import Example from "../pages/Example";
 import FunctionDocs from "../pages/FunctionDocs";
 import ObjectDocs from "../pages/ObjectDocs";
 import EnumDocs from "../pages/EnumDocs";
+import ImportModuleDocs from "../pages/ImportModuleDocs";
 import NoMatch from "../pages/NoMatch";
 
 const Main = styled.main`
@@ -31,6 +32,7 @@ function Body() {
         <Route path="/import/object/:id" element={<ObjectDocs import />} />
         <Route path="/enum/:id" element={<EnumDocs />} />
         <Route path="/import/enum/:id" element={<EnumDocs import />} />
+        <Route path="/import/module/:id" element={<ImportModuleDocs />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </Main>

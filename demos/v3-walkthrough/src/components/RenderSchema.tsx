@@ -6,6 +6,7 @@ import {
   EnumDefinition,
   ImportedObjectDefinition,
   ImportedEnumDefinition,
+  ImportedModuleDefinition
 } from "@polywrap/wrap-manifest-types-js";
 
 import { trimPropType } from "../utils/trimPropType";
@@ -67,6 +68,7 @@ export interface RenderSchemaProps {
   enums?: EnumDefinition[];
   importedObjects?: ImportedObjectDefinition[];
   importedEnums?: ImportedEnumDefinition[];
+  importedModules?: ImportedModuleDefinition[];
   withModuleType?: boolean;
   withComments?: boolean;
   onTypeNameClick?: (typeName: string) => void;
@@ -80,6 +82,7 @@ function RenderSchema(props: RenderSchemaProps) {
     enums,
     importedObjects,
     importedEnums,
+    importedModules,
     withModuleType,
     withComments,
     onTypeNameClick,
@@ -336,6 +339,62 @@ function RenderSchema(props: RenderSchemaProps) {
       <SpecialChar>{"}"}</SpecialChar>
       <br/>
       {index < importedEnums.length - 1 && <br/>}
+      </>
+    ))}
+    {importedModules?.length && importedModules.map((module, index) => (
+      <>
+      <Keyword>{"type "}</Keyword>
+      {onTypeNameClick ? (
+        <ClickableTypeName onClick={() => onTypeNameClick(module.type)}>
+          {module.type}
+        </ClickableTypeName>
+      ) : (
+        <RenderTypeName type={module.type} noClick />
+      )}
+      <SpecialChar>{" {"}</SpecialChar>
+      <br/>
+      {module.methods?.length && module.methods.map((method, index, methods) => (
+        <>
+        {withComments && method.comment && (
+          <RenderComment comment={method.comment} indent={1} />
+        )}
+        <RenderWhitespace indent={1} />
+        <PropName>{method.name}</PropName>
+        {method.arguments?.length && (
+          <>
+          <SpecialChar>{"("}</SpecialChar><br/>
+          {method.arguments.map((argument) => (
+            <>
+            {withComments && argument.comment && (
+              <RenderComment comment={argument.comment} indent={2} />
+            )}
+            <span>
+              <RenderWhitespace indent={2} />
+              <ArgName>{argument.name}</ArgName>
+              <SpecialChar>{": "}</SpecialChar>
+              <RenderTypeName type={argument.type} />
+              {argument.required && <SpecialChar>{"!"}</SpecialChar>}
+              <br/>
+            </span>
+            </>
+          ))}
+          <RenderWhitespace indent={1} />
+          <SpecialChar>{")"}</SpecialChar>
+          </>
+        )}{method.return && (
+          <>
+          <SpecialChar>{": "}</SpecialChar>
+          <RenderTypeName type={method.return.type} />
+          {method.return.required && <SpecialChar>{"!"}</SpecialChar>}
+          </>
+        )}
+        <br/>
+        {index < methods.length - 1 && <br/>}
+        </>
+      ))}
+      <SpecialChar>{"}"}</SpecialChar>
+      <br/>
+      {index < importedModules.length - 1 && <br/>}
       </>
     ))}
     </>

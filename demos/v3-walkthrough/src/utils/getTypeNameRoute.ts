@@ -24,6 +24,10 @@ export function getTypeNameRoute(
       name: x.type,
       route: `/import/enum/${x.type}`
     })) || [],
+    ...abi.importedModuleTypes?.map((x) => ({
+      name: x.type,
+      route: `/import/module/${x.type}`
+    })) || [],
     {
       name: "Env",
       route: "/env"

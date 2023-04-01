@@ -108,6 +108,7 @@ function Sidebar() {
   const importedObjects = abi?.importedObjectTypes || [];
   const enums = abi?.enumTypes || [];
   const importedEnums = abi?.importedEnumTypes || [];
+  const importedModules = abi?.importedModuleTypes || [];
   const dependencies = [
     ...(abi?.importedEnumTypes?.map((i) => i.uri) || []),
     ...(abi?.importedEnvTypes?.map((i) => i.uri) || []),
@@ -196,6 +197,17 @@ function Sidebar() {
           {importedEnums.map((i) => (
             <SidebarItem onClick={() =>
               navigate("/import/enum/" + i.type)
+            }>
+              {i.type}
+            </SidebarItem>
+          ))}
+        </SidebarSection>
+      )}
+      {importedModules.length > 0 && (
+        <SidebarSection name="Import Modules">
+          {importedModules.map((i) => (
+            <SidebarItem onClick={() =>
+              navigate("/import/module/" + i.type)
             }>
               {i.type}
             </SidebarItem>
