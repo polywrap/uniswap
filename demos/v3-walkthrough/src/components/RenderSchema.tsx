@@ -1,6 +1,13 @@
 import React from "react";
 import styled from "styled-components";
-import { MethodDefinition, ObjectDefinition, EnumDefinition } from "@polywrap/wrap-manifest-types-js";
+import {
+  MethodDefinition,
+  ObjectDefinition,
+  EnumDefinition,
+  ImportedObjectDefinition,
+  ImportedEnumDefinition,
+  ImportedModuleDefinition
+} from "@polywrap/wrap-manifest-types-js";
 
 import { trimPropType } from "../utils/trimPropType";
 
@@ -59,6 +66,9 @@ export interface RenderSchemaProps {
   methods?: MethodDefinition[];
   objects?: ObjectDefinition[];
   enums?: EnumDefinition[];
+  importedObjects?: ImportedObjectDefinition[];
+  importedEnums?: ImportedEnumDefinition[];
+  importedModules?: ImportedModuleDefinition[];
   withModuleType?: boolean;
   withComments?: boolean;
   onTypeNameClick?: (typeName: string) => void;
@@ -70,6 +80,9 @@ function RenderSchema(props: RenderSchemaProps) {
     methods,
     objects,
     enums,
+    importedObjects,
+    importedEnums,
+    importedModules,
     withModuleType,
     withComments,
     onTypeNameClick,
@@ -204,16 +217,22 @@ function RenderSchema(props: RenderSchemaProps) {
       <>
       <SpecialChar>{"}"}</SpecialChar>
       <br/>
-      {objects?.length && <br/>}
       </>
     )}
     {objects?.length && objects.map((object, index) => (
       <>
+      {methods?.length && <br/>}
       {withComments && object.comment && (
         <RenderComment comment={object.comment} indent={0} />
       )}
       <Keyword>{"type "}</Keyword>
-      <TypeName>{object.type}</TypeName>
+      {onTypeNameClick ? (
+        <ClickableTypeName onClick={() => onTypeNameClick(object.type)}>
+          {object.type}
+        </ClickableTypeName>
+      ) : (
+        <RenderTypeName type={object.type} noClick />
+      )}
       <SpecialChar>{" {"}</SpecialChar>
       <br/>
       {object.properties?.map((property) => (
@@ -236,11 +255,17 @@ function RenderSchema(props: RenderSchemaProps) {
       {index < objects.length - 1 && <br/>}
       </>
     ))}
-    {objects?.length && enums?.length && <br />}
+    {objects?.length && <br />}
     {enums?.length && enums.map((enumDef, index) => (
       <>
       <Keyword>{"enum "}</Keyword>
-      <RenderTypeName type={enumDef.type} noClick />
+      {onTypeNameClick ? (
+        <ClickableTypeName onClick={() => onTypeNameClick(enumDef.type)}>
+          {enumDef.type}
+        </ClickableTypeName>
+      ) : (
+        <RenderTypeName type={enumDef.type} noClick />
+      )}
       <SpecialChar>{" {"}</SpecialChar>
       <br/>
       {enumDef.constants?.map((constant) => (
@@ -253,6 +278,123 @@ function RenderSchema(props: RenderSchemaProps) {
       <SpecialChar>{"}"}</SpecialChar>
       <br/>
       {index < enums.length - 1 && <br/>}
+      </>
+    ))}
+    {enums?.length && <br />}
+    {importedObjects?.length && importedObjects.map((object, index) => (
+      <>
+      {withComments && object.comment && (
+        <RenderComment comment={object.comment} indent={0} />
+      )}
+      <Keyword>{"type "}</Keyword>
+      {onTypeNameClick ? (
+        <ClickableTypeName onClick={() => onTypeNameClick(object.type)}>
+          {object.type}
+        </ClickableTypeName>
+      ) : (
+        <RenderTypeName type={object.type} noClick />
+      )}
+      <SpecialChar>{" {"}</SpecialChar>
+      <br/>
+      {object.properties?.map((property) => (
+        <>
+        {withComments && property.comment && (
+          <RenderComment comment={property.comment} indent={1} />
+        )}
+        <span>
+          <RenderWhitespace indent={1} />
+          <PropName>{property.name}</PropName>
+          <SpecialChar>{": "}</SpecialChar>
+          <RenderTypeName type={property.type} />
+          {property.required && <SpecialChar>{"!"}</SpecialChar>}
+          <br/>
+        </span>
+        </>
+      ))}
+      <SpecialChar>{"}"}</SpecialChar>
+      <br/>
+      {index < importedObjects.length - 1 && <br/>}
+      </>
+    ))}
+    {importedObjects?.length && <br />}
+    {importedEnums?.length && importedEnums.map((enumDef, index) => (
+      <>
+      <Keyword>{"enum "}</Keyword>
+      {onTypeNameClick ? (
+        <ClickableTypeName onClick={() => onTypeNameClick(enumDef.type)}>
+          {enumDef.type}
+        </ClickableTypeName>
+      ) : (
+        <RenderTypeName type={enumDef.type} noClick />
+      )}
+      <SpecialChar>{" {"}</SpecialChar>
+      <br/>
+      {enumDef.constants?.map((constant) => (
+        <span>
+          <RenderWhitespace indent={1} />
+          <ConstantName>{constant}</ConstantName>
+          <br/>
+        </span>
+      ))}
+      <SpecialChar>{"}"}</SpecialChar>
+      <br/>
+      {index < importedEnums.length - 1 && <br/>}
+      </>
+    ))}
+    {importedModules?.length && importedModules.map((module, index) => (
+      <>
+      <Keyword>{"type "}</Keyword>
+      {onTypeNameClick ? (
+        <ClickableTypeName onClick={() => onTypeNameClick(module.type)}>
+          {module.type}
+        </ClickableTypeName>
+      ) : (
+        <RenderTypeName type={module.type} noClick />
+      )}
+      <SpecialChar>{" {"}</SpecialChar>
+      <br/>
+      {module.methods?.length && module.methods.map((method, index, methods) => (
+        <>
+        {withComments && method.comment && (
+          <RenderComment comment={method.comment} indent={1} />
+        )}
+        <RenderWhitespace indent={1} />
+        <PropName>{method.name}</PropName>
+        {method.arguments?.length && (
+          <>
+          <SpecialChar>{"("}</SpecialChar><br/>
+          {method.arguments.map((argument) => (
+            <>
+            {withComments && argument.comment && (
+              <RenderComment comment={argument.comment} indent={2} />
+            )}
+            <span>
+              <RenderWhitespace indent={2} />
+              <ArgName>{argument.name}</ArgName>
+              <SpecialChar>{": "}</SpecialChar>
+              <RenderTypeName type={argument.type} />
+              {argument.required && <SpecialChar>{"!"}</SpecialChar>}
+              <br/>
+            </span>
+            </>
+          ))}
+          <RenderWhitespace indent={1} />
+          <SpecialChar>{")"}</SpecialChar>
+          </>
+        )}{method.return && (
+          <>
+          <SpecialChar>{": "}</SpecialChar>
+          <RenderTypeName type={method.return.type} />
+          {method.return.required && <SpecialChar>{"!"}</SpecialChar>}
+          </>
+        )}
+        <br/>
+        {index < methods.length - 1 && <br/>}
+        </>
+      ))}
+      <SpecialChar>{"}"}</SpecialChar>
+      <br/>
+      {index < importedModules.length - 1 && <br/>}
       </>
     ))}
     </>

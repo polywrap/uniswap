@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { UnfoldMore } from "@mui/icons-material";
 import { useParams, useNavigate } from "react-router-dom";
 import { usePolywrapClient } from "@polywrap/react";
+import { ImportedEnumDefinition } from "@polywrap/wrap-manifest-types-js";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
 import { uniswapV3Uri } from "../constants";
@@ -22,6 +23,8 @@ const Title = styled.h1`
   font-weight: 100;
   font-stretch: expanded;
 `;
+
+const SectionTitle = styled.h3``;
 
 const SchemaLink = styled.span`
   color: ${props => props.theme.colors[50]};
@@ -44,9 +47,11 @@ const Description = styled.h2`
   font-size: large;
 `;
 
-const SectionTitle = styled.h3``;
+interface EnumDocsProps {
+  import?: boolean;
+}
 
-function EnumDocs() {
+function EnumDocs(props: EnumDocsProps) {
   const navigate = useNavigate();
   const client = usePolywrapClient();
   const { manifest, error, loading } = useWrapManifest({
@@ -71,7 +76,11 @@ function EnumDocs() {
     return (<div>{message}</div>);
   }
 
-  const enums = abi.enumTypes || [];
+  const enums = (
+    props.import ?
+    abi.importedEnumTypes :
+    abi.enumTypes
+  ) || [];
   const enumDef = enums.find((enumDef) => enumDef.type === id);
 
   if (!enumDef) {
@@ -111,6 +120,14 @@ function EnumDocs() {
           }
         }}
       />
+      {props.import && (
+        <>
+          <SectionTitle>
+          URI
+          </SectionTitle>
+          {(enumDef as ImportedEnumDefinition).uri}
+        </>
+      )}
       <ReferenceSection refRoutes={refRoutes} />
     </>
   );

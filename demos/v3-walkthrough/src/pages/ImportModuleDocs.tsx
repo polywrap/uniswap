@@ -3,15 +3,12 @@ import styled from "styled-components";
 import { UnfoldMore } from "@mui/icons-material";
 import { useParams, useNavigate } from "react-router-dom";
 import { usePolywrapClient } from "@polywrap/react";
-import { ImportedObjectDefinition } from "@polywrap/wrap-manifest-types-js";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
 import { uniswapV3Uri } from "../constants";
 import RenderSchema from "../components/RenderSchema";
-import ReferenceSection from "../components/ReferenceSection";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
-import { getTypeRefRoutes } from "../utils/getTypeRefRoutes";
 
 const Header = styled.div`
   display: flex;
@@ -47,22 +44,7 @@ const Description = styled.h2`
 
 const SectionTitle = styled.h3``;
 
-const PropertyList = styled.ul`
-  list-style: circle;
-  line-height: 1.5em;
-`;
-
-const PropertyName = styled.span`
-  font-kerning: none;
-  letter-spacing: 1px;
-  font-weight: bold;
-`;
-
-interface ObjectDocsProps {
-  import?: boolean;
-}
-
-function ObjectDocs(props: ObjectDocsProps) {
+function ImportModuleDocs() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
   const { manifest, error, loading } = useWrapManifest({
@@ -86,28 +68,21 @@ function ObjectDocs(props: ObjectDocsProps) {
     return (<div>{message}</div>);
   }
 
-  // Find the object
-  const objects = (
-    props.import ?
-    abi.importedObjectTypes :
-    abi.objectTypes
-  ) || [];
-  const object = objects.find((object) => object.type === id);
+  // Find the module
+  const importedModules = abi.importedModuleTypes || [];
+  const module = importedModules.find((module) => module.type === id);
 
-  if (!object) {
-    const message = `Unable to find object "${id}".`;
+  if (!module) {
+    const message = `Unable to find module "${id}".`;
     console.error(message);
     return (<div>{message}</div>);
   }
-
-  // Find all references in other parts of the ABI
-  const refRoutes = getTypeRefRoutes(object.type, abi);
 
   return (
     <>
       <Header>
         <Title>
-          Object: <b>{object.type}</b>
+          Module: <b>{module.type}</b>
         </Title>
         <SchemaLink
           onClick={() => navigate("/schema")}
@@ -116,13 +91,13 @@ function ObjectDocs(props: ObjectDocsProps) {
           <UnfoldMore />
         </SchemaLink>
       </Header>
-      {object?.comment && (
+      {module?.comment && (
         <Description>
-          {object.comment}
+          {module.comment}
         </Description>
       )}
       <RenderSchema
-        objects={[object]}
+        importedModules={[module]}
         onTypeNameClick={(name) => {
           const route = getTypeNameRoute(name, abi);
 
@@ -131,39 +106,12 @@ function ObjectDocs(props: ObjectDocsProps) {
           }
         }}
       />
-      {props.import && (
-        <>
-          <SectionTitle>
-          URI
-          </SectionTitle>
-          {(object as ImportedObjectDefinition).uri}
-        </>
-      )}
-      {object?.properties?.length && (
-        <>
-          <SectionTitle>
-          Properties
-          </SectionTitle>
-          <PropertyList>
-          {object.properties.map((property) => {
-            const required = property.required;
-            return (
-              <li>
-                <PropertyName>
-                  {property.name}
-                </PropertyName>
-                {!required && " (optional)"}
-                {" - "}
-                {property.comment || "no comment."}
-              </li>
-            );
-          })}
-          </PropertyList>
-        </>
-      )}
-      <ReferenceSection refRoutes={refRoutes} />
+      <SectionTitle>
+      URI
+      </SectionTitle>
+      {module.uri}
     </>
   );
 }
 
-export default ObjectDocs;
+export default ImportModuleDocs;
