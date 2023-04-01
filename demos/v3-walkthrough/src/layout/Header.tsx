@@ -18,6 +18,7 @@ import {
   colorThemes,
   ColorThemes
 } from '../styles/theme';
+import { useNavigate } from 'react-router-dom';
 
 export const HEIGHT = "32px";
 
@@ -62,6 +63,9 @@ function HeaderButton(props: {
     border-right-width: 1px;
     ` : ""}
     ${props.onClick ? "cursor: pointer;" : ""}
+    &:hover {
+      background-color: ${props.theme.colors[700]};
+    }
   `;
   Inner.defaultProps = {
     sx: {
@@ -88,7 +92,7 @@ const HeaderButtonIcon = styled(Box)`
 
 const WrapUriContainer = styled.div`
   margin-left: 10px;
-  margin-right: 5px;
+  margin-right: 10px;
   display: flex;
   flex-direction: row;
 `;
@@ -119,6 +123,7 @@ function Header() {
   const updateMedia = () => {
     setDesktop(window.innerWidth > desktopWidth);
   };
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     window.addEventListener("resize", updateMedia);
@@ -140,7 +145,7 @@ function Header() {
             <PolywrapLogo fill={theme.colors[50]} long={isDesktop} />
           </HeaderButtonIcon>
         </HeaderButton>
-        <HeaderButton
+        {/* <HeaderButton
           theme={theme}
           width={"auto"}
           border_right
@@ -158,6 +163,90 @@ function Header() {
               }}
               onClick={() => uri && navigator.clipboard.writeText(uri)}
             />
+          </WrapUriContainer>
+        </HeaderButton> */}
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/account-abstraction")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              account-abstraction
+            </WrapUri>
+          </WrapUriContainer>
+        </HeaderButton>
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/relay")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              relayer
+            </WrapUri>
+          </WrapUriContainer>
+        </HeaderButton>
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/gelato-relay")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              gelato-relay
+            </WrapUri>
+          </WrapUriContainer>
+        </HeaderButton>
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/safe-contracts")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              safe-contracts
+            </WrapUri>
+          </WrapUriContainer>
+        </HeaderButton>
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/safe-factory")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              safe-factory
+            </WrapUri>
+          </WrapUriContainer>
+        </HeaderButton>
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/safe-manager")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              safe-manager
+            </WrapUri>
+          </WrapUriContainer>
+        </HeaderButton>
+        <HeaderButton
+          theme={theme}
+          width={"auto"}
+          onClick={() => navigate("/ethereum")}
+          border_right
+        >
+          <WrapUriContainer>
+            <WrapUri>
+              ethereum
+            </WrapUri>
           </WrapUriContainer>
         </HeaderButton>
       </HeaderSubcontainer>

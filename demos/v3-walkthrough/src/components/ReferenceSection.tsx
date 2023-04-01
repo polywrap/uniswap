@@ -13,10 +13,12 @@ interface ReferenceSectionProps {
   refRoutes: TypeRefRoutes;
 }
 
-const SectionTitle = styled.h3``;
+const SectionTitle = styled.h3`
+  font-weight: 400;
+`;
 
 const SubSectionTitle = styled.h4`
-  font-weight: 100;
+  font-weight: 300;
 `;
 
 const ReferenceList = styled.ul`
@@ -48,7 +50,7 @@ export function ReferenceSection(props: ReferenceSectionProps) {
       </SectionTitle>
       {refRoutes.functionArgs.length > 0 && (
         <>
-        <SubSectionTitle>Function Arg</SubSectionTitle>
+        <SubSectionTitle>Function Arg:</SubSectionTitle>
         <ReferenceList>
           {refRoutes.functionArgs.map((nameRoute) => (
             <ReferenceListItem onClick={() => navigate(nameRoute.route)}>
@@ -65,7 +67,7 @@ export function ReferenceSection(props: ReferenceSectionProps) {
       )}
       {refRoutes.functionRets.length > 0 && (
         <>
-        <SubSectionTitle>Function Result</SubSectionTitle>
+        <SubSectionTitle>Function Result:</SubSectionTitle>
         <ReferenceList>
           {refRoutes.functionRets.map((nameRoute) => (
             <ReferenceListItem onClick={() => navigate(nameRoute.route)}>
@@ -82,7 +84,7 @@ export function ReferenceSection(props: ReferenceSectionProps) {
       )}
       {refRoutes.objects.length > 0 && (
         <>
-        <SubSectionTitle>Object Property</SubSectionTitle>
+        <SubSectionTitle>Object Property:</SubSectionTitle>
         <ReferenceList>
           {refRoutes.objects.map((nameRoute) => (
             <ReferenceListItem onClick={() => navigate(nameRoute.route)}>

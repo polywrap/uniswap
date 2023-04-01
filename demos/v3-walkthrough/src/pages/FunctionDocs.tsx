@@ -5,10 +5,11 @@ import { Launch, UnfoldMore } from "@mui/icons-material";
 import { usePolywrapClient } from "@polywrap/react";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
-import { uniswapV3Uri, examples } from "../constants";
+import { uniswapV3Uri, examples, wrappers } from "../constants";
 import RenderSchema from "../components/RenderSchema";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
+import { useActiveWrapper } from "../hooks/useActiveWrapper";
 
 const Header = styled.div`
   display: flex;
@@ -17,8 +18,16 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  font-weight: 100;
-  font-stretch: expanded;
+  font-weight: 300;
+`;
+
+const TitleFunctionName = styled.span`
+  font-weight: 400;
+  font-family: 'Source Code Pro';
+  background-color: ${props => props.theme.colors[800]};
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  border-radius: 0.2em;
 `;
 
 const SchemaLink = styled.span`
@@ -33,16 +42,18 @@ const SchemaLink = styled.span`
 `;
 
 const SchemaText = styled.h6`
-  color: ${props => props.theme.colors[50]};
-  font-weight: 100;
+  color: ${props => props.theme.colors[100]};
+  font-weight: 400;
 `;
 
 const FunctionDescription = styled.h2`
-  font-weight: 100;
+  font-weight: 300;
   font-size: large;
 `;
 
-const SectionTitle = styled.h3``;
+const SectionTitle = styled.h3`
+  font-weight: 400;
+`;
 
 const ArgumentList = styled.ul`
   list-style: circle;
@@ -50,9 +61,12 @@ const ArgumentList = styled.ul`
 `;
 
 const ArgumentName = styled.span`
-  font-kerning: none;
-  letter-spacing: 1px;
-  font-weight: bold;
+  font-family: 'Source Code Pro';
+  font-weight: 400;
+  background-color: ${props => props.theme.colors[800]};
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  border-radius: 0.2em;
 `;
 
 const ExampleList = styled.ul`
@@ -70,11 +84,14 @@ const ExampleListItem = styled.li`
 function FunctionDocs() {
   const navigate = useNavigate();
   const client = usePolywrapClient();
+  const { id } = useParams<"id">();
+  
+  const wrapper = useActiveWrapper();
+
   const { manifest, error, loading } = useWrapManifest({
     client,
-    uri: uniswapV3Uri
+    uri: wrappers[wrapper]
   });
-  const { id } = useParams<"id">();
 
   if (loading) {
     return (<Loader style={{ width: "100%", marginTop: "45px" }} />);
@@ -102,18 +119,21 @@ function FunctionDocs() {
   }
 
   // Find any examples including this function
-  const exampleRefs = examples
-    .filter((x) => x.method === method.name)
+  const exampleRefs = examples[wrapper]
+    .filter((x) => 
+      (x.type === "simple" && x.method === method.name) ||
+      (x.type === "complex" && x.steps.some(s => s.method === method.name))
+    )
     .map((x) => x.name);
 
   return (
     <>
       <Header>
         <Title>
-          Function: <b>{method.name}</b>
+          Function: <TitleFunctionName>{method.name}</TitleFunctionName>
         </Title>
         <SchemaLink
-          onClick={() => navigate("/schema")}
+          onClick={() => navigate(`/${wrapper}/schema`)}
         >
           <SchemaText>schema</SchemaText>
           <UnfoldMore />
@@ -127,7 +147,7 @@ function FunctionDocs() {
       <RenderSchema
         methods={[method]}
         onTypeNameClick={(name) => {
-          const route = getTypeNameRoute(name, abi);
+          const route = getTypeNameRoute(name, abi, wrapper);
 
           if (route) {
             navigate(route);
@@ -163,7 +183,7 @@ function FunctionDocs() {
           </SectionTitle>
           <ExampleList>
             {exampleRefs.map((example) => (
-              <ExampleListItem onClick={() => navigate("/example/" + example)}>
+              <ExampleListItem onClick={() => navigate(`${wrapper}/example/${example}`)}>
                 <span style={{ display: "flex" }}>
                   <Launch style={{ paddingRight: "0.5em" }} />
                   {example}

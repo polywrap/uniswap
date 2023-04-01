@@ -1,21 +1,33 @@
 export const readme = `
-# The UniV3 Wrap
+# The **Safe{Core} SDK** Wraps
 
-[Uniswap V3](https://docs.uniswap.org/concepts/uniswap-protocol) is a peer-to-peer system designed for exchanging cryptocurrencies on the Ethereum blockchain. It has become one of the most used & trusted decentralized exchanges on the blockchain ([usage statistics](https://defillama.com/protocol/uniswap)).
+The Safe{{Core}} SDK Wraps are a port of the [Safe{Core} SDK](https://safe.global/core) as a collection of Polywrap Wraps.
 
-[Polywrap](https://polywrap.io) is a framework for building portable web3 SDKs, also referred to as "wraps". Wraps are easy to integrate and compose together, making web3 software development a breeze.
+They consist of the main [Account Abstraction Wrapper](/#/account-abstraction), and a series of supporting Wraps:
+
+- [Relayer](/#/relay)
+- [Gelato Relay](/#/gelato-relay)
+- [Safe Contracts](/#/safe-contracts)
+- [Safe Factory](/#/safe-factory)
+- [Safe Manager](/#/safe-manager)
+- [Ethereum](/#/ethereum)
+
+[Polywrap](https://polywrap.io) is a framework for building portable web3 SDKs, also referred to as "Wraps". Wraps are easy to integrate and compose together, making web3 software development a breeze.
 
 ## Examples
 
-On this site, you'll be able to try the UniV3 wrap in the examples section. For example, try getting a pool address based on 2 input tokens [here](https://uniswap.docs.wrappers.io/#/example/Get%20Pool%20Address).
+Make sure to check out the [Execute Sponsored Transaction Example](/#/account-abstraction/example/Execute%20Sponsored%20Transaction) for a live demo of its functionality!
 
 ## Schema
 
-All wraps have a schema which describes their capabilities. You can find the UniV3 schema [here](https://uniswap.docs.wrappers.io/#/schema).
+All Wraps have a schema which describes their capabilities. You can find the Account Abstraction schema [here](/#/account-abstraction/schema).
 
 ## Source Code
 
-The UniV3 source code can be found [here](https://github.com/polywrap/uniswap).
+- [Account Abstraction and Relay Wraps Github](https://github.com/cbrzn/account-abstraction-wrapper)
+- [Gelato Relay Wrap Github](https://github.com/cbrzn/gelato-relay-polywrap)
+- [Safe Contracts, Factory, and Manager Wraps Github](https://github.com/polywrap/safe-contracts-wrapper)
+- [Ethereum Wrap Github](https://github.com/polywrap/ethereum)
 
 ## Integrate
 
@@ -30,7 +42,7 @@ In order to integrate the UniV3 wrap into your applications, the first thing you
 
 ### Step 2: Client Config 
 
-UniV3 depends upon the [ethereum wrap](https://github.com/polywrap/ethereum), which in-turn requires an [ethereum-provider plugin](https://github.com/polywrap/ethereum/tree/main/provider). Plugins are added directly to the client using its config.
+The Account Abstraction Wrap depends upon the [ethereum wrap](https://github.com/polywrap/ethereum), which in-turn requires an [ethereum-provider plugin](https://github.com/polywrap/ethereum/tree/main/provider). Plugins are added directly to the client using its config.
 
 [Here's an example](https://github.com/polywrap/ethereum/blob/36e6f3331264732e73f3e236004416e82930ed64/provider/implementations/js/tests/index.spec.ts#L15-L30) of setting up a JavaScript / TypeScript client with the ethereum-provider plugin.
 
@@ -43,21 +55,19 @@ With your client successfully configured, you can now run any function on the Un
 You can execute functions in TypeScript with the \`client.invoke(...)\` syntax like so:
 \`\`\`typescript
 await client.invoke({
-  uri: "wrap://ens/uniswap.wraps.eth:v3",
-  method: "fetchPoolFromTokens",
+  uri: "wrap://ens/aa.safe.wraps.eth:core@0.1.0",
+  method: "relayTransaction",
   args: {...}
 });
 \`\`\`
 
 Or you can keep it type-safe by using Polywrap's codegen like so:
 \`\`\`typescript
-await Uniswap.fetchPoolFromTokens({...});
+await AccountAbstraction.relayTransaction({...});
 \`\`\`
-
-If you'd like to generate typings for the UniV3 wrap, you can see an example of this in TypeScript [here](https://github.com/polywrap/uniswap/tree/main/v3/sdks/js).
 
 ## Support
 
-For any questions or problems related to the UniV3 wrap or Polywrap at large, please visit our [Discord](https://discord.polywrap.io).
+For any questions or problems related to the Account Abstraction Wrap or Polywrap at large, please visit our [Discord](https://discord.polywrap.io).
 
 `;

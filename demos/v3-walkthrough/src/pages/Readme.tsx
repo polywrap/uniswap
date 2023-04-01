@@ -16,6 +16,10 @@ a {
 a:visited {
   color: ${props => props.theme.colors[300]};
 }
+
+h1, h2, h3 {
+  font-weight: 300;
+}
 `;
 
 function Readme() {

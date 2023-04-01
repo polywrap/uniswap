@@ -15,7 +15,8 @@ export interface TypeRefRoutes {
 
 export function getTypeRefRoutes(
   typeName: string,
-  abi: WrapManifest["abi"]
+  abi: WrapManifest["abi"],
+  wrapper: string
 ): TypeRefRoutes {
   const objects: Set<string> = new Set();
   const functionArgs: Set<string> = new Set();
@@ -59,17 +60,17 @@ export function getTypeRefRoutes(
 
   functionArgs.forEach((name) => result.functionArgs.push({
     name,
-    route: "/function/" + name
+    route: `/${wrapper}/function/${name}`
   }));
 
   functionRets.forEach((name) => result.functionRets.push({
     name,
-    route: "/function/" + name
+    route: `/${wrapper}/function/${name}`
   }));
 
   objects.forEach((name) => result.objects.push({
     name,
-    route: "/object/" + name
+    route: `/${wrapper}/object/${name}`
   }));
 
   return result;

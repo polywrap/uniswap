@@ -6,12 +6,13 @@ import { usePolywrapClient } from "@polywrap/react";
 import { ImportedEnumDefinition } from "@polywrap/wrap-manifest-types-js";
 
 import { useWrapManifest } from "../hooks/useWrapManifest";
-import { uniswapV3Uri } from "../constants";
+import { wrappers } from "../constants";
 import RenderSchema from "../components/RenderSchema";
 import ReferenceSection from "../components/ReferenceSection";
 import Loader from "../components/Loader";
 import { getTypeNameRoute } from "../utils/getTypeNameRoute";
 import { getTypeRefRoutes } from "../utils/getTypeRefRoutes";
+import { useActiveWrapper } from "../hooks/useActiveWrapper";
 
 const Header = styled.div`
   display: flex;
@@ -20,8 +21,16 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  font-weight: 100;
-  font-stretch: expanded;
+  font-weight: 300;
+`;
+
+const TitleEnumName = styled.span`
+  font-weight: 400;
+  font-family: 'Source Code Pro';
+  background-color: ${props => props.theme.colors[800]};
+  padding-left: 0.2em;
+  padding-right: 0.2em;
+  border-radius: 0.2em;
 `;
 
 const SectionTitle = styled.h3``;
@@ -39,11 +48,11 @@ const SchemaLink = styled.span`
 
 const SchemaText = styled.h6`
   color: ${props => props.theme.colors[50]};
-  font-weight: 100;
+  font-weight: 400;
 `;
 
 const Description = styled.h2`
-  font-weight: 100;
+  font-weight: 300;
   font-size: large;
 `;
 
@@ -54,9 +63,10 @@ interface EnumDocsProps {
 function EnumDocs(props: EnumDocsProps) {
   const navigate = useNavigate();
   const client = usePolywrapClient();
-  const { manifest, error, loading } = useWrapManifest({
+  const wrapper = useActiveWrapper();
+  let { manifest, error, loading } = useWrapManifest({
     client,
-    uri: uniswapV3Uri
+    uri: wrappers[wrapper]
   });
   const { id } = useParams<"id">();
 
@@ -90,16 +100,16 @@ function EnumDocs(props: EnumDocsProps) {
   }
 
   // Find all references in other parts of the ABI
-  const refRoutes = getTypeRefRoutes(enumDef.type, abi);
+  const refRoutes = getTypeRefRoutes(enumDef.type, abi, wrapper);
 
   return (
     <>
       <Header>
         <Title>
-          Enum: <b>{enumDef.type}</b>
+          Enum: <TitleEnumName>{enumDef.type}</TitleEnumName>
         </Title>
         <SchemaLink
-          onClick={() => navigate("/schema")}
+          onClick={() => navigate(`/${wrapper}/schema`)}
         >
           <SchemaText>schema</SchemaText>
           <UnfoldMore />
@@ -113,7 +123,7 @@ function EnumDocs(props: EnumDocsProps) {
       <RenderSchema
         enums={[enumDef]}
         onTypeNameClick={(name) => {
-          const route = getTypeNameRoute(name, abi);
+          const route = getTypeNameRoute(name, abi, wrapper);
 
           if (route) {
             navigate(route);

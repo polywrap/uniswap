@@ -10,6 +10,7 @@ import ObjectDocs from "../pages/ObjectDocs";
 import EnumDocs from "../pages/EnumDocs";
 import ImportModuleDocs from "../pages/ImportModuleDocs";
 import NoMatch from "../pages/NoMatch";
+import Readme from "../pages/Readme";
 
 const Main = styled.main`
   padding-bottom: 50px;

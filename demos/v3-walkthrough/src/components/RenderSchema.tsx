@@ -12,54 +12,62 @@ import {
 import { trimPropType } from "../utils/trimPropType";
 
 const globalStyles = `
-  font-size: 14px;
-  letter-spacing: 1px;
+  font-family: 'Source Code Pro';
   color: white;
-  font-weight: 700;
+  font-weight: 500;
+  line-height: 1.5;
 `;
 
 export const Comment = styled.span`
   ${globalStyles}
-  color: green;
+  color: #00a800;
 `;
 
 export const Keyword = styled.span`
   ${globalStyles}
-  color: #0067d1;
+  color: #81a7ff;
 `;
 
 export const SpecialChar = styled.span`
   ${globalStyles}
   font-size: 16px;
-  color: #e3e3e3;
+  color: #c6c6c6;
 `;
 
 export const TypeName = styled.span`
   ${globalStyles}
-  color: #00ff37;
+  color: #00c400;
 `;
 
 export const ClickableTypeName = styled(TypeName)`
   cursor: pointer;
+  font-weight: 600;
+  &:hover {
+    color: #88ff88;
+  }
 `;
 
 export const PropName = styled.span`
   ${globalStyles}
-  color: #36b5ff;
+  color: #18b2ff;
 `;
 
 export const ClickablePropName = styled(PropName)`
   cursor: pointer;
+  font-weight: 600;
+  &:hover {
+    color: #d3e8ff;
+  }
 `;
 
 export const ArgName = styled.span`
   ${globalStyles}
-  color: #cfcfcf;
+  color: #a8a8a8;
 `;
 
 export const ConstantName = styled.span`
   ${globalStyles}
-  color: #36b5ff;
+  color: #18b2ff;
 `;
 
 export interface RenderSchemaProps {

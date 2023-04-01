@@ -107,5 +107,5 @@ export interface Theme {
 }
 
 export const defaultTheme: Theme = {
-  colors: colorThemes.neutral
+  colors: colorThemes.slate
 };
