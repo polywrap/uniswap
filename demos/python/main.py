@@ -8,6 +8,7 @@ from polywrap_uri_resolvers import (
 from polywrap_client import PolywrapClient, ClientConfig
 from polywrap_core import InvokerOptions, UriPackageOrWrapper, Uri
 import os
+from pathlib import Path
 from eth_account import Account
 
 # TODO: Change this w/polywrap name
@@ -15,13 +16,21 @@ from cbrzn_ethereum_provider_py import ethereum_provider_plugin
 from cbrzn_ethereum_provider_py.connection import ConnectionConfig, Connection
 from cbrzn_ethereum_provider_py.connections import Connections
 
-# from polywrap_http_plugin import http_plugin
+from dotenv import load_dotenv
 
+load_dotenv()
 
 ETHEREUM_WRAPPER_URI = Uri.from_str("wrap://ens/wraps.eth:ethereum@2.0.0")
 ETHEREUM_PROVIDER_URI = Uri.from_str("wrap://ens/wraps.eth:ethereum-provider@2.0.0")
-UNISWAP_WRAPPER_URI = Uri.from_str("wrap://fs/../../v3/wrap/build")
+GRAPH_NODE_WRAPPER_URI = Uri.from_str("wrap://ens/wraps.eth:graph-node@1.0.0")
+SHA3_WRAPPER_URI = Uri.from_str("wrap://ens/wraps.eth:sha3@1.0.0")
 
+LOCAL_ETHEREUM_WRAPPER = Uri.from_str("wrap://fs/./dependencies/ethereum")
+LOCAL_GRAPH_NODE_WRAPPER = Uri.from_str("wrap://fs/./dependencies/graph-node")
+LOCAL_SHA3_WRAPPER = Uri.from_str("wrap://fs/./dependencies/sha3")
+
+uniswap_wrapper_path = Path(__file__).parent.parent.parent.joinpath("v3", "wrap", "build")
+UNISWAP_WRAPPER_URI = Uri.from_str(f"fs/{uniswap_wrapper_path}")
 
 async def main():
     if "PRIVATE_KEY" not in os.environ:
@@ -41,16 +50,11 @@ async def main():
     resolver = RecursiveResolver(
         UriResolverAggregator(
             [
-                StaticResolver(
-                    {
-                        ETHEREUM_WRAPPER_URI: Uri.from_str(
-                            "http/https://raw.githubusercontent.com/cbrzn/safe-playground/master/wrap-build-artifacts/ethereum/core"
-                        )
-                    }
-                ),
-                # StaticResolver({Uri.from_str("wrap://ens/wraps.eth:http@1.1.0"): http_plugin()}),
-                StaticResolver({ETHEREUM_PROVIDER_URI: ethereum_provider}),
                 FsUriResolver(file_reader=SimpleFileReader()),
+                StaticResolver({ETHEREUM_WRAPPER_URI: LOCAL_ETHEREUM_WRAPPER}),
+                StaticResolver({ETHEREUM_PROVIDER_URI: ethereum_provider}),
+                StaticResolver({GRAPH_NODE_WRAPPER_URI: LOCAL_GRAPH_NODE_WRAPPER}),
+                StaticResolver({SHA3_WRAPPER_URI: LOCAL_SHA3_WRAPPER}),
             ]
         )
     )

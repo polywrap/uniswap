@@ -13,7 +13,7 @@ python = "^3.10"
 polywrap-client = "^0.1.0a15"
 eth_account = "0.8.0"
 cbrzn-ethereum-provider-py = "0.0.1"
-# polywrap-http-plugin = "^0.1.0a2"
+python-dotenv = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 isort = "^5.12.0"
