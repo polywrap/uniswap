@@ -1,0 +1,51 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "polywrap-uniswap-demo"
+version = "0.1.0"
+authors = ["Cesar <cesar@polywrap.io>"]
+description = ""
+
+[tool.poetry.dependencies]
+python = "^3.10"
+polywrap-client = "^0.1.0a15"
+eth_account = "0.8.0"
+cbrzn-ethereum-provider-py = "0.0.1"
+# polywrap-http-plugin = "^0.1.0a2"
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.12.0"
+black = "^23.1.0"
+bandit = "^1.7.4"
+pyright = "^1.1.296"
+pylint = "^2.16.3"
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+
+[tool.black]
+target-version = ["py310"]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+reportShadowedImports = false
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = [
+    "tests"
+]
+
+[tool.pylint]
+disable = [
+    "too-many-return-statements",
+]
+ignore = [
+    "tests/"
+]
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
