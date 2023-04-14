@@ -12,10 +12,9 @@ from pathlib import Path
 from eth_account import Account
 import time
 
-# TODO: Change this w/polywrap name
-from cbrzn_ethereum_provider_py import ethereum_provider_plugin
-from cbrzn_ethereum_provider_py.connection import ConnectionConfig, Connection
-from cbrzn_ethereum_provider_py.connections import Connections
+from polywrap_ethereum_provider import ethereum_provider_plugin
+from polywrap_ethereum_provider.connection import ConnectionConfig, Connection
+from polywrap_ethereum_provider.connections import Connections
 
 from dotenv import load_dotenv
 
@@ -74,7 +73,7 @@ async def main():
     get_native_options: InvokerOptions[UriPackageOrWrapper] = InvokerOptions(
         uri=UNISWAP_WRAPPER_URI,
         method="getNative",
-        args={"chainId": "mainnet"},
+        args={"chainId": "MAINNET"},
         encode_result=False,
     )
     print("Getting native token...")
@@ -85,7 +84,7 @@ async def main():
     get_pool_from_address_options: InvokerOptions[UriPackageOrWrapper] = InvokerOptions(
         uri=UNISWAP_WRAPPER_URI,
         method="fetchPoolFromAddress",
-        args={"chainId": "mainnet", "address": USDC_ETH_03_ADDRESS, "fetchTicks": True},
+        args={"chainId": "MAINNET", "address": USDC_ETH_03_ADDRESS, "fetchTicks": True},
     )
 
     print("Fetching pool of USDC and ETH...")
