@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import {
-  Ethereum_Module,
+  EthersUtils_Module,
   FeeAmount,
   Args_computePoolAddress,
   NextTickResult,
@@ -93,7 +93,7 @@ export function computePoolAddress(args: Args_computePoolAddress): string {
       : args.initCodeHashManualOverride!;
 
   const salt: string = SHA3_Module.hex_keccak_256({
-    message: Ethereum_Module.encodeParams({
+    message: EthersUtils_Module.encodeParams({
       types: ["address", "address", "uint24"],
       values: [tokens[0].address, tokens[1].address, fee.toString()],
     }).unwrap(),

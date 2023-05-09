@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
-  Ethereum_Module,
+  EthersUtils_Module,
   Args_swapCallParameters,
   MethodParameters,
   Route,
@@ -200,7 +200,7 @@ export function swapCallParameters(
           };
 
           calldatas.push(
-            Ethereum_Module.encodeFunction({
+            EthersUtils_Module.encodeFunction({
               method: routerAbi("exactInputSingle"),
               args: [paramsToJsonString(exactInputSingleParams)],
             }).unwrap()
@@ -221,7 +221,7 @@ export function swapCallParameters(
           };
 
           calldatas.push(
-            Ethereum_Module.encodeFunction({
+            EthersUtils_Module.encodeFunction({
               method: routerAbi("exactOutputSingle"),
               args: [paramsToJsonString(exactOutputSingleParams)],
             }).unwrap()
@@ -249,7 +249,7 @@ export function swapCallParameters(
           };
 
           calldatas.push(
-            Ethereum_Module.encodeFunction({
+            EthersUtils_Module.encodeFunction({
               method: routerAbi("exactInput"),
               args: [paramsToJsonString(exactInputParams)],
             }).unwrap()
@@ -264,7 +264,7 @@ export function swapCallParameters(
           };
 
           calldatas.push(
-            Ethereum_Module.encodeFunction({
+            EthersUtils_Module.encodeFunction({
               method: routerAbi("exactOutput"),
               args: [paramsToJsonString(exactOutputParams)],
             }).unwrap()

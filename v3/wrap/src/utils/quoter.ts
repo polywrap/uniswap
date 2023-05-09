@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 import {
-  Ethereum_Module,
+  EthersUtils_Module,
   Args_quoteCallParameters,
   MethodParameters,
   QuoteOptions,
@@ -32,7 +32,7 @@ export function quoteCallParameters(
 
   if (singleHop) {
     if (tradeType == TradeType.EXACT_INPUT) {
-      calldata = Ethereum_Module.encodeFunction({
+      calldata = EthersUtils_Module.encodeFunction({
         method: quoterAbi("quoteExactInputSingle"),
         args: [
           route.path[0].address,
@@ -45,7 +45,7 @@ export function quoteCallParameters(
         ],
       }).unwrap();
     } else {
-      calldata = Ethereum_Module.encodeFunction({
+      calldata = EthersUtils_Module.encodeFunction({
         method: quoterAbi("quoteExactOutputSingle"),
         args: [
           route.path[0].address,
@@ -71,12 +71,12 @@ export function quoteCallParameters(
     });
 
     if (tradeType == TradeType.EXACT_INPUT) {
-      calldata = Ethereum_Module.encodeFunction({
+      calldata = EthersUtils_Module.encodeFunction({
         method: quoterAbi("quoteExactInput"),
         args: [path, quoteAmount],
       }).unwrap();
     } else {
-      calldata = Ethereum_Module.encodeFunction({
+      calldata = EthersUtils_Module.encodeFunction({
         method: quoterAbi("quoteExactOutput"),
         args: [path, quoteAmount],
       }).unwrap();

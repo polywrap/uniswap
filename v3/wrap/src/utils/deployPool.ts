@@ -1,5 +1,5 @@
 import {
-  Ethereum_TxResponse,
+  Ethers_TxResponse,
   FeeAmount,
   GasOptions,
   Args_deployPool,
@@ -16,7 +16,7 @@ import { getSqrtRatioAtTick } from "../tickList";
 
 import { BigInt } from "@polywrap/wasm-as";
 
-export function deployPool(args: Args_deployPool): Ethereum_TxResponse {
+export function deployPool(args: Args_deployPool): Ethers_TxResponse {
   const pool: Pool = args.pool;
   const gasOptions: GasOptions | null = args.gasOptions;
 
@@ -31,7 +31,7 @@ export function deployPool(args: Args_deployPool): Ethereum_TxResponse {
 
 export function deployPoolFromTokens(
   args: Args_deployPoolFromTokens
-): Ethereum_TxResponse {
+): Ethers_TxResponse {
   const tokenA: Token = args.tokenA;
   const tokenB: Token = args.tokenB;
   const fee: FeeAmount = args.fee;

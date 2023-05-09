@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
-  Ethereum_Module,
+  EthersUtils_Module,
   FeeOptions,
   Args_encodeMulticall,
   Args_encodePermit,
@@ -84,7 +84,7 @@ export function encodeRouteToPath(args: Args_encodeRouteToPath): string {
     finalStep.path.reverse();
   }
 
-  return Ethereum_Module.solidityPack({
+  return EthersUtils_Module.solidityPack({
     types: finalStep.types,
     values: finalStep.path,
   }).unwrap();
@@ -96,7 +96,7 @@ export function encodePermit(args: Args_encodePermit): string {
   const isAllowedPermit: boolean = options.nonce !== null;
 
   return isAllowedPermit
-    ? Ethereum_Module.encodeFunction({
+    ? EthersUtils_Module.encodeFunction({
         method: selfPermitAbi("selfPermitAllowed"),
         args: [
           token.address,
@@ -107,7 +107,7 @@ export function encodePermit(args: Args_encodePermit): string {
           options.s,
         ],
       }).unwrap()
-    : Ethereum_Module.encodeFunction({
+    : EthersUtils_Module.encodeFunction({
         method: selfPermitAbi("selfPermit"),
         args: [
           token.address,
@@ -129,12 +129,12 @@ export function encodeUnwrapWETH9(args: Args_encodeUnwrapWETH9): string {
     const feeBips: string = encodeFeeBips(feeOptions.fee);
     const feeRecipient: string = getChecksumAddress(feeOptions.recipient);
 
-    return Ethereum_Module.encodeFunction({
+    return EthersUtils_Module.encodeFunction({
       method: paymentsAbi("unwrapWETH9WithFee"),
       args: [amountMinimum.toString(), recipient, feeBips, feeRecipient],
     }).unwrap();
   } else {
-    return Ethereum_Module.encodeFunction({
+    return EthersUtils_Module.encodeFunction({
       method: paymentsAbi("unwrapWETH9"),
       args: [amountMinimum.toString(), recipient],
     }).unwrap();
@@ -151,7 +151,7 @@ export function encodeSweepToken(args: Args_encodeSweepToken): string {
     const feeBips: string = encodeFeeBips(feeOptions.fee);
     const feeRecipient: string = getChecksumAddress(feeOptions.recipient);
 
-    return Ethereum_Module.encodeFunction({
+    return EthersUtils_Module.encodeFunction({
       method: paymentsAbi("sweepTokenWithFee"),
       args: [
         token.address,
@@ -162,7 +162,7 @@ export function encodeSweepToken(args: Args_encodeSweepToken): string {
       ],
     }).unwrap();
   } else {
-    return Ethereum_Module.encodeFunction({
+    return EthersUtils_Module.encodeFunction({
       method: paymentsAbi("sweepToken"),
       args: [token.address, amountMinimum.toString(), recipient],
     }).unwrap();
@@ -170,7 +170,7 @@ export function encodeSweepToken(args: Args_encodeSweepToken): string {
 }
 
 export function encodeRefundETH(_: Args_encodeRefundETH): string {
-  return Ethereum_Module.encodeFunction({
+  return EthersUtils_Module.encodeFunction({
     method: paymentsAbi("refundETH"),
     args: null,
   }).unwrap();
@@ -180,7 +180,7 @@ export function encodeMulticall(args: Args_encodeMulticall): string {
   const calldatas: string[] = args.calldatas;
   return calldatas.length == 1
     ? calldatas[0]
-    : Ethereum_Module.encodeFunction({
+    : EthersUtils_Module.encodeFunction({
         method:
           "function multicall(bytes[] calldata data) external payable returns (bytes[] memory results)",
         args: ['[' + calldatas.join(',') + ']'],

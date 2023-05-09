@@ -1,5 +1,5 @@
 import {
-  Ethereum_TxResponse,
+  Ethers_TxResponse,
   FeeAmount,
   GasOptions,
   Args_execSwap,
@@ -23,7 +23,7 @@ import { createTradeExactIn, createTradeExactOut } from "../trade";
 
 import { BigInt } from "@polywrap/wasm-as";
 
-export function execSwap(args: Args_execSwap): Ethereum_TxResponse {
+export function execSwap(args: Args_execSwap): Ethers_TxResponse {
   const trades: Trade[] = args.trades;
   const swapOptions: SwapOptions = args.swapOptions;
   const gasOptions: GasOptions | null = args.gasOptions;
@@ -40,7 +40,7 @@ export function execSwap(args: Args_execSwap): Ethereum_TxResponse {
   });
 }
 
-export function swap(args: Args_swap): Ethereum_TxResponse {
+export function swap(args: Args_swap): Ethers_TxResponse {
   const inToken: Token = args.inToken;
   const outToken: Token = args.outToken;
   const fee: FeeAmount = args.fee;
@@ -95,7 +95,7 @@ export function swap(args: Args_swap): Ethereum_TxResponse {
   });
 }
 
-export function swapWithPool(args: Args_swapWithPool): Ethereum_TxResponse {
+export function swapWithPool(args: Args_swapWithPool): Ethers_TxResponse {
   const address: string = args.address;
   const amount: TokenAmount = args.amount;
   const tradeType: TradeType = args.tradeType;

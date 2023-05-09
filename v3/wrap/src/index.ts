@@ -100,7 +100,7 @@ import {
   Args_validateTickList,
   Args_withdrawToken,
   Args_wrapAmount,
-  Args_wrapToken, ChainId, Ethereum_TxResponse, Fraction, MethodParameters, MintAmounts,
+  Args_wrapToken, ChainId, Ethers_TxResponse, Fraction, MethodParameters, MintAmounts,
   ModuleBase, NextTickResult, Pool, PoolChangeResult, Position, Price, Route, Tick, Token, TokenAmount, Trade
 } from "./wrap";
 
@@ -148,7 +148,7 @@ export class Module extends ModuleBase {
     return utils.addDelta(args);
   }
 
-  approve(args: Args_approve): Ethereum_TxResponse {
+  approve(args: Args_approve): Ethers_TxResponse {
     return utils.approve(args);
   }
 
@@ -232,11 +232,11 @@ export class Module extends ModuleBase {
     return token.currencyEquals(args);
   }
 
-  deployPool(args: Args_deployPool): Ethereum_TxResponse {
+  deployPool(args: Args_deployPool): Ethers_TxResponse {
     return utils.deployPool(args);
   }
 
-  deployPoolFromTokens(args: Args_deployPoolFromTokens): Ethereum_TxResponse {
+  deployPoolFromTokens(args: Args_deployPoolFromTokens): Ethers_TxResponse {
     return utils.deployPoolFromTokens(args);
   }
 
@@ -272,11 +272,11 @@ export class Module extends ModuleBase {
     return router.encodeUnwrapWETH9(args);
   }
 
-  execCall(args: Args_execCall): Ethereum_TxResponse {
+  execCall(args: Args_execCall): Ethers_TxResponse {
     return utils.execCall(args);
   }
 
-  execSwap(args: Args_execSwap): Ethereum_TxResponse {
+  execSwap(args: Args_execSwap): Ethers_TxResponse {
     return swap.execSwap(args);
   }
 
@@ -456,7 +456,7 @@ export class Module extends ModuleBase {
     return position.safeTransferFromParameters(args);
   }
 
-  swap(args: Args_swap): Ethereum_TxResponse {
+  swap(args: Args_swap): Ethers_TxResponse {
     return swap.swap(args);
   }
 
@@ -464,7 +464,7 @@ export class Module extends ModuleBase {
     return router.swapCallParameters(args);
   }
 
-  swapWithPool(args: Args_swapWithPool): Ethereum_TxResponse {
+  swapWithPool(args: Args_swapWithPool): Ethers_TxResponse {
     return swap.swapWithPool(args);
   }
 

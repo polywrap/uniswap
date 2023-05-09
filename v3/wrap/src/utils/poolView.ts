@@ -1,4 +1,4 @@
-import { ChainId, Ethereum_Module, FeeAmount, getChainIdKey } from "../wrap";
+import { ChainId, Ethers_Module, FeeAmount, getChainIdKey } from "../wrap";
 
 import { BigInt } from "@polywrap/wasm-as";
 
@@ -37,7 +37,7 @@ export function ethCallView(
   chainId: ChainId,
   method: string
 ): string {
-  return Ethereum_Module.callContractView({
+  return Ethers_Module.callContractView({
     address: address,
     method: method,
     args: [],

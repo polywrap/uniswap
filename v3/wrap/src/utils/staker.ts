@@ -2,7 +2,7 @@
 
 import {
   ClaimOptions,
-  Ethereum_Module,
+  EthersUtils_Module,
   FullWithdrawOptions,
   IncentiveKey,
   Args_collectRewards,
@@ -36,7 +36,7 @@ export function collectRewards(args: Args_collectRewards): MethodParameters {
     calldatas = calldatas.concat(encodeClaim(incentiveKey, options));
     // re-stakes the position for the unique program
     calldatas.push(
-      Ethereum_Module.encodeFunction({
+      EthersUtils_Module.encodeFunction({
         method: stakerAbi("stakeToken"),
         args: [
           encodeIncentiveKey(incentiveKey),
@@ -74,7 +74,7 @@ export function withdrawToken(args: Args_withdrawToken): MethodParameters {
   }
   const owner: string = getChecksumAddress(options.owner);
   calldatas.push(
-    Ethereum_Module.encodeFunction({
+    EthersUtils_Module.encodeFunction({
       method: stakerAbi("withdrawToken"),
       args: [
         options.tokenId.toString(),
@@ -103,12 +103,12 @@ export function encodeDeposit(args: Args_encodeDeposit): string {
     for (let i = 0; i < incentiveKeys.length; i++) {
       keys.push(encodeIncentiveKey(incentiveKeys[i]));
     }
-    data = Ethereum_Module.encodeParams({
+    data = EthersUtils_Module.encodeParams({
       types: [`${stakerAbi("INCENTIVE_KEY_ABI")}[]`],
       values: ["[" + keys.join(",") + "]"],
     }).unwrap();
   } else {
-    data = Ethereum_Module.encodeParams({
+    data = EthersUtils_Module.encodeParams({
       types: [stakerAbi("INCENTIVE_KEY_ABI")],
       values: [encodeIncentiveKey(incentiveKeys[0])],
     }).unwrap();
@@ -128,7 +128,7 @@ function encodeClaim(
 ): string[] {
   const calldatas: string[] = [];
   calldatas.push(
-    Ethereum_Module.encodeFunction({
+    EthersUtils_Module.encodeFunction({
       method: stakerAbi("unstakeToken"),
       args: [
         encodeIncentiveKey(incentiveKey),
@@ -140,7 +140,7 @@ function encodeClaim(
   const amount: BigInt =
     options.amount === null ? BigInt.ZERO : options.amount!;
   calldatas.push(
-    Ethereum_Module.encodeFunction({
+    EthersUtils_Module.encodeFunction({
       method: stakerAbi("claimReward"),
       args: [
         incentiveKey.rewardToken.address,
