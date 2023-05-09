@@ -1,7 +1,7 @@
 import { PolywrapClient } from "@polywrap/client-js";
 import {
   ChainIdEnum,
-  Ethereum_TxResponse,
+  Ethers_TxResponse,
   MethodParameters,
   Pool,
   Token,
@@ -9,7 +9,7 @@ import {
   Trade,
   getPoolFromAddress, getPools, getTokens,
   bestTradeExactOut, getNative, swapCallParameters,
-  getMainnetForkConfig, initInfra, stopInfra, Ethereum_TxReceipt,
+  getMainnetForkConfig, initInfra, stopInfra, Ethers_TxReceipt,
 } from "../helpers";
 import path from "path";
 import * as ethers from "ethers";
@@ -47,7 +47,7 @@ describe("Call (mainnet fork)", () => {
   it("successfully approves token transfers", async () => {
     const tokens: Token[] = getTokens(await getPools(client, fsUri));
     for (const token of tokens) {
-      const txResponse = await client.invoke<Ethereum_TxResponse>({
+      const txResponse = await client.invoke<Ethers_TxResponse>({
         uri: fsUri,
         method: "approve",
         args: { token },
@@ -67,7 +67,7 @@ describe("Call (mainnet fork)", () => {
 
     // approve token transfers
     for (const token of tokens) {
-      const txResponse = await client.invoke<Ethereum_TxResponse>({
+      const txResponse = await client.invoke<Ethers_TxResponse>({
         uri: fsUri,
         method: "approve",
         args: { token },
@@ -91,7 +91,7 @@ describe("Call (mainnet fork)", () => {
     });
 
     // execCall eth -> usdc
-    const ethUsdcQuery = await client.invoke<Ethereum_TxResponse>({
+    const ethUsdcQuery = await client.invoke<Ethers_TxResponse>({
       uri: fsUri,
       method: "execCall",
       args: {
@@ -120,7 +120,7 @@ describe("Call (mainnet fork)", () => {
         "value": "0x00"
       };
 
-    const result = await client.invoke<Ethereum_TxResponse>({
+    const result = await client.invoke<Ethers_TxResponse>({
       uri: fsUri,
       method: "execCall",
       args: {
@@ -132,7 +132,7 @@ describe("Call (mainnet fork)", () => {
     if (result.ok == false) throw result.error;
     expect(result.value).toBeTruthy();
 
-    const wait = await client.invoke<Ethereum_TxReceipt>({
+    const wait = await client.invoke<Ethers_TxReceipt>({
       uri: "wrap://ens/wraps.eth:ethereum@2.0.0",
       method: "awaitTransaction",
       args: {

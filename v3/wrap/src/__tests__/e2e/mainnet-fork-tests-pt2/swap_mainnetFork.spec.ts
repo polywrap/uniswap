@@ -1,15 +1,22 @@
 import { PolywrapClient } from "@polywrap/client-js";
 import {
   ChainIdEnum,
-  Ethereum_TxResponse, FeeAmountEnum,
+  Ethers_TxResponse,
+  FeeAmountEnum,
   Pool,
   SwapOptions,
   Token,
   TokenAmount,
-  Trade, TradeTypeEnum,
-  getPoolFromAddress, getTokens,
-  bestTradeExactOut, bestTradeExactIn, getNative,
-  getMainnetForkConfig, initInfra, stopInfra,
+  Trade,
+  TradeTypeEnum,
+  getPoolFromAddress,
+  getTokens,
+  bestTradeExactOut,
+  bestTradeExactIn,
+  getNative,
+  getMainnetForkConfig,
+  initInfra,
+  stopInfra,
 } from "../helpers";
 import path from "path";
 import * as ethers from "ethers";
@@ -18,7 +25,6 @@ import erc20ABI from "../testData/erc20ABI.json";
 jest.setTimeout(360000);
 
 describe("Swap (mainnet fork)", () => {
-
   const getSwapParams = (recipient: string): SwapOptions => ({
     slippageTolerance: "0.1",
     recipient,
@@ -41,7 +47,7 @@ describe("Swap (mainnet fork)", () => {
     client = new PolywrapClient(config);
     // get uri
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
-    fsUri = "fs/" + wrapperAbsPath + '/build';
+    fsUri = "fs/" + wrapperAbsPath + "/build";
     // set up test case data
     pools = await Promise.all([
       getPoolFromAddress(client, fsUri, USDC_ETH_03_ADDRESS, true),
@@ -49,10 +55,12 @@ describe("Swap (mainnet fork)", () => {
     ]);
     tokens = getTokens(pools);
     // set up ethers provider
-    ethersProvider = new ethers.providers.JsonRpcProvider("http://localhost:8546");
+    ethersProvider = new ethers.providers.JsonRpcProvider(
+      "http://localhost:8546"
+    );
     // approve token transfers
     for (const token of tokens) {
-      const txResponse = await client.invoke<Ethereum_TxResponse>({
+      const txResponse = await client.invoke<Ethers_TxResponse>({
         uri: fsUri,
         method: "approve",
         args: { token },
@@ -72,15 +80,21 @@ describe("Swap (mainnet fork)", () => {
     const recipient = await ethersProvider.getSigner(0).getAddress();
 
     const ETH: Token = await getNative(client, fsUri, ChainIdEnum.MAINNET);
-    const USDC: Token = tokens.find(token => token.currency.symbol === "USDC") as Token;
-    const WBTC: Token = tokens.find(token => token.currency.symbol === "WBTC") as Token;
+    const USDC: Token = tokens.find(
+      (token) => token.currency.symbol === "USDC"
+    ) as Token;
+    const WBTC: Token = tokens.find(
+      (token) => token.currency.symbol === "WBTC"
+    ) as Token;
 
     // eth -> usdc preparation
-    const usdcOut: TokenAmount = { token: USDC, amount: "10000000000" }
-    const ethUsdcTrade: Trade = (await bestTradeExactOut(client, fsUri, pools, ETH, usdcOut))[0];
+    const usdcOut: TokenAmount = { token: USDC, amount: "10000000000" };
+    const ethUsdcTrade: Trade = (
+      await bestTradeExactOut(client, fsUri, pools, ETH, usdcOut)
+    )[0];
 
     // execSwap eth -> usdc
-    const ethUsdcQuery = await client.invoke<Ethereum_TxResponse>({
+    const ethUsdcQuery = await client.invoke<Ethers_TxResponse>({
       uri: fsUri,
       method: "execSwap",
       args: {
@@ -94,17 +108,25 @@ describe("Swap (mainnet fork)", () => {
     const ethUsdcTx = await ethersProvider.getTransaction(ethUsdcHash);
     const ethUsdcTxResponse = await ethUsdcTx.wait();
     expect(ethUsdcTxResponse.status).toBeTruthy();
-    
-    const usdcContract = new ethers.Contract(USDC.address, erc20ABI, ethersProvider);
-    const usdcBalance: ethers.BigNumber = await usdcContract.balanceOf(recipient);
+
+    const usdcContract = new ethers.Contract(
+      USDC.address,
+      erc20ABI,
+      ethersProvider
+    );
+    const usdcBalance: ethers.BigNumber = await usdcContract.balanceOf(
+      recipient
+    );
     expect(usdcBalance.gte(usdcOut.amount)).toBeTruthy();
 
     // usdc -> wbtc preparation
-    const wbtcOut: TokenAmount = { token: WBTC, amount: "1000000" }
-    const usdcWbtcTrade: Trade = (await bestTradeExactOut(client, fsUri, pools, USDC, wbtcOut))[0];
+    const wbtcOut: TokenAmount = { token: WBTC, amount: "1000000" };
+    const usdcWbtcTrade: Trade = (
+      await bestTradeExactOut(client, fsUri, pools, USDC, wbtcOut)
+    )[0];
 
     // execSwap usdc -> wbtc
-    const usdcWbtcQuery = await client.invoke<Ethereum_TxResponse>({
+    const usdcWbtcQuery = await client.invoke<Ethers_TxResponse>({
       uri: fsUri,
       method: "execSwap",
       args: {
@@ -112,23 +134,31 @@ describe("Swap (mainnet fork)", () => {
         swapOptions: getSwapParams(recipient),
       },
     });
-    if (usdcWbtcQuery.ok == false) fail(usdcWbtcQuery.error)
+    if (usdcWbtcQuery.ok == false) fail(usdcWbtcQuery.error);
 
     const usdcWbtcHash: string = usdcWbtcQuery.value.hash ?? "";
     const usdcWbtcTx = await ethersProvider.getTransaction(usdcWbtcHash);
     const usdcWbtcTxResponse = await usdcWbtcTx.wait();
     expect(usdcWbtcTxResponse.status).toBeTruthy();
 
-    const wbtcContract = new ethers.Contract(WBTC.address, erc20ABI, ethersProvider);
-    const wbtcBalance: ethers.BigNumber = await wbtcContract.balanceOf(recipient);
+    const wbtcContract = new ethers.Contract(
+      WBTC.address,
+      erc20ABI,
+      ethersProvider
+    );
+    const wbtcBalance: ethers.BigNumber = await wbtcContract.balanceOf(
+      recipient
+    );
     expect(wbtcBalance.gte(wbtcOut.amount)).toBeTruthy();
 
     // wbtc -> eth preparation
-    const wbtcIn: TokenAmount = { token: WBTC, amount: wbtcBalance.toString() }
-    const wbtcEthTrade: Trade = (await bestTradeExactIn(client, fsUri, pools, wbtcIn, ETH))[0];
+    const wbtcIn: TokenAmount = { token: WBTC, amount: wbtcBalance.toString() };
+    const wbtcEthTrade: Trade = (
+      await bestTradeExactIn(client, fsUri, pools, wbtcIn, ETH)
+    )[0];
 
     // execSwap wbtc -> eth
-    const wbtcEthQuery = await client.invoke<Ethereum_TxResponse>({
+    const wbtcEthQuery = await client.invoke<Ethers_TxResponse>({
       uri: fsUri,
       method: "execSwap",
       args: {
@@ -143,7 +173,9 @@ describe("Swap (mainnet fork)", () => {
     const wbtcEthTxResponse = await wbtcEthTx.wait();
     expect(wbtcEthTxResponse.status).toBeTruthy();
 
-    const finalWbtcBalance: ethers.BigNumber = await wbtcContract.balanceOf(recipient);
+    const finalWbtcBalance: ethers.BigNumber = await wbtcContract.balanceOf(
+      recipient
+    );
     expect(finalWbtcBalance.eq(0)).toBeTruthy();
   });
 
@@ -151,9 +183,11 @@ describe("Swap (mainnet fork)", () => {
     const recipient = await ethersProvider.getSigner(1).getAddress();
 
     const ETH: Token = await getNative(client, fsUri, ChainIdEnum.MAINNET);
-    const USDC: Token = tokens.find(token => token.currency.symbol === "USDC") as Token;
+    const USDC: Token = tokens.find(
+      (token) => token.currency.symbol === "USDC"
+    ) as Token;
 
-    const ethUsdcQuery = await client.invoke<Ethereum_TxResponse>({
+    const ethUsdcQuery = await client.invoke<Ethers_TxResponse>({
       uri: fsUri,
       method: "swap",
       args: {
@@ -172,8 +206,14 @@ describe("Swap (mainnet fork)", () => {
     const ethUsdcTxResponse = await ethUsdcTx.wait();
     expect(ethUsdcTxResponse.status).toBeTruthy();
 
-    const usdcContract = new ethers.Contract(USDC.address, erc20ABI, ethersProvider);
-    const usdcBalance: ethers.BigNumber = await usdcContract.balanceOf(recipient);
+    const usdcContract = new ethers.Contract(
+      USDC.address,
+      erc20ABI,
+      ethersProvider
+    );
+    const usdcBalance: ethers.BigNumber = await usdcContract.balanceOf(
+      recipient
+    );
     expect(usdcBalance.gte("1000000000")).toBeTruthy();
   });
 
@@ -181,18 +221,32 @@ describe("Swap (mainnet fork)", () => {
     const recipient = await ethersProvider.getSigner().getAddress();
 
     const ETH: Token = await getNative(client, fsUri, ChainIdEnum.MAINNET);
-    const USDC: Token = tokens.find(token => token.currency.symbol === "USDC") as Token;
-    const WBTC: Token = tokens.find(token => token.currency.symbol === "WBTC") as Token;
+    const USDC: Token = tokens.find(
+      (token) => token.currency.symbol === "USDC"
+    ) as Token;
+    const WBTC: Token = tokens.find(
+      (token) => token.currency.symbol === "WBTC"
+    ) as Token;
 
-    const usdcContract = new ethers.Contract(USDC.address, erc20ABI, ethersProvider.getSigner(2));
-    const startUsdcBalance: ethers.BigNumber = await usdcContract.balanceOf(recipient);
+    const usdcContract = new ethers.Contract(
+      USDC.address,
+      erc20ABI,
+      ethersProvider.getSigner(2)
+    );
+    const startUsdcBalance: ethers.BigNumber = await usdcContract.balanceOf(
+      recipient
+    );
 
-    const wbtcContract = new ethers.Contract(WBTC.address, erc20ABI, ethersProvider);
+    const wbtcContract = new ethers.Contract(
+      WBTC.address,
+      erc20ABI,
+      ethersProvider
+    );
 
     const usdcOut = "1000000000";
 
     // swap eth -> usdc
-    const ethUsdcQuery = await client.invoke<Ethereum_TxResponse>({
+    const ethUsdcQuery = await client.invoke<Ethers_TxResponse>({
       uri: fsUri,
       method: "swap",
       args: {
@@ -211,12 +265,14 @@ describe("Swap (mainnet fork)", () => {
     const ethUsdcTxResponse = await ethUsdcTx.wait();
     expect(ethUsdcTxResponse.status).toBeTruthy();
 
-    const usdcBalance: ethers.BigNumber = await usdcContract.balanceOf(recipient);
+    const usdcBalance: ethers.BigNumber = await usdcContract.balanceOf(
+      recipient
+    );
     expect(usdcBalance.sub(usdcOut).eq(startUsdcBalance)).toBeTruthy();
 
     // swapWithPool usdc -> wbtc
-    const usdcIn: TokenAmount = { token: USDC, amount: usdcBalance.toString() }
-    const usdcWbtcQuery = await client.invoke<Ethereum_TxResponse>({
+    const usdcIn: TokenAmount = { token: USDC, amount: usdcBalance.toString() };
+    const usdcWbtcQuery = await client.invoke<Ethers_TxResponse>({
       uri: fsUri,
       method: "swapWithPool",
       args: {
@@ -233,9 +289,13 @@ describe("Swap (mainnet fork)", () => {
     const usdcWbtcTxResponse = await usdcWbtcTx.wait();
     expect(usdcWbtcTxResponse.status).toBeTruthy();
 
-    const endUsdcBalance: ethers.BigNumber = await usdcContract.balanceOf(recipient);
+    const endUsdcBalance: ethers.BigNumber = await usdcContract.balanceOf(
+      recipient
+    );
     expect(endUsdcBalance.eq(0)).toBeTruthy();
-    const endWbtcBalance: ethers.BigNumber = await wbtcContract.balanceOf(recipient);
+    const endWbtcBalance: ethers.BigNumber = await wbtcContract.balanceOf(
+      recipient
+    );
     expect(endWbtcBalance.gt(0)).toBeTruthy();
   });
 });

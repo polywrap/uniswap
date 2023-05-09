@@ -1,6 +1,6 @@
 import { PolywrapClient } from "@polywrap/client-js";
 import {
-  ChainIdEnum, Ethereum_TxResponse, FeeAmountEnum, Token, Pool,
+  ChainIdEnum, Ethers_TxResponse, FeeAmountEnum, Token, Pool,
   getPoolFromAddress,
   getWrappedNative,
   initInfra,
@@ -46,7 +46,7 @@ describe("Deploy pool (mainnet fork)", () => {
     };
     const WETH: Token = await getWrappedNative(client, fsUri, ChainIdEnum.MAINNET);
 
-    const txResponse = await client.invoke<Ethereum_TxResponse>({
+    const txResponse = await client.invoke<Ethers_TxResponse>({
       uri: fsUri,
       method: "deployPoolFromTokens",
       args: {

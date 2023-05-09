@@ -3,7 +3,7 @@
 import {
   AddLiquidityOptions,
   CollectOptions,
-  Ethereum_Module,
+  EthersUtils_Module,
   Args_addCallParameters,
   Args_collectCallParameters,
   Args_createCallParameters,
@@ -159,7 +159,7 @@ export function addCallParameters(
       deadline,
     };
     calldatas.push(
-      Ethereum_Module.encodeFunction({
+      EthersUtils_Module.encodeFunction({
         method: nfpmAbi("mint"),
         args: [paramsToEthAbiString(args)],
       }).unwrap()
@@ -175,7 +175,7 @@ export function addCallParameters(
       deadline,
     };
     calldatas.push(
-      Ethereum_Module.encodeFunction({
+      EthersUtils_Module.encodeFunction({
         method: nfpmAbi("increaseLiquidity"),
         args: [paramsToEthAbiString(args)],
       }).unwrap()
@@ -263,7 +263,7 @@ export function removeCallParameters(
 
   if (options.permit !== null) {
     calldatas.push(
-      Ethereum_Module.encodeFunction({
+      EthersUtils_Module.encodeFunction({
         method: nfpmAbi("permit"),
         args: [
           getChecksumAddress(options.permit!.spender),
@@ -286,7 +286,7 @@ export function removeCallParameters(
     deadline,
   };
   calldatas.push(
-    Ethereum_Module.encodeFunction({
+    EthersUtils_Module.encodeFunction({
       method: nfpmAbi("decreaseLiquidity"),
       args: [paramsToEthAbiString(decreaseLiqArgs)],
     }).unwrap()
@@ -316,7 +316,7 @@ export function removeCallParameters(
   if (liqPercent.eq(new Fraction(BigInt.ONE))) {
     if (options.burnToken !== null && options.burnToken!.unwrap()) {
       calldatas.push(
-        Ethereum_Module.encodeFunction({
+        EthersUtils_Module.encodeFunction({
           method: nfpmAbi("burn"),
           args: [tokenId],
         }).unwrap()
@@ -344,7 +344,7 @@ export function safeTransferFromParameters(
 
   let calldata: string;
   if (options.data !== null) {
-    calldata = Ethereum_Module.encodeFunction({
+    calldata = EthersUtils_Module.encodeFunction({
       method: nfpmAbi("safeTransferFrom"),
       args: [
         sender,
@@ -354,7 +354,7 @@ export function safeTransferFromParameters(
       ],
     }).unwrap();
   } else {
-    calldata = Ethereum_Module.encodeFunction({
+    calldata = EthersUtils_Module.encodeFunction({
       method: nfpmAbi("_safeTransferFrom"),
       args: [sender, recipient, options.tokenId.toString()],
     }).unwrap();
@@ -371,7 +371,7 @@ function isMint(options: AddLiquidityOptions): boolean {
 }
 
 function encodeCreate(pool: Pool): string {
-  return Ethereum_Module.encodeFunction({
+  return EthersUtils_Module.encodeFunction({
     method: nfpmAbi("createAndInitializePoolIfNecessary"),
     args: [
       pool.token0.address,
@@ -401,7 +401,7 @@ function encodeCollect(options: CollectOptions): string[] {
     amount1Max: MAX_UINT_128,
   };
   calldatas.push(
-    Ethereum_Module.encodeFunction({
+    EthersUtils_Module.encodeFunction({
       method: nfpmAbi("collect"),
       args: [paramsToEthAbiString(collectArgs)],
     }).unwrap()

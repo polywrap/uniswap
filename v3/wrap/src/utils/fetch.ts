@@ -10,8 +10,8 @@ import {
   Args_fetchTickList,
   Args_fetchPoolFromTokens,
   FeeAmount,
-  Ethereum_Module,
-  Ethereum_Connection,
+  Ethers_Module,
+  Ethers_Connection,
   Currency,
 } from "../wrap";
 import { createPool, getPoolAddress } from "../pool";
@@ -36,26 +36,26 @@ export function fetchToken(args: Args_fetchToken): Token {
   const chainId: ChainId = args.chainId;
   const address: string = args.address;
 
-  const connection: Ethereum_Connection = {
+  const connection: Ethers_Connection = {
     node: null,
     networkNameOrChainId: getChainIdKey(chainId),
   };
 
-  const name: string = Ethereum_Module.callContractView({
+  const name: string = Ethers_Module.callContractView({
     connection,
     address,
     method: "function name() public view returns (string memory)",
     args: null,
   }).unwrap();
 
-  const symbol: string = Ethereum_Module.callContractView({
+  const symbol: string = Ethers_Module.callContractView({
     connection,
     address,
     method: "function symbol() public view returns (string memory)",
     args: null,
   }).unwrap();
 
-  const decimalsString: string = Ethereum_Module.callContractView({
+  const decimalsString: string = Ethers_Module.callContractView({
     connection,
     address,
     method: "function decimals() public view returns (uint8)",
