@@ -9,7 +9,7 @@ import {
   Trade,
   getPoolFromAddress, getPools, getTokens,
   bestTradeExactOut, getNative, swapCallParameters,
-  getMainnetForkConfig, initInfra, stopInfra, Ethereum_TxReceipt,
+  getMainnetForkConfig, initInfra, stopInfra, Ethers_TxReceipt,
 } from "../helpers";
 import path from "path";
 import * as ethers from "ethers";
@@ -132,7 +132,7 @@ describe("Call (mainnet fork)", () => {
     if (result.ok == false) throw result.error;
     expect(result.value).toBeTruthy();
 
-    const wait = await client.invoke<Ethereum_TxReceipt>({
+    const wait = await client.invoke<Ethers_TxReceipt>({
       uri: "wrap://ens/wraps.eth:ethereum@2.0.0",
       method: "awaitTransaction",
       args: {
