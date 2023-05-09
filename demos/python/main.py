@@ -1,3 +1,8 @@
+import os
+from pathlib import Path
+from eth_account import Account
+import time
+
 from polywrap_uri_resolvers import (
     RecursiveResolver,
     UriResolverAggregator,
@@ -7,25 +12,25 @@ from polywrap_uri_resolvers import (
 )
 from polywrap_client import PolywrapClient, ClientConfig
 from polywrap_core import InvokerOptions, UriPackageOrWrapper, Uri
-import os
-from pathlib import Path
-from eth_account import Account
-import time
-
+from polywrap_http_plugin import http_plugin
 from polywrap_ethereum_provider import ethereum_provider_plugin
-from polywrap_ethereum_provider.connection import ConnectionConfig, Connection
+from polywrap_ethereum_provider.connection import Connection
 from polywrap_ethereum_provider.connections import Connections
 
 from dotenv import load_dotenv
 
 load_dotenv()
 
-ETHEREUM_WRAPPER_URI = Uri.from_str("wrap://ens/wraps.eth:ethereum@2.0.0")
+ETHEREUM_WRAP_CORE_URI = Uri.from_str("wrap://ens/ethers.wraps.eth")
+ETHEREUM_WRAP_UTILS_URI = Uri.from_str("wrap://ens/ethers.wraps.eth:utils@0.0.1")
 ETHEREUM_PROVIDER_URI = Uri.from_str("wrap://ens/wraps.eth:ethereum-provider@2.0.0")
 GRAPH_NODE_WRAPPER_URI = Uri.from_str("wrap://ens/wraps.eth:graph-node@1.0.0")
+HTTP_PLUGIN_URI = Uri.from_str("wrap://ens/wraps.eth:http@1.1.0")
 SHA3_WRAPPER_URI = Uri.from_str("wrap://ens/wraps.eth:sha3@1.0.0")
 
-LOCAL_ETHEREUM_WRAPPER = Uri.from_str("wrap://fs/./dependencies/ethereum")
+
+LOCAL_ETHEREUM_CORE_WRAPPER = Uri.from_str("wrap://fs/./dependencies/ethers/core")
+LOCAL_ETHEREUM_UTILS_WRAPPER = Uri.from_str("wrap://fs/./dependencies/ethers/utils")
 LOCAL_GRAPH_NODE_WRAPPER = Uri.from_str("wrap://fs/./dependencies/graph-node")
 LOCAL_SHA3_WRAPPER = Uri.from_str("wrap://fs/./dependencies/sha3")
 
@@ -43,31 +48,27 @@ async def main():
     print("Demo of swap in uniswap with python client started...")
     print(f"The address: {signer.address} will execute the swap")
 
-    connection_config = ConnectionConfig(
-        provider="https://mainnet.infura.io/v3/1a8e6a8ab1df44ccb77d3e954082c5d4",
-        signer=signer,
-    )
-    connection = Connection(config=connection_config)
+    connection = Connection(provider="https://mainnet.infura.io/v3/1a8e6a8ab1df44ccb77d3e954082c5d4", signer=signer)
     connections = Connections(
-        networks={"mainnet": connection}, default_network="mainnet"
+        {"mainnet": connection}, default_network="mainnet"
     )
-    ethereum_provider = ethereum_provider_plugin(connections=connections)
-
+    ethereum_provider_package = ethereum_provider_plugin(connections=connections)
+    http_plugin_package = http_plugin() # type: ignore
     resolver = RecursiveResolver(
         UriResolverAggregator(
             [
                 FsUriResolver(file_reader=SimpleFileReader()),
-                StaticResolver({ETHEREUM_WRAPPER_URI: LOCAL_ETHEREUM_WRAPPER}),
-                StaticResolver({ETHEREUM_PROVIDER_URI: ethereum_provider}),
+                StaticResolver({ETHEREUM_WRAP_CORE_URI: LOCAL_ETHEREUM_CORE_WRAPPER}),
+                StaticResolver({ETHEREUM_WRAP_UTILS_URI: LOCAL_ETHEREUM_UTILS_WRAPPER}),
+                StaticResolver({ETHEREUM_PROVIDER_URI: ethereum_provider_package}),
                 StaticResolver({GRAPH_NODE_WRAPPER_URI: LOCAL_GRAPH_NODE_WRAPPER}),
                 StaticResolver({SHA3_WRAPPER_URI: LOCAL_SHA3_WRAPPER}),
+                StaticResolver({HTTP_PLUGIN_URI: http_plugin_package}),
             ]
         )
     )
 
-    interface_implementations = {ETHEREUM_PROVIDER_URI: [ETHEREUM_PROVIDER_URI]}
-
-    config = ClientConfig(resolver=resolver, interfaces=interface_implementations)
+    config = ClientConfig(resolver=resolver)
     client = PolywrapClient(config=config)
 
     get_native_options: InvokerOptions[UriPackageOrWrapper] = InvokerOptions(

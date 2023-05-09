@@ -20,5 +20,5 @@ poetry install
 
 Run example
 ```bash
-poetry main python main.py
+poetry run python main.py
 ```

@@ -10,9 +10,10 @@ description = ""
 
 [tool.poetry.dependencies]
 python = "^3.10"
-polywrap-client = "^0.1.0a28"
+polywrap-client = "^0.1.0a29"
 eth_account = "0.8.0"
-polywrap-ethereum-provider = "0.0.1"
+polywrap-http-plugin = "0.1.0a6"
+polywrap-ethereum-provider = "0.1.0a2"
 python-dotenv = "^1.0.0"
 
 [tool.poetry.group.dev.dependencies]
