@@ -10,14 +10,6 @@ export function getSimpleConfig(): IClientConfigBuilder {
       "ens/wraps.eth:ethereum-provider@2.0.0",
       ethereumProviderPlugin({ connections: new Connections({ networks: { } }) }) as IWrapPackage
     )
-    .addRedirect(
-      "wrap://ens/ethers.wraps.eth:utils@0.0.1",
-      "wrap://ipfs/QmRENy16y3p4VTXv7jXyVrPhJ9gdTMK8U8sXmLSTXW5ReF"
-    )
-    .addRedirect(
-      "wrap://ens/ethers.wraps.eth",
-      "wrap://ipfs/QmVkEd5KUkxaDLWkvxBw2dXpEJ43SkohxekFPrtDHqruhS"
-    )
 }
 
 export function getMainnetForkConfig(): IClientConfigBuilder {
@@ -39,14 +31,6 @@ export function getMainnetForkConfig(): IClientConfigBuilder {
           defaultNetwork: "mainnet",
         }),
       }) as IWrapPackage,
-    )
-    .addRedirect(
-      "wrap://ens/ethers.wraps.eth:utils@0.0.1",
-      "wrap://ipfs/QmRENy16y3p4VTXv7jXyVrPhJ9gdTMK8U8sXmLSTXW5ReF"
-    )
-    .addRedirect(
-      "wrap://ens/ethers.wraps.eth",
-      "wrap://ipfs/QmVkEd5KUkxaDLWkvxBw2dXpEJ43SkohxekFPrtDHqruhS"
     )
 }
 
