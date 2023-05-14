@@ -172,7 +172,7 @@ We used the Ethereum wrapper's `encodeFunction` method to encode calldata for Un
 // An abridged copy of src/router/utils.ts in the Uniswap v3 wrapper
 
 import {
-  Ethereum_Module,
+  Ethers_Module,
   Args_encodeMulticall,
 } from "./wrap";
 
@@ -180,7 +180,7 @@ export function encodeMulticall(args: Args_encodeMulticall): string {
   const calldatas: string[] = args.calldatas;
   return calldatas.length == 1
     ? calldatas[0]
-    : Ethereum_Module.encodeFunction({
+    : Ethers_Module.encodeFunction({
         method:
           "function multicall(bytes[] calldata data) external payable returns (bytes[] memory results)",
         args: ['["' + calldatas.join('","') + '"]'],

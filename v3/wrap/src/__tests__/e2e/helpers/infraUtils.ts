@@ -9,7 +9,7 @@ export function getSimpleConfig(): IClientConfigBuilder {
     .addPackage(
       "ens/wraps.eth:ethereum-provider@2.0.0",
       ethereumProviderPlugin({ connections: new Connections({ networks: { } }) }) as IWrapPackage
-    );
+    )
 }
 
 export function getMainnetForkConfig(): IClientConfigBuilder {
@@ -31,7 +31,7 @@ export function getMainnetForkConfig(): IClientConfigBuilder {
           defaultNetwork: "mainnet",
         }),
       }) as IWrapPackage,
-    );
+    )
 }
 
 export async function initInfra(): Promise<void> {

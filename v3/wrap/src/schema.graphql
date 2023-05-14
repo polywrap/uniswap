@@ -1,4 +1,5 @@
-#import { Module, TxResponse } into Ethereum from "wrap://ens/wraps.eth:ethereum@2.0.0"
+#import { Module, TxResponse } into Ethers from "wrap://ens/ethers.wraps.eth:0.1.0"
+#import { Module } into EthersUtils from "wrap://ens/ethers.wraps.eth:utils@0.1.1"
 #import { Module } into SHA3 from "wrap://ens/wraps.eth:sha3@1.0.0"
 #import { Module } into Subgraph from "wrap://ens/wraps.eth:graph-node@1.0.0"
 
@@ -11,7 +12,7 @@ type Module {
         amount: BigInt
         """Transaction gas configuration"""
         gasOptions: GasOptions
-    ): Ethereum_TxResponse!
+    ): Ethers_TxResponse!
 
     """Send an Ethereum transaction to the given address"""
     execCall(
@@ -23,7 +24,7 @@ type Module {
         chainId: ChainId!
         """Transaction gas configuration"""
         gasOptions: GasOptions
-    ): Ethereum_TxResponse!
+    ): Ethers_TxResponse!
 
     """Perform an on-chain swap with one or more trades in a single transaction"""
     execSwap(
@@ -33,7 +34,7 @@ type Module {
         swapOptions: SwapOptions!
         """Transaction gas configuration"""
         gasOptions: GasOptions
-    ): Ethereum_TxResponse!
+    ): Ethers_TxResponse!
 
     """Perform an on-chain swap within a single pool by using token and fee amount information to find the correct pool"""
     swap(
@@ -51,7 +52,7 @@ type Module {
         swapOptions: SwapOptions!
         """Transaction gas configuration"""
         gasOptions: GasOptions
-    ): Ethereum_TxResponse!
+    ): Ethers_TxResponse!
 
     """Perform an on-chain swap using a single pool at provided address; requires ERC20-compliant input and output (i.e. no Ether)"""
     swapWithPool(
@@ -65,7 +66,7 @@ type Module {
         swapOptions: SwapOptions!
         """Transaction gas configuration"""
         gasOptions: GasOptions
-    ): Ethereum_TxResponse!
+    ): Ethers_TxResponse!
 
     """Deploy a pool contract on-chain"""
     deployPool(
@@ -73,7 +74,7 @@ type Module {
         pool: Pool!
         """Transaction gas configuration"""
         gasOptions: GasOptions
-    ): Ethereum_TxResponse!
+    ): Ethers_TxResponse!
 
     """Deploy a pool contract on chain for the given tokens and fee amount"""
     deployPoolFromTokens(
@@ -85,7 +86,7 @@ type Module {
         fee: FeeAmount!
         """Transaction gas configuration"""
         gasOptions: GasOptions
-    ): Ethereum_TxResponse!
+    ): Ethers_TxResponse!
     ## Token
     """Returns true if the currencies are equivalent, false otherwise"""
     currencyEquals(
