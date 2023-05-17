@@ -8,7 +8,7 @@ export function getBuilder(): IClientConfigBuilder {
   return new ClientConfigBuilder()
     .addDefaults()
     .addPackage(
-    DefaultBundle.plugins.ethereumProvider.uri.uri,
+    DefaultBundle.plugins.ethereumProviderV2.uri.uri,
     ethereumProviderPlugin({
       connections: new Connections({
         networks: {
