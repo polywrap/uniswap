@@ -18,7 +18,7 @@ UniV3 depends upon the [ethereum wrap](https://github.com/polywrap/ethereum), wh
 
 [Here's an example](https://github.com/polywrap/ethereum/blob/36e6f3331264732e73f3e236004416e82930ed64/provider/implementations/js/tests/index.spec.ts#L15-L30) of setting up a JavaScript / TypeScript client with the ethereum-provider plugin.
 
-You can learn more about Polywrap clients & configs in the docs [here](https://docs.polywrap.io/tutorials/integrate-wrappers/configure-client).
+You can learn more about Polywrap clients & configs in the docs [here](https://docs.polywrap.io/tutorials/use-wraps/configure-client).
 
 ### Step 3: Run!
 
