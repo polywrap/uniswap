@@ -14,9 +14,9 @@ In order to integrate the UniV3 wrap into your applications, the first thing you
 
 ### Step 2: Client Config 
 
-UniV3 depends upon the [ethereum wrap](https://github.com/polywrap/ethereum), which in-turn requires an [ethereum-provider plugin](https://github.com/polywrap/ethereum/tree/main/provider). Plugins are added directly to the client using its config.
+UniV3 depends upon the [ethereum wrap](https://github.com/polywrap/ethers), which in-turn requires an [ethereum-provider plugin](https://github.com/polywrap/ethereum-wallet). Plugins are added directly to the client using its config.
 
-[Here's an example](https://github.com/polywrap/ethereum/blob/36e6f3331264732e73f3e236004416e82930ed64/provider/implementations/js/tests/index.spec.ts#L15-L30) of setting up a JavaScript / TypeScript client with the ethereum-provider plugin.
+[Here's an example](https://github.com/polywrap/ethers/blob/36e6f3331264732e73f3e236004416e82930ed64/provider/implementations/js/tests/index.spec.ts#L15-L30) of setting up a JavaScript / TypeScript client with the ethereum-provider plugin.
 
 You can learn more about Polywrap clients & configs in the docs [here](https://docs.polywrap.io/tutorials/use-wraps/configure-client).
 
