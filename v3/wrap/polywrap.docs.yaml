@@ -1,5 +1,5 @@
 format: 0.1.0
 description: Interact with the Uniswap V3 contract.
 website: https://polywrap.io
-repository: https://github.com/polywrap/ens
+repository: https://github.com/polywrap/
 readme: ./docs/readme.md

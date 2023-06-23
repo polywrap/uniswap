@@ -10,7 +10,6 @@ In order to integrate the UniV3 wrap into your applications, the first thing you
 - JavaScript / TypeScript
 - Python
 - Rust
-- Go
 - Swift
 
 ### Step 2: Client Config 
