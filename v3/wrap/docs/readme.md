@@ -2,17 +2,13 @@
 
 [Uniswap V3](https://docs.uniswap.org/concepts/uniswap-protocol) is a peer-to-peer system designed for exchanging cryptocurrencies on the Ethereum blockchain. It has become one of the most used & trusted decentralized exchanges on the blockchain ([usage statistics](https://defillama.com/protocol/uniswap)).
 
-## Integrate
+The UniV3 wrap gives you the ability to interact with Uniswap V3 contracts.
 
-### Step 1: Polywrap Client
+## Requirements
 
-In order to integrate the UniV3 wrap into your applications, the first thing you'll need is a Polywrap client. Currently Polywrap has clients available in:
-- JavaScript / TypeScript
-- Python
-- Rust
-- Swift
+To run the UniV3 wrap you'll need a Polywrap client in your application. See here for installation information: https://docs.polywrap.io/clients
 
-### Step 2: Client Config 
+### Configuration
 
 UniV3 depends upon the [ethereum wrap](https://github.com/polywrap/ethers), which in-turn requires an [ethereum-provider plugin](https://github.com/polywrap/ethereum-wallet). Plugins are added directly to the client using its config.
 
@@ -20,25 +16,11 @@ UniV3 depends upon the [ethereum wrap](https://github.com/polywrap/ethers), whic
 
 You can learn more about Polywrap clients & configs in the docs [here](https://docs.polywrap.io/tutorials/use-wraps/configure-client).
 
-### Step 3: Run!
+## Run!
 
 With your client successfully configured, you can now run any function on the UniV3 wrap with ease.
 
-You can execute functions in TypeScript with the `client.invoke(...)` syntax like so:
-```typescript
-await client.invoke({
-  uri: "wrap://ens/uniswap.wraps.eth:v3",
-  method: "fetchPoolFromTokens",
-  args: {...}
-});
-```
-
-Or you can keep it type-safe by using Polywrap's `codegen` like so:
-```typescript
-await Uniswap.fetchPoolFromTokens({...});
-```
-
-If you'd like to generate typings for the UniV3 wrap, you can see an example of this in [Polywrap's Quick Start guide](https://docs.polywrap.io/quick-start#generating-types-codegen).
+You can check out the UniV3 wrap's schema for a list of methods, or [check out its tests](https://github.com/polywrap/uniswap/tree/main/v3/wrap/src/__tests__/e2e) for detailed usage examples.
 
 ## Support
 
