@@ -6,7 +6,7 @@ The UniV3 wrap gives you the ability to interact with Uniswap V3 contracts.
 
 ## Requirements
 
-To run the UniV3 wrap you'll need a Polywrap client in your application. See here for installation information: https://docs.polywrap.io/clients
+To run the UniV3 wrap you'll need a Polywrap client in your application. See here for installation information: [https://docs.polywrap.io/clients](https://docs.polywrap.io/clients)
 
 ### Configuration
 
