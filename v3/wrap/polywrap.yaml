@@ -1,4 +1,4 @@
-format: 0.3.0
+format: 0.4.0
 project:
   name: uniswap-v3
   type: wasm/assemblyscript
@@ -7,3 +7,4 @@ source:
   module: ./src/index.ts
 extensions:
   build: ./polywrap.build.yaml
+  docs: ./polywrap.docs.yaml
