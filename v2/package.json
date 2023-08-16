@@ -1,8 +1,5 @@
 {
-  "name": "@polywrap/uniswap-v2",
-  "description": "Uniswap V2 Wasm Wrapper",
   "private": true,
-  "version": "0.1.0",
   "scripts": {
     "reset": "yarn clean && yarn && yarn build",
     "clean": "npx rimraf ./node_modules ./build ./coverage ./.wrap ./**/wrap",
