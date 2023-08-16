@@ -1,5 +1,5 @@
-#import { Module, TxResponse, StaticTxResult } into Ethereum from "wrap://ens/wraps.eth:ethereum@1.2.0"
-#import { Module } into SHA3 from "wrap://ens/wraps.eth:sha3@1.0.0"
+#import { Module, TxResponse, StaticTxResult } into Ethereum from "wrapscan.io/polywrap/ethers@1.0"
+#import { Module } into SHA3 from "wrapscan.io/polywrap/sha3@1.0"
 
 type Module {
     swap (

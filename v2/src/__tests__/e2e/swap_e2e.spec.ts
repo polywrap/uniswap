@@ -43,7 +43,7 @@ describe("Swap", () => {
     // deploy api
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../..");
     fsUri = "fs/" + wrapperAbsPath + '/build';
-    ethersProvider = ethers.providers.getDefaultProvider("http://localhost:8546") as providers.JsonRpcProvider;
+    ethersProvider = ethers.providers.getDefaultProvider("http://127.0.0.1:8546") as providers.JsonRpcProvider;
     recipient = await ethersProvider.getSigner().getAddress();
 
     // set up test case data
