@@ -13,7 +13,7 @@ jobs:
     name: v3-cd
     if: |
       github.event.pull_request.merged &&
-      startsWith(github.event.pull_request.title, '[CD]') != true &&
+      endsWith(github.event.pull_request.title, '/workflows/cd') &&
       github.event.pull_request.user.login != 'github-actions'
     runs-on: ubuntu-latest
     timeout-minutes: 60
