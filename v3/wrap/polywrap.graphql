@@ -1,6 +1,6 @@
-#import { Module, TxResponse } into Ethers from "wrap://ens/ethers.wraps.eth:0.1.0"
-#import { Module } into EthersUtils from "wrap://ens/ethers.wraps.eth:utils@0.1.1"
-#import { Module } into SHA3 from "wrap://ens/wraps.eth:sha3@1.0.0"
+#import { Module, TxResponse } into Ethers from "wrapscan.io/polywrap/ethers@1.0"
+#import { Module } into EthersUtils from "wrapscan.io/polywrap/ethers-utils@1.0"
+#import { Module } into SHA3 from "wrapscan.io/polywrap/sha3@1.0"
 #import { Module } into Subgraph from "wrap://ens/wraps.eth:graph-node@1.0.0"
 
 type Module {

@@ -275,9 +275,9 @@ One advantage of testing with `jest` is that it requires developers to make call
 Setting up the Client is easy if you only need the default plugins and plan to use a standard Polywrap test environment.
 
 The `@polywrap/cli-js` package includes functions for starting and stopping a Polywrap test environment programmatically. The test environment has the following:
-* A standard Ganache Ethereum test chain at "http://localhost:8545"
-* A Ganache Ethereum mainnet fork test chain at "http://localhost:8546"
-* An IPFS node at * A Ganache Ethereum test chain at "http://localhost:5001"
+* A standard Ganache Ethereum test chain at "http://127.0.0.1:8545"
+* A Ganache Ethereum mainnet fork test chain at "http://127.0.0.1:8546"
+* An IPFS node at * A Ganache Ethereum test chain at "http://127.0.0.1:5001"
 
 It also sets up an ENS contract at initialization so you can build wrappers and deploy them to an ENS URI on your locally hosted testnet.
 
@@ -292,7 +292,7 @@ export function getMainnetForkConfig(): IClientConfigBuilder {
       ethereumProviderPlugin({
         connections: new Connections({
           networks: {
-            mainnet: new Connection({ provider: "http://localhost:8546" }), // mainnet fork
+            mainnet: new Connection({ provider: "http://127.0.0.1:8546" }), // mainnet fork
           },
           defaultNetwork: "mainnet",
         }),
@@ -322,7 +322,7 @@ describe('Wrapper Test', () => {
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
     fsUri = "fs/" + wrapperAbsPath + '/build';
     // set up ethers provider
-    ethersProvider = new ethers.providers.JsonRpcProvider("http://localhost:8546");
+    ethersProvider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8546");
   });
 
   afterAll(async () => {

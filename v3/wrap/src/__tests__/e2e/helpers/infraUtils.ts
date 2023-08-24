@@ -26,7 +26,7 @@ export function getMainnetForkConfig(): IClientConfigBuilder {
       ethereumProviderPlugin({
         connections: new Connections({
           networks: {
-            mainnet: new Connection({ provider: "http://localhost:8546" }),
+            mainnet: new Connection({ provider: "http://127.0.0.1:8546" }),
           },
           defaultNetwork: "mainnet",
         }),
@@ -46,8 +46,8 @@ export async function initInfra(): Promise<void> {
   }
 
   const success = await awaitResponse(
-    `http://localhost:8546`,
-    '"jsonrpc":',
+    `http://127.0.0.1:8546`,
+    'jsonrpc',
     "post",
     2000,
     20000,

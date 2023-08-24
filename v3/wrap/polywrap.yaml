@@ -3,8 +3,7 @@ project:
   name: uniswap-v3
   type: wasm/assemblyscript
 source:
-  schema: ./src/schema.graphql
+  schema: ./polywrap.graphql
   module: ./src/index.ts
 extensions:
-  build: ./polywrap.build.yaml
   docs: ./polywrap.docs.yaml
