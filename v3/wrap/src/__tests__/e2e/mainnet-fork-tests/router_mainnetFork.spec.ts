@@ -34,7 +34,7 @@ describe("SwapRouter (mainnet fork)", () => {
     pools = await getPools(client, fsUri, true, sliceStart, sliceEnd);
     tokens = getTokens(pools);
     // set up ethers provider
-    ethersProvider = ethers.providers.getDefaultProvider("http://localhost:8546");
+    ethersProvider = ethers.providers.getDefaultProvider("http://127.0.0.1:8546");
     // get uni pools
     const ticks: Tick[][] = pools.map((pool: Pool): Tick[] => pool.tickDataProvider);
     const uniTicks: uni.Tick[][] = ticks.map(tickArr => tickArr.map(tick => new uni.Tick({ ...tick })));

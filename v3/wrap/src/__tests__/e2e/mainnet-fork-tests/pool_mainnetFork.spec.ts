@@ -32,7 +32,7 @@ describe("Pool (mainnet fork)", () => {
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
     fsUri = "fs/" + wrapperAbsPath + '/build';
     // set up ethers provider
-    ethersProvider = ethers.providers.getDefaultProvider("http://localhost:8546");
+    ethersProvider = ethers.providers.getDefaultProvider("http://127.0.0.1:8546");
     // set up test case data
     pools = await getPools(client, fsUri);
     pool0 = await getPoolFromAddress(client, fsUri, addresses[0], true);

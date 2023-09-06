@@ -1,29 +1,27 @@
-import { runCLI } from "@polywrap/test-env-js";
+import { Commands } from "@polywrap/cli-js";
 import axios from "axios";
-import {ClientConfigBuilder, IClientConfigBuilder, IWrapPackage} from "@polywrap/client-js";
-import {Connection, Connections, ethereumProviderPlugin} from "@polywrap/ethereum-provider-js";
-import {DefaultBundle} from "@polywrap/client-config-builder-js";
+import { PolywrapClientConfigBuilder, ClientConfigBuilder } from "@polywrap/client-js";
+import { Connection, Connections, ethereumWalletPlugin } from "@polywrap/ethereum-wallet-js";
+import { Web3 } from "@polywrap/client-config-builder-js";
 
-export function getBuilder(): IClientConfigBuilder {
-  return new ClientConfigBuilder()
+export function getBuilder(): ClientConfigBuilder {
+  return new PolywrapClientConfigBuilder()
     .addDefaults()
-    .addPackage(
-    DefaultBundle.plugins.ethereumProvider.uri.uri,
-    ethereumProviderPlugin({
-      connections: new Connections({
-        networks: {
-          MAINNET: new Connection({ provider: "http://localhost:8546" }),
-        },
-        defaultNetwork: "MAINNET"
-      }),
-    }) as IWrapPackage
+    .setPackage(
+      Web3.bundle.ethereumWallet.uri,
+      ethereumWalletPlugin({
+        connections: new Connections({
+          networks: {
+            MAINNET: new Connection({ provider: "http://127.0.0.1:8546" }),
+          },
+          defaultNetwork: "MAINNET"
+        }),
+      })
   );
 }
 
 export async function initInfra(): Promise<void> {
-  const { exitCode, stderr, stdout } = await runCLI({
-    args: ["infra", "up", "--verbose"]
-  });
+  const { exitCode, stderr, stdout } = await Commands.infra("up", { verbose: true });
 
   if (exitCode) {
     throw Error(
@@ -32,8 +30,8 @@ export async function initInfra(): Promise<void> {
   }
 
   const success = await awaitResponse(
-    `http://localhost:8546`,
-    '"jsonrpc":',
+    `http://127.0.0.1:8546`,
+    'jsonrpc',
     "post",
     2000,
     20000,
@@ -47,9 +45,7 @@ export async function initInfra(): Promise<void> {
 }
 
 export async function stopInfra(): Promise<void> {
-  const { exitCode, stderr, stdout } = await runCLI({
-    args: ["infra", "down", "--verbose"]
-  });
+  const { exitCode, stderr, stdout } = await Commands.infra("down", { verbose: true });
 
   if (exitCode) {
     throw Error(

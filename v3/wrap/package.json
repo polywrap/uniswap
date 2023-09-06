@@ -3,9 +3,9 @@
   "scripts": {
     "reset": "yarn clean && yarn && yarn build",
     "clean": "rimraf ./node_modules ./build ./coverage ./.polywrap ./**/wrap",
-    "build": "npx polywrap build -c client-config.ts",
+    "build": "npx polywrap build",
     "deploy": "npx polywrap deploy --output-file deployment.json",
-    "codegen": "npx polywrap codegen -c client-config.ts",
+    "codegen": "npx polywrap codegen",
     "test:e2e:replication": "jest --passWithNoTests --runInBand --verbose src/__tests__/e2e/sdk-test-replications",
     "test:e2e:fork": "jest --passWithNoTests --runInBand --verbose src/__tests__/e2e/mainnet-fork-tests/",
     "test:e2e:fork:pt2": "jest --passWithNoTests --runInBand --verbose src/__tests__/e2e/mainnet-fork-tests-pt2/",
@@ -17,13 +17,13 @@
     "lint:fix": "yarn eslint src --fix"
   },
   "dependencies": {
-    "@polywrap/wasm-as": "0.10.2"
+    "@polywrap/wasm-as": "~0.11.0"
   },
   "devDependencies": {
     "@as-pect/cli": "6.2.4",
-    "@polywrap/cli-js": "0.10.2",
-    "@polywrap/client-js": "0.10.1",
-    "@polywrap/ethereum-provider-js": "0.3.1",
+    "@polywrap/cli-js": "~0.11.0",
+    "@polywrap/client-js": "~0.12.0",
+    "@polywrap/ethereum-wallet-js": "~0.1.0",
     "@types/jest": "26.0.24",
     "@types/node": "12.6.9",
     "@typescript-eslint/eslint-plugin": "4.11.1",
@@ -41,7 +41,7 @@
     "graphql": "16.2.0",
     "graphql-request": "3.7.0",
     "jest": "26.6.3",
-    "polywrap": "^0.10.5",
+    "polywrap": "^0.11.0",
     "prettier": "2.2.1",
     "rimraf": "3.0.2",
     "solc": "0.8.3",

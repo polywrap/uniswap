@@ -47,7 +47,7 @@ describe("Fetch", () => {
     const link: App.Token = tokens.filter(token => token.currency.symbol === "LINK")[0];
     pairs = [[aave, dai], [usdc, dai], [aave, usdc], [comp, weth], [uniswap, link], [uniswap, wbtc], [wbtc, weth]];
     // set up ethers provider
-    ethersProvider = getDefaultProvider("http://localhost:8546");
+    ethersProvider = getDefaultProvider("http://127.0.0.1:8546");
   });
 
   afterAll(async () => {

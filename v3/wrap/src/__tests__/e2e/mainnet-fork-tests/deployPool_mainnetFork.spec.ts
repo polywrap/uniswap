@@ -27,7 +27,7 @@ describe("Deploy pool (mainnet fork)", () => {
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
     fsUri = "fs/" + wrapperAbsPath + '/build';
     // set up ethers provider
-    ethersProvider = new ethers.providers.JsonRpcProvider("http://localhost:8546");
+    ethersProvider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8546");
   });
 
   afterAll(async () => {
@@ -55,7 +55,10 @@ describe("Deploy pool (mainnet fork)", () => {
         fee: FeeAmountEnum.MEDIUM,
       },
     });
-    if (txResponse.ok == false) fail(txResponse.error);
+    
+    expect(txResponse.ok).toBeTruthy();
+    
+    if(!txResponse.ok) return;
 
     const txHash: string = txResponse.value.hash;
     const tx = await ethersProvider.getTransaction(txHash);

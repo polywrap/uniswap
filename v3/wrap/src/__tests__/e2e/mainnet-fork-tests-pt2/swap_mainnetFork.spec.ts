@@ -56,7 +56,7 @@ describe("Swap (mainnet fork)", () => {
     tokens = getTokens(pools);
     // set up ethers provider
     ethersProvider = new ethers.providers.JsonRpcProvider(
-      "http://localhost:8546"
+      "http://127.0.0.1:8546"
     );
     // approve token transfers
     for (const token of tokens) {

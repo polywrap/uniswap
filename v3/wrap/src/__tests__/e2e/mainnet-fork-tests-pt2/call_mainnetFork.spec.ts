@@ -36,7 +36,7 @@ describe("Call (mainnet fork)", () => {
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../../../");
     fsUri = "fs/" + wrapperAbsPath + '/build';
     // set up ethers provider
-    ethersProvider = new ethers.providers.JsonRpcProvider("http://localhost:8546");
+    ethersProvider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8546");
     recipient = await ethersProvider.getSigner().getAddress();
   });
 
@@ -133,7 +133,7 @@ describe("Call (mainnet fork)", () => {
     expect(result.value).toBeTruthy();
 
     const wait = await client.invoke<Ethers_TxReceipt>({
-      uri: "wrap://ens/wraps.eth:ethereum@2.0.0",
+      uri: "wrap://wrapscan.io/polywrap/ethers@1.1",
       method: "awaitTransaction",
       args: {
         txHash: result.value.hash,

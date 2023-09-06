@@ -11,7 +11,7 @@ import {
 import { getBuilder, initInfra, stopInfra } from "../infraUtils";
 import { ethers } from "ethers";
 import * as uni from "@uniswap/sdk";
-jest.setTimeout(120000);
+jest.setTimeout(360000);
 import * as App from "./types/wrap";
 
 describe("Router", () => {
@@ -32,7 +32,7 @@ describe("Router", () => {
     // deploy api
     const wrapperAbsPath: string = path.resolve(__dirname + "/../../..");
     fsUri = "fs/" + wrapperAbsPath + '/build';
-    ethersProvider = ethers.providers.getDefaultProvider("http://localhost:8546") as ethers.providers.JsonRpcProvider;
+    ethersProvider = ethers.providers.getDefaultProvider("http://127.0.0.1:8546") as ethers.providers.JsonRpcProvider;
     recipient = await ethersProvider.getSigner().getAddress();
 
     // set up test case data -> pairs
@@ -78,10 +78,7 @@ describe("Router", () => {
         uri: fsUri,
         method: 'approve',
         args: {
-          token: token,
-          txOverrides: {
-            gasPrice: "100",
-          }
+          token: token
         },
       });
       if (txResponse.ok === false) throw txResponse.error;
@@ -355,10 +352,7 @@ describe("Router", () => {
       method: "estimateGas",
       args: {
         parameters: swapParameters,
-        chainId: token0.chainId,
-        txOverrides: {
-          gasPrice: "100",
-        }
+        chainId: token0.chainId
       },
     });
     if (gasEstimateResult.ok === false) throw gasEstimateResult.error;
@@ -414,10 +408,7 @@ describe("Router", () => {
         method: "execCallStatic",
         args: {
           parameters: swapParameters,
-          chainId: tokenIn.chainId,
-          txOverrides: {
-            gasPrice: "100",
-          }
+          chainId: tokenIn.chainId
         },
       });
       if (swapStatic.ok === false) throw swapStatic.error;

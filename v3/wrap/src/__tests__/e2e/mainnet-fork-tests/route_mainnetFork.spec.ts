@@ -40,7 +40,7 @@ describe("Route (mainnet fork)", () => {
     ].filter(isDefined);
     tokens = getTokens(pools);
     // set up ethers provider
-    ethersProvider = ethers.providers.getDefaultProvider("http://localhost:8546");
+    ethersProvider = ethers.providers.getDefaultProvider("http://127.0.0.1:8546");
     // get uni pools
     uniPools = [
       await getUniswapPool(ethersProvider, DAI_WETH_address, false),

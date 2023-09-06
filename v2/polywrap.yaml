@@ -3,5 +3,5 @@ project:
   name: uniswap-v2
   type: wasm/assemblyscript
 source:
-  schema: ./src/schema.graphql
+  schema: ./polywrap.graphql
   module: ./src/index.ts
