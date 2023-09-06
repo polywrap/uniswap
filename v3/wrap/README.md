@@ -277,7 +277,7 @@ Setting up the Client is easy if you only need the default plugins and plan to u
 The `@polywrap/cli-js` package includes functions for starting and stopping a Polywrap test environment programmatically. The test environment has the following:
 * A standard Ganache Ethereum test chain at "http://127.0.0.1:8545"
 * A Ganache Ethereum mainnet fork test chain at "http://127.0.0.1:8546"
-* An IPFS node at * A Ganache Ethereum test chain at "http://127.0.0.1:5001"
+* An IPFS node at "http://127.0.0.1:5001"
 
 It also sets up an ENS contract at initialization so you can build wrappers and deploy them to an ENS URI on your locally hosted testnet.
 
