@@ -284,19 +284,32 @@ It also sets up an ENS contract at initialization so you can build wrappers and 
 We created a helper function that takes some network information as inputs and returns a Client config.
 
 ```typescript
-export function getMainnetForkConfig(): IClientConfigBuilder {
-  return new ClientConfigBuilder()
+import {
+  Sys,
+  ClientConfigBuilder,
+  IWrapPackage,
+  PolywrapClientConfigBuilder,
+  Web3,
+} from "@polywrap/client-js";
+import {
+  ethereumWalletPlugin,
+  Connections,
+  Connection,
+} from "@polywrap/ethereum-wallet-js";
+
+export function getMainnetForkConfig(): ClientConfigBuilder {
+  return new PolywrapClientConfigBuilder()
     .addDefaults()
-    .addPackage(
-      "ens/wraps.eth:ethereum-provider@2.0.0",
-      ethereumProviderPlugin({
+    .setPackage(
+      Web3.bundle.ethereumWallet.uri,
+      ethereumWalletPlugin({
         connections: new Connections({
           networks: {
-            mainnet: new Connection({ provider: "http://127.0.0.1:8546" }), // mainnet fork
+            mainnet: new Connection({ provider: "http://127.0.0.1:8546" }),
           },
           defaultNetwork: "mainnet",
         }),
-      }),
+      }) as IWrapPackage
     );
 }
 ```

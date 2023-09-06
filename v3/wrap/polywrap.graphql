@@ -1,7 +1,7 @@
 #import { Module, TxResponse } into Ethers from "wrapscan.io/polywrap/ethers@1.0"
 #import { Module } into EthersUtils from "wrapscan.io/polywrap/ethers-utils@1.0"
 #import { Module } into SHA3 from "wrapscan.io/polywrap/sha3@1.0"
-#import { Module } into Subgraph from "wrap://ens/wraps.eth:graph-node@1.0.0"
+#import { Module } into Subgraph from "wrap://wrapscan.io/polywrap/graph-node@1.0"
 
 type Module {
     """Call the approve(...) function of an ERC20 token contract on-chain, allowing the Uniswap router contract to transfer tokens"""

@@ -1,42 +1,52 @@
 import { runCli } from "@polywrap/cli-js";
 import axios from "axios";
-import { ClientConfigBuilder, DefaultBundle, IClientConfigBuilder, IWrapPackage } from "@polywrap/client-js";
-import { ethereumProviderPlugin, Connections, Connection } from "@polywrap/ethereum-provider-js";
+import {
+  Sys,
+  ClientConfigBuilder,
+  IWrapPackage,
+  PolywrapClientConfigBuilder,
+  Web3,
+} from "@polywrap/client-js";
+import {
+  ethereumWalletPlugin,
+  Connections,
+  Connection,
+} from "@polywrap/ethereum-wallet-js";
 
-export function getSimpleConfig(): IClientConfigBuilder {
-  return new ClientConfigBuilder()
+export function getSimpleConfig(): ClientConfigBuilder {
+  return new PolywrapClientConfigBuilder()
     .addDefaults()
-    .addPackage(
-      "ens/wraps.eth:ethereum-provider@2.0.0",
-      ethereumProviderPlugin({ connections: new Connections({ networks: { } }) }) as IWrapPackage
-    )
+    .setPackage(
+      Web3.bundle.ethereumWallet.uri,
+      ethereumWalletPlugin({
+        connections: new Connections({ networks: {} }),
+      }) as IWrapPackage
+    );
 }
 
-export function getMainnetForkConfig(): IClientConfigBuilder {
-  return new ClientConfigBuilder()
+export function getMainnetForkConfig(): ClientConfigBuilder {
+  return new PolywrapClientConfigBuilder()
     .addDefaults()
-    .addEnv(DefaultBundle.embeds.ipfsResolver.source.uri, {
-      provider: DefaultBundle.ipfsProviders[0],
-      fallbackProviders: DefaultBundle.ipfsProviders.slice(1),
+    .addEnv(Sys.bundle.ipfsResolver.uri, {
       retries: { tryResolveUri: 2, getFile: 2 },
-      timeout: 10000
+      timeout: 10000,
     })
-    .addPackage(
-      "ens/wraps.eth:ethereum-provider@2.0.0",
-      ethereumProviderPlugin({
+    .setPackage(
+      Web3.bundle.ethereumWallet.uri,
+      ethereumWalletPlugin({
         connections: new Connections({
           networks: {
             mainnet: new Connection({ provider: "http://127.0.0.1:8546" }),
           },
           defaultNetwork: "mainnet",
         }),
-      }) as IWrapPackage,
-    )
+      }) as IWrapPackage
+    );
 }
 
 export async function initInfra(): Promise<void> {
   const { exitCode, stderr, stdout } = await runCli({
-    args: ["infra", "up", "--verbose"]
+    args: ["infra", "up", "--verbose"],
   });
 
   if (exitCode) {
@@ -47,7 +57,7 @@ export async function initInfra(): Promise<void> {
 
   const success = await awaitResponse(
     `http://127.0.0.1:8546`,
-    'jsonrpc',
+    "jsonrpc",
     "post",
     2000,
     20000,
@@ -62,7 +72,7 @@ export async function initInfra(): Promise<void> {
 
 export async function stopInfra(): Promise<void> {
   const { exitCode, stderr, stdout } = await runCli({
-    args: ["infra", "down", "--verbose"]
+    args: ["infra", "down", "--verbose"],
   });
 
   if (exitCode) {

@@ -55,7 +55,10 @@ describe("Deploy pool (mainnet fork)", () => {
         fee: FeeAmountEnum.MEDIUM,
       },
     });
-    if (txResponse.ok == false) fail(txResponse.error);
+    
+    expect(txResponse.ok).toBeTruthy();
+    
+    if(!txResponse.ok) return;
 
     const txHash: string = txResponse.value.hash;
     const tx = await ethersProvider.getTransaction(txHash);
