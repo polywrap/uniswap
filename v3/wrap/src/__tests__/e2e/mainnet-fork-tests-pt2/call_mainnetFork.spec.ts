@@ -133,7 +133,7 @@ describe("Call (mainnet fork)", () => {
     expect(result.value).toBeTruthy();
 
     const wait = await client.invoke<Ethers_TxReceipt>({
-      uri: "wrap://ens/wraps.eth:ethereum@2.0.0",
+      uri: "wrap://wrapscan.io/polywrap/ethers@1.1",
       method: "awaitTransaction",
       args: {
         txHash: result.value.hash,
